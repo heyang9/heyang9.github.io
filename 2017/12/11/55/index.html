@@ -10,8 +10,27 @@
   
 
   
-  <meta name="description" content="第一篇博客
-啦啦啦实验一下">
+  <meta name="description" content="Mac下hexo博客搭建
+环境配置
+Node.js
+官网下载安装
+
+git
+appstore下载安装Xcode即可
+
+
+安装hexo
+执行指令
+sudo npm install -g hexo
+
+初始化
+hexo init blog
+
+安装npm
+npm install
+
+开启hexo服务器
+hex">
   
 
   
@@ -51,9 +70,9 @@
   <nav class="site-navigation">
     <ul>
       
-        <li><a href="/">主页</a></li>
+        <li><a href="/">Home</a></li>
       
-        <li><a href="/archives">归档</a></li>
+        <li><a href="/archives">Archives</a></li>
       
     </ul>
   </nav>
@@ -84,8 +103,76 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="第一篇博客"><a href="#第一篇博客" class="headerlink" title="第一篇博客"></a>第一篇博客</h2><hr>
-<p>啦啦啦实验一下</p>
+        <h1 id="Mac下hexo博客搭建"><a href="#Mac下hexo博客搭建" class="headerlink" title="Mac下hexo博客搭建"></a>Mac下hexo博客搭建</h1><hr>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><ul>
+<li><p><strong>Node.js</strong></p>
+<p>官网下载安装</p>
+</li>
+<li><p><strong>git</strong></p>
+<p>appstore下载安装Xcode即可</p>
+</li>
+</ul>
+<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><ul>
+<li><p><strong>执行指令</strong></p>
+<p><code>sudo npm install -g hexo</code></p>
+</li>
+<li><p><strong>初始化</strong></p>
+<p><code>hexo init blog</code></p>
+</li>
+<li><p><strong>安装npm</strong></p>
+<p><code>npm install</code></p>
+</li>
+<li><p><strong>开启hexo服务器</strong></p>
+<p><code>hexo s</code></p>
+</li>
+</ul>
+<h2 id="关联github"><a href="#关联github" class="headerlink" title="关联github"></a>关联github</h2><ul>
+<li><p><strong>登陆github账号，新建仓库</strong></p>
+<p><em>仓库名必须是github用户名.github.io 否则会报错404</em></p>
+<p>打开blog文件中_config.yml，修改最后部分：</p>
+<p><code>deploy:
+type: git
+repository: https://github.com/&quot;你自己的用户名“/”你自己用户名“.github.io.git
+branch: master</code></p>
+<blockquote>
+<p>注意冒号后面一定要接空格</p>
+</blockquote>
+<p><code>hexo g</code></p>
+<p><code>hexo d</code></p>
+<p>即可生成网页，<a href="https://用户名.github.io，可以访问并看到你的博客" target="_blank" rel="noopener">https://用户名.github.io，可以访问并看到你的博客</a></p>
+<p>如果报错：</p>
+<p><code>npm install hexo-deployer-git --save</code></p>
+<p>重复</p>
+</li>
+<li><p><strong>添加ssh keys到github</strong></p>
+<p><code>ls -al ~/.ssh</code></p>
+<p><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</code></p>
+<p><em>注意密码要大于五个字符</em></p>
+<p>打开~/.ssh/id_rsa.pub文件，拷贝内容至Github –&gt; Settings –&gt; SSH keys –&gt; add SSH key:</p>
+</li>
+<li><p><strong>发布文章</strong></p>
+<p><code>hexo new &quot;postName&quot;</code></p>
+<p>名为postName.md的文件会建在目录/blog/source/_posts下, 此刻我正在用macdown编辑.md文件</p>
+<p>cd到blog文件夹下</p>
+<p><code>hexo g</code></p>
+<p><code>hexo d</code></p>
+</li>
+</ul>
+<h2 id="更换theme"><a href="#更换theme" class="headerlink" title="更换theme"></a>更换theme</h2><ul>
+<li><p><strong>最重要的就是更换主题啦！</strong></p>
+<p><a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo官网</a> 可以在官网上看自己喜欢的主题💕</p>
+<p>切记不要在 hexo server 运行的时候安装主题。因为文件的改动会导致 Hexo server 重新生成网站，如果有些文件还没下载完 或者 文件内的语法有问题，就会导致 Hexo server 报错，之后再刷新网页的话就什么也打不开，会报很奇怪的错误。</p>
+<p><code>git clone https://github.com.....&quot;这里是你喜欢主题的github链接&quot;</code></p>
+<blockquote>
+<p>然后一定要在blog文件夹下把_config.yml里的theme改成你git的主题名</p>
+</blockquote>
+<p>cd到blog目录</p>
+<p><code>hexo clean</code></p>
+<p><code>hexo g</code></p>
+<p><code>hexo d</code></p>
+<p>我第一次更换主题的时候出现了一些错误，发现是没有在blog目录执行<br>npm install hexo-renderer-ejs –save</p>
+</li>
+</ul>
 
       
     </div>
