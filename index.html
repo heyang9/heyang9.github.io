@@ -59,6 +59,134 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/08/02/git账号/"><span>查看本地git的账号是否是目前登陆的邮箱</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/02/git账号/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-02T01:22:21.000Z">
+          2017-08-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>我的GitHub账号很乱。感觉</p>
+<p>我查了一下，很多人出现跟我类似的问题，都在问为什么自己明明有干嘛干嘛啊，为什么没有绿格子，基本上解决办法就是本地看一下git账号邮箱啊用户名啊是什么就能解决了。</p>
+<p><code>$ git config --global user.name &quot;John Doe&quot;</code></p>
+<p><code>$ git config --global user.email johndoe@example.com</code></p>
+<p>这个是一开始的配置，可能大家配置的时候很不经意 就填了其他的。。像我这种有好几个邮箱的人很多吧。这个其实蛮关键的，因为以后你所有的项目都会默认使用这里配置的用户信息。</p>
+<p>为什么没有绿格子呢，看一下配置信息就好啦</p>
+<p><code>$ git config --list</code></p>
+<p>不是自己登陆的邮箱账号的话就改吧</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/27/略谈EM算法/"><span>EM算法</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/略谈EM算法/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T01:22:21.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="略谈EM算法"><a href="#略谈EM算法" class="headerlink" title="略谈EM算法"></a>略谈EM算法</h2><p>目前虽然没有用到这个的项目，但是毕竟是经典算法，而且跟概率相关的对于我而言都比较绕，就仔细琢磨琢磨啦。</p>
+<h3 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h3><p>先说最大似然估计好了，我觉得这个蛮好理解的：</p>
+<p>通俗的说：现在已经拿到了很多个样本（你的数据集中所有因变量），这些样本值已经实现，最大似然估计就是去找到那个（组）参数估计值，使得前面已经实现的样本值发生概率最大。这时是求样本所有观测的联合概率最大化，是个连乘积，只要取对数，就变成了线性加总。此时通过对参数求导数，并令一阶导数为零，就可以通过解方程（组），得到最大似然估计值。</p>
+<p><img src="http://img.blog.csdn.net/20170528003838359" alt=""></p>
+<p>实际中为了便于分析，定义了对数似然函数：</p>
+<p><img src="http://img.blog.csdn.net/20170528003844453" alt=""></p>
+<p><img src="http://img.blog.csdn.net/20170528003850144" alt=""></p>
+<p>求最大似然估计量的一般步骤：</p>
+<pre><code>（1）写出似然函数；
+
+（2）对似然函数取对数，并整理；
+
+（3）求导数；
+
+（4）解似然方程。
+</code></pre><p>最大似然估计的特点：</p>
+<pre><code>1.比其他估计方法更加简单；
+
+2.收敛性：无偏或者渐近无偏，当样本数目增加时，收敛性质会更好；
+
+3.如果假设的类条件概率模型正确，则通常能获得较好的结果。但如果假设模型出现偏差，将导致非常差的估计结果。
+</code></pre><h3 id="贝叶斯决策"><a href="#贝叶斯决策" class="headerlink" title="贝叶斯决策"></a>贝叶斯决策</h3><p>都说到极大似然了，继续讲一下贝叶斯决策吧。也有很多科普是先从贝叶斯决策引出极大似然的。</p>
+<p><img src="http://img.blog.csdn.net/20170528002022807" alt=""></p>
+<p>我们要求的是后验概率，就得先知道先验概率和似然（类条件概率）。这里先验概率估计较简单，1、每个样本所属的自然状态都是已知的（有监督学习）；2、依靠经验；3、用训练样本中各类出现的频率估计。类条件概率的估计（非常难），原因包括：概率密度函数包含了一个随机变量的全部信息；样本数据可能不多；特征向量x的维度可能很大等等。总之要直接估计类条件概率的密度函数很难。解决的办法就是，把估计完全未知的概率密度转化为估计参数。这里就将概率密度估计问题转化为参数估计问题，极大似然估计就是一种参数估计方法。</p>
+<h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><p>M算法当做最大似然估计的拓展，解决难以给出解析解的最大似然估计（MLE）问题。EM算法引入了隐变量。什么是隐变量呢，比如你知道A是高斯分布，和一些样本，就能估计它的参数，B也是。但是如果A，B是混合的，就不太好估计，因为抽取得到的每个样本都不知道是从哪个分布抽取的，（直观上是这样，公式推导结果也是如此，出现了log在两个求和符号之间的情况）</p>
+<p><img src="https://www.zhihu.com/equation?tex=P%28X%3B%5Ctheta%29%3D%5Csum_%7Bk%3D1%7D%5EK%5Cpi_kN%28x%3B+%5Cmu_k%2C+%5Csigma_k%29%3D%5Csum_ZP%28Z%3B%5Cpi%29P%28X%7CZ%3B%5Cmu%2C%5Csigma%29" alt=""></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+%5Ctheta%5E%2A+%26%3D+%5Carg%5Cmax_%5Ctheta+%5Csum_X+logP%28X%3B%5Ctheta%29+%5C%5C+%26%3D%5Carg%5Cmax_%5Ctheta+%5Csum_X+log+%5Csum_ZP%28Z%3B%5Cpi%29P%28X%7CZ%3B%5Cmu%2C%5Csigma%29+%5C%5C+%26%3D%5Carg%5Cmax_%5Ctheta+%5Csum_X+log+%5Csum_ZP%28X%2CZ%3B%5Ctheta%29+%5Cend%7Baligned%7D" alt=""></p>
+<p>这时就需要EM算法。EM算法就是这样，假设我们想估计知道A和B两个参数，在开始状态下二者都是未知的，但如果知道了A的信息就可以得到B的信息，反过来知道了B也就得到了A。可以考虑首先赋予A某种初值，以此得到B的估计值，然后从B的当前值出发，重新估计A的取值，这个过程一直持续到收敛为止。E步（求期望），第三步被称作M步（求极大化），于是EM算法就在不停的EM、EM、EM….，所以被叫做EM算法！使用EM的好处就是，分离不开，就不分离。用旧的变量来表达新的变量，一步步迭代，也能找到局部最优。其实也就坐标上升法，含有隐变量对数似然求导比较复杂，因此先固定参数求隐变量后验分布(E步)，然后固定隐变量求参数(M步)，交替进行。</p>
+<p>举个非常棒的例子，看完基本上就能懂什么是EM算法，如下：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-a95770a0f41ed0873106d4a1f2dd6b7d_hd.jpg" alt=""></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/02/正则化的问题/"><span>L1正则化和L2正则化</span></a></h3>
     
   
@@ -598,124 +726,11 @@ $ sudo pip install numpy --upgrade --ignore-installed
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2016/12/11/mac+hexo/"><span>博客搭建</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/12/11/mac+hexo/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-12-11T11:35:21.000Z">
-          2016-12-11
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="mac环境下hexo博客搭建"><a href="#mac环境下hexo博客搭建" class="headerlink" title="mac环境下hexo博客搭建"></a>mac环境下hexo博客搭建</h1><hr>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><ul>
-<li><p><strong>Node.js</strong></p>
-<p>官网下载安装</p>
-</li>
-<li><p><strong>git</strong></p>
-<p>appstore下载安装Xcode即可</p>
-</li>
-</ul>
-<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><ul>
-<li><p><strong>执行指令</strong></p>
-<p><code>sudo npm install -g hexo</code></p>
-</li>
-<li><p><strong>初始化</strong></p>
-<p><code>hexo init blog</code></p>
-</li>
-<li><p><strong>安装npm</strong></p>
-<p><code>npm install</code></p>
-</li>
-<li><p><strong>开启hexo服务器</strong></p>
-<p><code>hexo s</code></p>
-</li>
-</ul>
-<h2 id="关联github"><a href="#关联github" class="headerlink" title="关联github"></a>关联github</h2><ul>
-<li><p><strong>登陆github账号，新建仓库</strong></p>
-<p><em>仓库名必须是github用户名.github.io 否则会报错404</em></p>
-<p>打开blog文件中_config.yml，修改最后部分：</p>
-<p><code>deploy:
-type: git
-repository: https://github.com/&quot;你自己的用户名“/”你自己用户名“.github.io.git
-branch: master</code></p>
-<blockquote>
-<p>注意冒号后面一定要接空格</p>
-</blockquote>
-<p><code>hexo g</code></p>
-<p><code>hexo d</code></p>
-<p>即可生成网页，<a href="https://用户名.github.io，可以访问并看到你的博客" target="_blank" rel="noopener">https://用户名.github.io，可以访问并看到你的博客</a></p>
-<p>如果报错：</p>
-<p><code>npm install hexo-deployer-git --save</code></p>
-<p>重复</p>
-</li>
-<li><p><strong>添加ssh keys到github</strong></p>
-<p><code>ls -al ~/.ssh</code></p>
-<p><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</code></p>
-<p><em>注意密码要大于五个字符</em></p>
-<p>打开~/.ssh/id_rsa.pub文件，拷贝内容至Github –&gt; Settings –&gt; SSH keys –&gt; add SSH key:</p>
-</li>
-<li><p><strong>发布文章</strong></p>
-<p><code>hexo new &quot;postName&quot;</code></p>
-<p>名为postName.md的文件会建在目录/blog/source/_posts下, 此刻我正在用macdown编辑.md文件</p>
-<p>cd到blog文件夹下</p>
-<p><code>hexo g</code></p>
-<p><code>hexo d</code></p>
-</li>
-</ul>
-<h2 id="更换theme"><a href="#更换theme" class="headerlink" title="更换theme"></a>更换theme</h2><ul>
-<li><p><strong>最重要的就是更换主题啦！</strong></p>
-<p><a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo官网</a> 可以在官网上看自己喜欢的主题💕</p>
-<p>切记不要在 hexo server 运行的时候安装主题。因为文件的改动会导致 Hexo server 重新生成网站，如果有些文件还没下载完 或者 文件内的语法有问题，就会导致 Hexo server 报错，之后再刷新网页的话就什么也打不开，会报很奇怪的错误。</p>
-<p><code>git clone https://github.com.....&quot;这里是你喜欢主题的github链接&quot;</code></p>
-<blockquote>
-<p>然后一定要在blog文件夹下把_config.yml里的theme改成你git的主题名</p>
-</blockquote>
-<p>cd到blog目录</p>
-<p><code>hexo clean</code></p>
-<p><code>hexo g</code></p>
-<p><code>hexo d</code></p>
-<p>我第一次更换主题的时候出现了一些错误，发现是没有在blog目录执行<br>npm install hexo-renderer-ejs –save</p>
-</li>
-</ul>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
+  
+  <a href="/page/2/" class="pagination-next">Next</a>
   
 </nav>
     </main>

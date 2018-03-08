@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>EM算法 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+  
+  <meta name="author" content="Yang He">
+  
+
+  
+  <meta name="description" content="略谈EM算法目前虽然没有用到这个的项目，但是毕竟是经典算法，而且跟概率相关的对于我而言都比较绕，就仔细琢磨琢磨啦。
+极大似然估计先说最大似然估计好了，我觉得这个蛮好理解的：
+通俗的说：现在已经拿到了很多个样本（你的数据集中所有因变量），这些样本值已经实现，最大似然估计就是去找到那个（组）参数估计值，">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="EM算法"/>
+
+  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>EM算法</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/略谈EM算法/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T01:22:21.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="略谈EM算法"><a href="#略谈EM算法" class="headerlink" title="略谈EM算法"></a>略谈EM算法</h2><p>目前虽然没有用到这个的项目，但是毕竟是经典算法，而且跟概率相关的对于我而言都比较绕，就仔细琢磨琢磨啦。</p>
+<h3 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h3><p>先说最大似然估计好了，我觉得这个蛮好理解的：</p>
+<p>通俗的说：现在已经拿到了很多个样本（你的数据集中所有因变量），这些样本值已经实现，最大似然估计就是去找到那个（组）参数估计值，使得前面已经实现的样本值发生概率最大。这时是求样本所有观测的联合概率最大化，是个连乘积，只要取对数，就变成了线性加总。此时通过对参数求导数，并令一阶导数为零，就可以通过解方程（组），得到最大似然估计值。</p>
+<p><img src="http://img.blog.csdn.net/20170528003838359" alt=""></p>
+<p>实际中为了便于分析，定义了对数似然函数：</p>
+<p><img src="http://img.blog.csdn.net/20170528003844453" alt=""></p>
+<p><img src="http://img.blog.csdn.net/20170528003850144" alt=""></p>
+<p>求最大似然估计量的一般步骤：</p>
+<pre><code>（1）写出似然函数；
+
+（2）对似然函数取对数，并整理；
+
+（3）求导数；
+
+（4）解似然方程。
+</code></pre><p>最大似然估计的特点：</p>
+<pre><code>1.比其他估计方法更加简单；
+
+2.收敛性：无偏或者渐近无偏，当样本数目增加时，收敛性质会更好；
+
+3.如果假设的类条件概率模型正确，则通常能获得较好的结果。但如果假设模型出现偏差，将导致非常差的估计结果。
+</code></pre><h3 id="贝叶斯决策"><a href="#贝叶斯决策" class="headerlink" title="贝叶斯决策"></a>贝叶斯决策</h3><p>都说到极大似然了，继续讲一下贝叶斯决策吧。也有很多科普是先从贝叶斯决策引出极大似然的。</p>
+<p><img src="http://img.blog.csdn.net/20170528002022807" alt=""></p>
+<p>我们要求的是后验概率，就得先知道先验概率和似然（类条件概率）。这里先验概率估计较简单，1、每个样本所属的自然状态都是已知的（有监督学习）；2、依靠经验；3、用训练样本中各类出现的频率估计。类条件概率的估计（非常难），原因包括：概率密度函数包含了一个随机变量的全部信息；样本数据可能不多；特征向量x的维度可能很大等等。总之要直接估计类条件概率的密度函数很难。解决的办法就是，把估计完全未知的概率密度转化为估计参数。这里就将概率密度估计问题转化为参数估计问题，极大似然估计就是一种参数估计方法。</p>
+<h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><p>M算法当做最大似然估计的拓展，解决难以给出解析解的最大似然估计（MLE）问题。EM算法引入了隐变量。什么是隐变量呢，比如你知道A是高斯分布，和一些样本，就能估计它的参数，B也是。但是如果A，B是混合的，就不太好估计，因为抽取得到的每个样本都不知道是从哪个分布抽取的，（直观上是这样，公式推导结果也是如此，出现了log在两个求和符号之间的情况）</p>
+<p><img src="https://www.zhihu.com/equation?tex=P%28X%3B%5Ctheta%29%3D%5Csum_%7Bk%3D1%7D%5EK%5Cpi_kN%28x%3B+%5Cmu_k%2C+%5Csigma_k%29%3D%5Csum_ZP%28Z%3B%5Cpi%29P%28X%7CZ%3B%5Cmu%2C%5Csigma%29" alt=""></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+%5Ctheta%5E%2A+%26%3D+%5Carg%5Cmax_%5Ctheta+%5Csum_X+logP%28X%3B%5Ctheta%29+%5C%5C+%26%3D%5Carg%5Cmax_%5Ctheta+%5Csum_X+log+%5Csum_ZP%28Z%3B%5Cpi%29P%28X%7CZ%3B%5Cmu%2C%5Csigma%29+%5C%5C+%26%3D%5Carg%5Cmax_%5Ctheta+%5Csum_X+log+%5Csum_ZP%28X%2CZ%3B%5Ctheta%29+%5Cend%7Baligned%7D" alt=""></p>
+<p>这时就需要EM算法。EM算法就是这样，假设我们想估计知道A和B两个参数，在开始状态下二者都是未知的，但如果知道了A的信息就可以得到B的信息，反过来知道了B也就得到了A。可以考虑首先赋予A某种初值，以此得到B的估计值，然后从B的当前值出发，重新估计A的取值，这个过程一直持续到收敛为止。E步（求期望），第三步被称作M步（求极大化），于是EM算法就在不停的EM、EM、EM….，所以被叫做EM算法！使用EM的好处就是，分离不开，就不分离。用旧的变量来表达新的变量，一步步迭代，也能找到局部最优。其实也就坐标上升法，含有隐变量对数似然求导比较复杂，因此先固定参数求隐变量后验分布(E步)，然后固定隐变量求参数(M步)，交替进行。</p>
+<p>举个非常棒的例子，看完基本上就能懂什么是EM算法，如下：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-a95770a0f41ed0873106d4a1f2dd6b7d_hd.jpg" alt=""></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2018 Yang He
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
