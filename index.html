@@ -59,6 +59,76 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/10/08/ARIMA😛/"><span>利用ARIMA模型做时间序列预测</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/10/08/ARIMA😛/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-10-08T01:22:21.000Z">
+          2017-10-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="ARIMA😛"><a href="#ARIMA😛" class="headerlink" title="ARIMA😛"></a>ARIMA😛</h2><h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><p>时间序列，就是按时间顺序排列的，随时间变化的数据序列。我从自己实验平台上采的上位机和设备之间的通信包，按packets/s做数据就是时间序列。因为这个环境比较特殊，跟通信过程和应用层协议有关系，这里就不多说了，因为不是传统网络包，所以前期还是做了一些分析的，结果是这些数据是周期性的，但是不平稳，总之是可以做很多东西的。</p>
+<p>随机过程的特征有均值、方差、协方差等。<br>如果随机过程的特征随着时间变化，则此过程是非平稳的；相反，如果随机过程的特征不随时间而变化，就称此过程是平稳的。非平稳时间序列分析时，若导致非平稳的原因是确定的，可以用的方法主要有趋势拟合模型、季节调整模型、移动平均、指数平滑等方法。<br>若导致非平稳的原因是随机的，方法主要有ARIMA（autoregressive integrated moving average）及自回归条件异方差模型等。</p>
+<p>ARIMA，就是AR，I，MA的结合。ARIMA(p,d,q)模型，其中 d 是差分的阶数，用来得到平稳序列。</p>
+<p>AR是自回归, p为相应的自回归项。MA为移动平均，q为相应的移动平均项数。ARIMA和ARMA的区别，就是公式左边的x变成差分算子，保证数据的稳定性。一般取两阶以下就好了。</p>
+<p>贴公式：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-e3570dff8b96abda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/515" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-994e75bd9e86802c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/517" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-9fefb203841154f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/617" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-80aa172908765c87.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/488" alt=""></p>
+<h3 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h3><p>ARIMA模型运用的基本流程有几下几步：</p>
+<pre><code>数据可视化，识别平稳性。
+对非平稳的时间序列数据，做差分，得到平稳序列。
+建立合适的模型。
+平稳化处理后，若偏自相关函数是截尾的，而自相关函数是拖尾的，则建立AR模型；
+若偏自相关函数是拖尾的，而自相关函数是截尾的，则建立MA模型；
+若偏自相关函数和自相关函数均是拖尾的，则序列适合ARMA模型。
+模型的阶数在确定之后，对ARMA模型进行参数估计，比较常用是最小二乘法进行参数估计。
+假设检验，判断（诊断）残差序列是否为白噪声序列。
+利用已通过检验的模型进行预测。
+</code></pre><p>1.数据的平稳性处理<br>ARIMA模型建模时，首先采用ADF（Augmented Dickey-Fuller）单位根检验来判断数据的平稳性。通常可以画出时间序列的散点图或折线图，来对所研究的时间序列进行大致的平稳性判断。对非平稳的时间序列，一般取对数处理或进行差分处理，然后判断修正后的数据序列的平稳性。若采取差分的形式，此时进行差分的次数就是ARIMA(p,d,q)模型中的阶数d。在差分运算过程中，阶数并不是越大越好，差分运算的过程是信息加工提取的过程，因此，一般差分次数不超过2次。时间序列数据被平稳化处理后，ARIMA(p,d,q)模型就转化为ARMA(p,q)模型。</p>
+<p>2.建立模型<br>通常在时间序列分析中，采用自相关函数（ACF）、偏自相关函数（PACF）来判别ARMA(p,q)模型的系数和阶数。自相关函数(ACF)描述时间序列观测值与其过去的观测值之间的线性相关性。偏自相关函数(PACF)描述在给定中间观测值的条件下时间序列观测值与其过去的观测值之间的线性相关性。<br><img src="http://img.blog.csdn.net/20150602093858686?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYXNwaXJpbnZhZ3JhbnQ=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>这个表基本上就够用啦</p>
+<p>3.参数估计<br>时间序列分析模型的阶数在确定之后，然后应当对ARMA模型进行参数估计。比较常用是最小二乘法进行参数估计，但是在所有的时间序列模型中，MA模型的参数估计相对比较困难，因此，尽量避免使用高阶的MA模型和ARMA模型。</p>
+<p>4.模型验证<br>通过上述步骤后，应对通过模型取得的估计结果进行检验与诊断，以验证所选用的模型是否合适。这一过程主要检验所拟合的时间序列模型是否客观合理。针对模型的合理性检验，通常从两个方面进行判断：1、要验证所拟合的时间序列<br>模型的参数估计值是否有显著性；2、要验证所拟合的时间序列模型的残差序列是否是白噪声序列，即残差序列的独立性检验。残差序列可由估计出来的模型计算得到，如果残差序列的自相关函数不显著非零，可以认为是独立的。若这两项验证通过，则认为该模型是合理的，否则，应重新选取模型，上述步骤，选出有效的模型，然后应用该模型进行预测。</p>
+<p>这里不把我对工控数据的arima分析贴出来了，其实比较一下仔细分析选的模型和autoarima的特性还是蛮有趣的</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/08/02/git账号/"><span>查看本地git的账号是否是目前登陆的邮箱</span></a></h3>
     
   
@@ -629,82 +699,6 @@
 <pre><code>sudo -H pip install awscli --upgrade --ignore-installed six
 sudo pip install --ignore-installed six
 sudo pip install --ignore-installed matplotlib
-</code></pre>
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2016/12/25/pandas安装问题/"><span>Python问题</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/12/25/pandas安装问题/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-12-25T12:35:21.000Z">
-          2016-12-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="解决-Mac-pip-Error-Errno-1-Operation-not-permitted"><a href="#解决-Mac-pip-Error-Errno-1-Operation-not-permitted" class="headerlink" title="解决 Mac pip Error: [Errno 1] Operation not permitted"></a>解决 Mac pip Error: [Errno 1] Operation not permitted</h1><p>安装pandas包的时候出现报错：</p>
-<pre><code>Installing collected packages: numpy, pandas
-Found existing installation: numpy 1.8.0rc1
-DEPRECATION: Uninstalling a distutils installed project (numpy) has been deprecated and will be removed in a future version. This is due to the fact that uninstalling a distutils project will only partially uninstall the project.
-Uninstalling numpy-1.8.0rc1:
-Exception:
-Traceback (most recent call last):
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/basecommand.py&quot;, line 215, in main
-status = self.run(options, args)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/commands/install.py&quot;, line 342, in run
-prefix=options.prefix_path,
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_set.py&quot;, line 778, in install
-requirement.uninstall(auto_confirm=True)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_install.py&quot;, line 754, in uninstall
-paths_to_remove.remove(auto_confirm)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_uninstall.py&quot;, line 115, in remove
-renames(path, new_path)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/utils/__init__.py&quot;, line 267, in renames
-shutil.move(old, new)
-File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 302, in move
-copy2(src, real_dst)
-File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 131, in copy2
-copystat(src, dst)
-File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 103, in copystat
-os.chflags(dst, st.st_flags)
-
-OSError: [Errno 1] Operation not permitted: &apos;/tmp/pip-bXMbsV-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy-1.8.0rc1-py2.7.egg-info&apos;
-</code></pre><p>解决如下：</p>
-<pre><code>$ pip install --upgrade pip
-
-$ sudo pip install numpy --upgrade --ignore-installed
 </code></pre>
       
     </div>
