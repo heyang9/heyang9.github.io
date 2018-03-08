@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Bias(偏差)，Error(误差)，和Variance(方差) | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+  
+  <meta name="author" content="Yang He">
+  
+
+  
+  <meta name="description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系这个比较基础的概念我觉得是很好理解的👌🏻
+看图
+
+这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Bias(偏差)，Error(误差)，和Variance(方差)"/>
+
+  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Bias(偏差)，Error(误差)，和Variance(方差)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-21T02:31:23.000Z">
+          2017-03-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系"><a href="#机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系" class="headerlink" title="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系"></a>机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系</h2><p>这个比较基础的概念我觉得是很好理解的👌🏻</p>
+<p>看图</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5gbz8cmfj30k00tw0u5.jpg" alt=""></p>
+<p>这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的<strong>预测结果的期望</strong>与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况，如右上图，会很分散（容易收到样本数据影响，稍微的扰动会带来很大影响）</p>
+<p>variance和bias不同的是，它不是对样本拟合程度的反应，它表现的是模型在测试集上的表现，降低方差需要减小模型复杂度，但是会容易欠拟合，带来的结果是high bias。</p>
+<p>一句话：</p>
+<p>Bias是 “用所有可能的训练数据集训练出的所有模型的输出的平均值” 与 “真实模型”的输出值之间的差异；<br>Variance则是“不同的训练数据集训练出的模型”的输出值之间的差异。</p>
+<p>所以bias和variance的选择是一个tradeoff。</p>
+<p>噪声则表达了在当前任务上任何学习算法所能达到的期望泛化误差的下界，即刻画了学习问题本身的难度。</p>
+<p>Error = Bias^2 + Variance + Noise</p>
+<p>不列出具体推导了，周志华老师的机器学习中写的很明白</p>
+<h3 id="怎么避免过拟合和欠拟合"><a href="#怎么避免过拟合和欠拟合" class="headerlink" title="怎么避免过拟合和欠拟合"></a>怎么避免过拟合和欠拟合</h3><pre><code>避免欠拟合：
+
+寻找更好的特征-----具有代表性的
+
+用更多的特征-----增大输入向量的维度
+
+
+避免过拟合：
+增大数据集合-----使用更多的数据，噪声点比重减少
+
+减少数据特征-----减小数据维度，高维空间密度小
+
+正则化方法-----即在对模型的目标函数（objective function）或代价函数（cost function）加上正则项
+
+交叉验证方法
+</code></pre><h3 id="什么是交叉验证"><a href="#什么是交叉验证" class="headerlink" title="什么是交叉验证"></a>什么是交叉验证</h3><p>Cross-validation 是为了有效的估测 generalization error(泛化误差) 所设计的实验方法</p>
+<p>将原始数据分成K组(一般是均分),将每个子集数据分别做一次验证集,其余的K-1组子集数据作为训练集,这样会得到K个模型,用这K个模型最终的验证集的分类准确率的平均数作为此K-CV下分类器的性能指标.K一般大于等于2,实际操作时一般从3开始取,只有在原始数据集合数据量小的时候才会尝试取2. 而K-CV 的实验共需要建立 k 个models，并计算 k 次 test sets 的平均辨识率。在实作上，k 要够大才能使各回合中的 训练样本数够多，一般而言 k=10 (作为一个经验参数)算是相当足够了。</p>
+<p>为什么要交叉验证呢：k-fold交叉验证常用来确定不同类型的模型（线性、指数等）哪一种更好，为了减少数据划分对模型评价的影响，最终选出来的模型类型（线性、指数等）是k次建模的误差平均值最小的模型。当k较大时，经过更多次数的平均可以学习得到更符合真实数据分布的模型，Bias就小了，但是这样一来模型就更加拟合训练数据集，再去测试集上预测的时候预测误差的期望值就变大了，从而Variance就大了；反之，k较小时模型不会过度拟合训练数据，从而Bias较大，但是正因为没有过度拟合训练数据，Variance也较小。</p>
+<p>这个图是我看到比较清楚明了的了：</p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp5h42bf9sj30jg0j8t9f.jpg" alt=""></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2018 Yang He
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
