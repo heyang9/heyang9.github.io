@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   
-  <title>呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+  <title>逻辑回归总结 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
 
   
   <meta name="author" content="Yang He">
   
 
   
+  <meta name="description" content="总结了一下最近看的知识和笔记
+线性回归
+逻辑回归线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归（logisti">
+  
 
+  
+  
+  <meta name="keywords" content="">
   
 
   <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  
+  <meta property="og:title" content="逻辑回归总结"/>
 
   <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
 
@@ -54,12 +61,11 @@
 </header>
 
     <main class="site-main posts-loop">
-    
-  <article>
+    <article>
 
   
     
-    <h3 class="article-title"><a href="/2017/01/17/线性回归/"><span>逻辑回归总结</span></a></h3>
+    <h3 class="article-title"><span>逻辑回归总结</span></h3>
     
   
 
@@ -116,264 +122,6 @@
 </article>
 
 
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2016/12/28/解决python报错/"><span>Python 问题（二）</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/12/28/解决python报错/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-12-28T01:15:21.000Z">
-          2016-12-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="python-mpl-toolkits-installation-issue"><a href="#python-mpl-toolkits-installation-issue" class="headerlink" title="python mpl_toolkits installation issue"></a>python mpl_toolkits installation issue</h1><p>OSError: [Errno 1] Operation not permitted: ‘/tmp/pip-nIfswi-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/six-1.4.1-py2.7.egg-info’</p>
-<blockquote>
-<p>import missingno时候出现ImportError: No module named mpl_toolkits.axes_grid1</p>
-</blockquote>
-<p>加入</p>
-<blockquote>
-<p>import mpl_toolkits</p>
-</blockquote>
-<p>报错：</p>
-<blockquote>
-<p>Could not find a version that satisfies the requirement mpl_toolkits (from versions: )<br>No matching distribution found for mpl_toolkits  </p>
-</blockquote>
-<p>解决如下：</p>
-<pre><code>sudo -H pip install awscli --upgrade --ignore-installed six
-sudo pip install --ignore-installed six
-sudo pip install --ignore-installed matplotlib
-</code></pre>
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2016/12/25/pandas安装问题/"><span>Python问题</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/12/25/pandas安装问题/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-12-25T12:35:21.000Z">
-          2016-12-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="解决-Mac-pip-Error-Errno-1-Operation-not-permitted"><a href="#解决-Mac-pip-Error-Errno-1-Operation-not-permitted" class="headerlink" title="解决 Mac pip Error: [Errno 1] Operation not permitted"></a>解决 Mac pip Error: [Errno 1] Operation not permitted</h1><p>安装pandas包的时候出现报错：</p>
-<pre><code>Installing collected packages: numpy, pandas
-Found existing installation: numpy 1.8.0rc1
-DEPRECATION: Uninstalling a distutils installed project (numpy) has been deprecated and will be removed in a future version. This is due to the fact that uninstalling a distutils project will only partially uninstall the project.
-Uninstalling numpy-1.8.0rc1:
-Exception:
-Traceback (most recent call last):
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/basecommand.py&quot;, line 215, in main
-status = self.run(options, args)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/commands/install.py&quot;, line 342, in run
-prefix=options.prefix_path,
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_set.py&quot;, line 778, in install
-requirement.uninstall(auto_confirm=True)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_install.py&quot;, line 754, in uninstall
-paths_to_remove.remove(auto_confirm)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_uninstall.py&quot;, line 115, in remove
-renames(path, new_path)
-File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/utils/__init__.py&quot;, line 267, in renames
-shutil.move(old, new)
-File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 302, in move
-copy2(src, real_dst)
-File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 131, in copy2
-copystat(src, dst)
-File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 103, in copystat
-os.chflags(dst, st.st_flags)
-
-OSError: [Errno 1] Operation not permitted: &apos;/tmp/pip-bXMbsV-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy-1.8.0rc1-py2.7.egg-info&apos;
-</code></pre><p>解决如下：</p>
-<pre><code>$ pip install --upgrade pip
-
-$ sudo pip install numpy --upgrade --ignore-installed
-</code></pre>
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2016/12/11/mac+hexo/"><span>博客搭建</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/12/11/mac+hexo/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-12-11T11:35:21.000Z">
-          2016-12-11
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="mac环境下hexo博客搭建"><a href="#mac环境下hexo博客搭建" class="headerlink" title="mac环境下hexo博客搭建"></a>mac环境下hexo博客搭建</h1><hr>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><ul>
-<li><p><strong>Node.js</strong></p>
-<p>官网下载安装</p>
-</li>
-<li><p><strong>git</strong></p>
-<p>appstore下载安装Xcode即可</p>
-</li>
-</ul>
-<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><ul>
-<li><p><strong>执行指令</strong></p>
-<p><code>sudo npm install -g hexo</code></p>
-</li>
-<li><p><strong>初始化</strong></p>
-<p><code>hexo init blog</code></p>
-</li>
-<li><p><strong>安装npm</strong></p>
-<p><code>npm install</code></p>
-</li>
-<li><p><strong>开启hexo服务器</strong></p>
-<p><code>hexo s</code></p>
-</li>
-</ul>
-<h2 id="关联github"><a href="#关联github" class="headerlink" title="关联github"></a>关联github</h2><ul>
-<li><p><strong>登陆github账号，新建仓库</strong></p>
-<p><em>仓库名必须是github用户名.github.io 否则会报错404</em></p>
-<p>打开blog文件中_config.yml，修改最后部分：</p>
-<p><code>deploy:
-type: git
-repository: https://github.com/&quot;你自己的用户名“/”你自己用户名“.github.io.git
-branch: master</code></p>
-<blockquote>
-<p>注意冒号后面一定要接空格</p>
-</blockquote>
-<p><code>hexo g</code></p>
-<p><code>hexo d</code></p>
-<p>即可生成网页，<a href="https://用户名.github.io，可以访问并看到你的博客" target="_blank" rel="noopener">https://用户名.github.io，可以访问并看到你的博客</a></p>
-<p>如果报错：</p>
-<p><code>npm install hexo-deployer-git --save</code></p>
-<p>重复</p>
-</li>
-<li><p><strong>添加ssh keys到github</strong></p>
-<p><code>ls -al ~/.ssh</code></p>
-<p><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</code></p>
-<p><em>注意密码要大于五个字符</em></p>
-<p>打开~/.ssh/id_rsa.pub文件，拷贝内容至Github –&gt; Settings –&gt; SSH keys –&gt; add SSH key:</p>
-</li>
-<li><p><strong>发布文章</strong></p>
-<p><code>hexo new &quot;postName&quot;</code></p>
-<p>名为postName.md的文件会建在目录/blog/source/_posts下, 此刻我正在用macdown编辑.md文件</p>
-<p>cd到blog文件夹下</p>
-<p><code>hexo g</code></p>
-<p><code>hexo d</code></p>
-</li>
-</ul>
-<h2 id="更换theme"><a href="#更换theme" class="headerlink" title="更换theme"></a>更换theme</h2><ul>
-<li><p><strong>最重要的就是更换主题啦！</strong></p>
-<p><a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo官网</a> 可以在官网上看自己喜欢的主题💕</p>
-<p>切记不要在 hexo server 运行的时候安装主题。因为文件的改动会导致 Hexo server 重新生成网站，如果有些文件还没下载完 或者 文件内的语法有问题，就会导致 Hexo server 报错，之后再刷新网页的话就什么也打不开，会报很奇怪的错误。</p>
-<p><code>git clone https://github.com.....&quot;这里是你喜欢主题的github链接&quot;</code></p>
-<blockquote>
-<p>然后一定要在blog文件夹下把_config.yml里的theme改成你git的主题名</p>
-</blockquote>
-<p>cd到blog目录</p>
-<p><code>hexo clean</code></p>
-<p><code>hexo g</code></p>
-<p><code>hexo d</code></p>
-<p>我第一次更换主题的时候出现了一些错误，发现是没有在blog目录执行<br>npm install hexo-renderer-ejs –save</p>
-</li>
-</ul>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-
-<nav class="pagination">
-  
-  
-</nav>
     </main>
 
     <footer class="site-footer">
