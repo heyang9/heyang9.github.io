@@ -79,9 +79,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>##RF、GBDT和xgboost</p>
-<p>###RF</p>
-<p>bagging很好理解的。从M个训练样本中随机选取m个样本，从N个特征中随机选取n个特征，然后建立一颗决策树。这样训练出T棵树后，让这k颗树对测试集进行投票产生决策值。RF是一种bagging的思路。可以并行化处理。</p>
+        <h2 id="RF、GBDT和xgboost"><a href="#RF、GBDT和xgboost" class="headerlink" title="RF、GBDT和xgboost"></a>RF、GBDT和xgboost</h2><h3 id="RF"><a href="#RF" class="headerlink" title="RF"></a>RF</h3><p>bagging很好理解的。从M个训练样本中随机选取m个样本，从N个特征中随机选取n个特征，然后建立一颗决策树。这样训练出T棵树后，让这k颗树对测试集进行投票产生决策值。RF是一种bagging的思路。可以并行化处理。</p>
 <p>随机森林的优点较多，简单总结：1、在数据集上表现良好，相对于其他算法有较大的优势（训练速度、预测准确度）；2、能够处理很高维的数据，并且不用特征选择，而且在训练完后，给出特征的重要性；3、容易做成并行化方法。<br>RF的缺点：在噪声较大的分类或者回归问题上回过拟合。</p>
 <p>我用随机森林做异常检测的效果还是不错的。</p>
 <h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><p>总共构建T棵树。当构建到第t棵树的时候，需要对前t-1棵树对训练样本分类回归产生的残差进行拟合。每次构建树的方式以及数据集一样，只不过拟合的目标变成了t-1棵树输出的残差。不可并行化处理。从CART来的，GBDT是回归树，当然也能分类，其实做分类的时候和Adaboost有点像，就是给个权重。GBDT中的决策树是个弱模型，深度较小一般不会超过5，叶子节点的数量也不会超过10，对于生成的每棵决策树乘上比较小的缩减系数（学习率&lt;0.1），有些GBDT的实现加入了随机抽样（subsample 0.5&lt;=f &lt;=0.8）提高模型的泛化能力。通过交叉验证的方法选择最优的参数。</p>
