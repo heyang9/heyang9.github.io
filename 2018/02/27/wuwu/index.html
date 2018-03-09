@@ -3,14 +3,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+  <title>LSTM &amp; RNN 回顾 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
 
   
   <meta name="author" content="Yang He">
   
 
   
-  <meta name="description" content="">
+  <meta name="description" content="LSTM 是什么最近在做的异常检测用到了LSTM，看了一些网上的介绍文章有的太复杂（全是公式），而且很多都是互相抄袭的，并没有说清楚LSTM的运行原理，那这里就按照我的理解解释一下好了：
+本文将按照我理解的逻辑顺序依次介绍一些概念：首先是MLP
+MLP先看图：
+
+应该不需要再解释什么了，非常典型的多层感知机，选择合适的权重是会有不错的效果的。
+以此为原型后续发展出了很多类型的神经网络，比如CNN等（CNN中就是把权重的乘号变成卷积）， 然后是RNN：
+RNN（Recurrent Neural Networks）RNN最大的不同点就是它引入了时序信息。一个简单的表示如下：
+
+这个图可以说是非常平面了，意思是单个神经元上允许使用网络循环传递信息。这样的结构是与其他一般的神经网络是有不同的。
+如果你还是不能理解他是怎么实现“循环”这个概念的，看下图：
+
+再仔细介绍一下这个图，因为rnn经常用的是文本处理，之类的场景，有的时候如果不好理解就代入到日常语境中会明白一些，比如这里，图上有4个T，可以理解的是如果一次处理一句话（batch的概念），这里一句话中分割成四个部分，并且进行tokenize, dictionarize,接着再由look up table 查找到embedding，将token由embedding表示，再对应到上图的输入神经元，隐状态 h_{i}^{t} 也就代表了一张MLP的hidden layer的一个cell。（全连接层，keras里的dense layer）
+前向计算是明白的，解释一下反向传播，这里的反向传播叫BPTT（through time），RNN通过反向推理微调其权重来训练其单元。简单的说，就是根据单元计算出的总输出与目标输出之间的误差，从网络的最终输出端反向逐层回归，利用损失函数的偏导调整每个单元的权重。这就是著名的BP算法，而RNN网络使用的是类似的一个版本，称为通过时间的反向传播（BPTT）。该版本扩展了调整过程，包括负责前一时刻（T-1）输入值对应的每个单元的记忆的权重。">
   
 
   
@@ -22,7 +34,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  
+  <meta property="og:title" content="LSTM &amp; RNN 回顾"/>
 
   <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
 
@@ -50,9 +62,9 @@
   <nav class="site-navigation">
     <ul>
       
-        <li><a href="/">主页</a></li>
+        <li><a href="/">Home</a></li>
       
-        <li><a href="/archives">归档</a></li>
+        <li><a href="/archives">Archives</a></li>
       
     </ul>
   </nav>
@@ -63,15 +75,15 @@
 
   
     
-    <h3 class="article-title"><span></span></h3>
+    <h3 class="article-title"><span>LSTM &amp; RNN 回顾</span></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2018/03/09/wuwu/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-09T11:13:40.537Z">
-          2018-03-09
+      <a href="/2018/02/27/wuwu/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-27T01:22:21.000Z">
+          2018-02-27
         </time>
       </a>
     </span>
@@ -83,8 +95,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id=""><a href="#" class="headerlink" title=" "></a><a id="more"></a> </h2><p>title: LSTM &amp; RNN 回顾<br>date: 2018-02-27 09:22:21</p>
-<h2 id="tags"><a href="#tags" class="headerlink" title="tags: "></a>tags: </h2><h2 id="LSTM-是什么"><a href="#LSTM-是什么" class="headerlink" title="LSTM 是什么"></a>LSTM 是什么</h2><p>最近在做的异常检测用到了LSTM，看了一些网上的介绍文章有的太复杂（全是公式），而且很多都是互相抄袭的，并没有说清楚LSTM的运行原理，那这里就按照我的理解解释一下好了：</p>
+        <h2 id="LSTM-是什么"><a href="#LSTM-是什么" class="headerlink" title="LSTM 是什么"></a>LSTM 是什么</h2><p>最近在做的异常检测用到了LSTM，看了一些网上的介绍文章有的太复杂（全是公式），而且很多都是互相抄袭的，并没有说清楚LSTM的运行原理，那这里就按照我的理解解释一下好了：</p>
 <p>本文将按照我理解的逻辑顺序依次介绍一些概念：首先是MLP</p>
 <h3 id="MLP"><a href="#MLP" class="headerlink" title="MLP"></a>MLP</h3><p>先看图：</p>
 <p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp6u2w5tl0j31400ma41y.jpg" alt=""></p>
@@ -97,6 +108,7 @@
 <p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp6u30oxtkj31400g6whk.jpg" alt=""></p>
 <p>再仔细介绍一下这个图，因为rnn经常用的是文本处理，之类的场景，有的时候如果不好理解就代入到日常语境中会明白一些，比如这里，图上有4个T，可以理解的是如果一次处理一句话（batch的概念），这里一句话中分割成四个部分，并且进行tokenize, dictionarize,接着再由look up table 查找到embedding，将token由embedding表示，再对应到上图的输入神经元，隐状态 h_{i}^{t} 也就代表了一张MLP的hidden layer的一个cell。（全连接层，keras里的dense layer）</p>
 <p>前向计算是明白的，解释一下反向传播，这里的反向传播叫BPTT（through time），RNN通过反向推理微调其权重来训练其单元。简单的说，就是根据单元计算出的总输出与目标输出之间的误差，从网络的最终输出端反向逐层回归，利用损失函数的偏导调整每个单元的权重。这就是著名的BP算法，而RNN网络使用的是类似的一个版本，称为通过时间的反向传播（BPTT）。该版本扩展了调整过程，包括负责前一时刻（T-1）输入值对应的每个单元的记忆的权重。</p>
+<a id="more"></a> 
 <p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp6u34ny2cj31kw0lrn16.jpg" alt=""></p>
 <p>st=Uh（t−1）+Wxt</p>
 <p>ht=f(st)</p>
