@@ -59,6 +59,156 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/"><span>Bias(偏差)，Error(误差)，和Variance(方差)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-21T02:31:23.000Z">
+          2017-03-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系"><a href="#机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系" class="headerlink" title="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系"></a>机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系</h2><p>这个比较基础的概念我觉得是很好理解的👌🏻</p>
+<p>看图</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5gbz8cmfj30k00tw0u5.jpg" alt=""></p>
+<p>这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的<strong>预测结果的期望</strong>与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况，如右上图，会很分散（容易收到样本数据影响，稍微的扰动会带来很大影响）</p>
+<p>variance和bias不同的是，它不是对样本拟合程度的反应，它表现的是模型在测试集上的表现，降低方差需要减小模型复杂度，但是会容易欠拟合，带来的结果是high bias。</p>
+<p>一句话：</p>
+<p>Bias是 “用所有可能的训练数据集训练出的所有模型的输出的平均值” 与 “真实模型”的输出值之间的差异；<br>Variance则是“不同的训练数据集训练出的模型”的输出值之间的差异。</p>
+<p>所以bias和variance的选择是一个tradeoff。</p>
+<p>噪声则表达了在当前任务上任何学习算法所能达到的期望泛化误差的下界，即刻画了学习问题本身的难度。</p>
+<p>Error = Bias^2 + Variance + Noise</p>
+<p>不列出具体推导了，周志华老师的机器学习中写的很明白</p>
+<h3 id="怎么避免过拟合和欠拟合"><a href="#怎么避免过拟合和欠拟合" class="headerlink" title="怎么避免过拟合和欠拟合"></a>怎么避免过拟合和欠拟合</h3><pre><code>避免欠拟合：
+
+寻找更好的特征-----具有代表性的
+
+用更多的特征-----增大输入向量的维度
+
+
+避免过拟合：
+增大数据集合-----使用更多的数据，噪声点比重减少
+
+减少数据特征-----减小数据维度，高维空间密度小
+
+正则化方法-----即在对模型的目标函数（objective function）或代价函数（cost function）加上正则项
+
+交叉验证方法
+</code></pre><h3 id="什么是交叉验证"><a href="#什么是交叉验证" class="headerlink" title="什么是交叉验证"></a>什么是交叉验证</h3><p>Cross-validation 是为了有效的估测 generalization error(泛化误差) 所设计的实验方法</p>
+<p>将原始数据分成K组(一般是均分),将每个子集数据分别做一次验证集,其余的K-1组子集数据作为训练集,这样会得到K个模型,用这K个模型最终的验证集的分类准确率的平均数作为此K-CV下分类器的性能指标.K一般大于等于2,实际操作时一般从3开始取,只有在原始数据集合数据量小的时候才会尝试取2. 而K-CV 的实验共需要建立 k 个models，并计算 k 次 test sets 的平均辨识率。在实作上，k 要够大才能使各回合中的 训练样本数够多，一般而言 k=10 (作为一个经验参数)算是相当足够了。</p>
+<p>为什么要交叉验证呢：k-fold交叉验证常用来确定不同类型的模型（线性、指数等）哪一种更好，为了减少数据划分对模型评价的影响，最终选出来的模型类型（线性、指数等）是k次建模的误差平均值最小的模型。当k较大时，经过更多次数的平均可以学习得到更符合真实数据分布的模型，Bias就小了，但是这样一来模型就更加拟合训练数据集，再去测试集上预测的时候预测误差的期望值就变大了，从而Variance就大了；反之，k较小时模型不会过度拟合训练数据，从而Bias较大，但是正因为没有过度拟合训练数据，Variance也较小。</p>
+<p>这个图是我看到比较清楚明了的了：</p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp5h42bf9sj30jg0j8t9f.jpg" alt=""></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/02/14/LDA知识点总结/"><span>线性判别分析是什么</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/02/14/LDA知识点总结/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-02-14T06:15:21.000Z">
+          2017-02-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="LDA知识点总结"><a href="#LDA知识点总结" class="headerlink" title="LDA知识点总结"></a>LDA知识点总结</h2><blockquote>
+<p>这个LDA不是NLP里的主题模型，是线性判别分析奥</p>
+</blockquote>
+<p>LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。</p>
+<p>一句话读懂LDA：<strong>投影后类内方差最小，类间方差最大</strong></p>
+<p>LDA通常作为数据预处理阶段的降维技术，其目标是将数据投影到低维空间来避免维度灾难（curse of dimensionality）引起的过拟合，同时还保留着良好的可分性。也可以说它是一种分类算法，通过对历史数据进行投影，以保证投影后同一类别的数据尽量靠近，不同类别的数据尽量分开。并生成线性判别模型对新生成的数据进行分离和预测。所以我们能看到它是一种有效的特征抽取方法。使用这种方法能够使投影后模式样本的类间散布矩阵最大，并且同时类内散布矩阵最小。就是说，它能够保证投影后模式样本在新的空间中有最小的类内距离和最大的类间距离，即模式在该空间中有最佳的可分离性。</p>
+<p>具体LDA分类基本思想：假设各个类别的样本数据符合高斯分布，这样利用LDA进行投影后，可以利用极大似然估计计算各个类别投影数据的均值和方差，进而得到该类别高斯分布的概率密度函数。当一个新的样本到来后，我们可以将它投影，然后将投影后的样本特征分别带入各个类别的高斯分布概率密度函数，计算它属于这个类别的概率，最大的概率对应的类别即为预测类别。</p>
+<p>关于具体公式就不手打了，贴几张图形象的表示一下它的原理：</p>
+<p><img src="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fp5f20x8vij31cy0es76e.jpg" alt=""></p>
+<p>从直观上可以看出，右图要比左图的投影效果好，因为右图的黑色数据和蓝色数据各个较为集中，且类别之间的距离明显。左图则在边界处数据混杂。以上就是LDA的主要思想了，当然在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。</p>
+<h3 id="PCA和LDA"><a href="#PCA和LDA" class="headerlink" title="PCA和LDA"></a>PCA和LDA</h3><p>PCA（主成分分析）和LDA（线性判别分析）有很多的相似点，其本质是要将初始样本映射到维度更低的样本空间中，但是PCA和LDA的映射目标不一样：PCA是为了让映射后的样本具有最大的发散性；而LDA是为了让映射后的样本有最好的分类性能。所以说PCA是一种无监督的降维方法，而LDA是一种有监督的降维方法。</p>
+<p>首先我们看看相同点：</p>
+<p>1）两者均可以对数据进行降维。</p>
+<p>2）两者在降维时均使用了矩阵特征分解的思想。</p>
+<p>3）两者都假设数据符合高斯分布。</p>
+<p>我们接着看看不同点：</p>
+<p>1）LDA是有监督的降维方法，而PCA是无监督的降维方法</p>
+<p>2）LDA降维最多降到类别数k-1的维数，而PCA没有这个限制。</p>
+<p>3）LDA除了可以用于降维，还可以用于分类。</p>
+<p>4）LDA选择分类性能最好的投影方向，而PCA选择样本点投影具有最大方差的方向。</p>
+<h3 id="LDA优缺点分析"><a href="#LDA优缺点分析" class="headerlink" title="LDA优缺点分析"></a>LDA优缺点分析</h3><p>LDA算法的主要优点有：</p>
+<p>1）在降维过程中可以使用类别的先验知识经验，而像PCA这样的无监督学习则无法使用类别先验知识。</p>
+<p>2）LDA在样本分类信息依赖均值而不是方差的时候，比PCA之类的算法较优。</p>
+<p>LDA算法的主要缺点有：</p>
+<p>1）LDA不适合对非高斯分布样本进行降维，PCA也有这个问题。</p>
+<p>2）LDA降维最多降到类别数k-1的维数，如果我们降维的维度大于k-1，则不能使用LDA。当然目前有一些LDA的进化版算法可以绕过这个问题。</p>
+<p>3）LDA在样本分类信息依赖方差而不是均值的时候，降维效果不好。</p>
+<p>4）LDA可能过度拟合数据。</p>
+<p>scikit-learn中就能直接用LDA（sklearn.discriminant_analysis.LinearDiscriminantAnalysis）。一般来说，如果我们的数据是有类别标签的，那么优先选择LDA去尝试降维；当然也可以使用PCA做很小幅度的降维去消去噪声，然后再使用LDA降维。如果没有类别标签，那么肯定PCA是最先考虑的一个选择了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/01/17/线性回归/"><span>逻辑回归总结</span></a></h3>
     
   

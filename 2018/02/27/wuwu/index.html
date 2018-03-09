@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>LSTM &amp; RNN 回顾 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+  
+  <meta name="author" content="Yang He">
+  
+
+  
+  <meta name="description" content="LSTM 是什么最近在做的异常检测用到了LSTM，看了一些网上的介绍文章有的太复杂（全是公式），而且很多都是互相抄袭的，并没有说清楚LSTM的运行原理，那这里就按照我的理解解释一下好了：
+本文将按照我理解的逻辑顺序依次介绍一些概念：首先是MLP
+MLP先看图：
+
+应该不需要再解释什么了，非常典型的多">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="LSTM &amp; RNN 回顾"/>
+
+  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>LSTM &amp; RNN 回顾</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/27/wuwu/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-27T01:22:21.000Z">
+          2018-02-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="LSTM-是什么"><a href="#LSTM-是什么" class="headerlink" title="LSTM 是什么"></a>LSTM 是什么</h2><p>最近在做的异常检测用到了LSTM，看了一些网上的介绍文章有的太复杂（全是公式），而且很多都是互相抄袭的，并没有说清楚LSTM的运行原理，那这里就按照我的理解解释一下好了：</p>
+<p>本文将按照我理解的逻辑顺序依次介绍一些概念：首先是MLP</p>
+<h3 id="MLP"><a href="#MLP" class="headerlink" title="MLP"></a>MLP</h3><p>先看图：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-decfe55a0900c7b7ec63c8028c4d58c5_hd.jpg" alt=""></p>
+<p>应该不需要再解释什么了，非常典型的多层感知机，选择合适的权重是会有不错的效果的。</p>
+<p>以此为原型后续发展出了很多类型的神经网络，比如CNN等（CNN中就是把权重的乘号变成卷积）， 然后是RNN：</p>
+<h3 id="RNN（Recurrent-Neural-Networks）"><a href="#RNN（Recurrent-Neural-Networks）" class="headerlink" title="RNN（Recurrent Neural Networks）"></a>RNN（Recurrent Neural Networks）</h3><p>RNN最大的不同点就是它引入了时序信息。一个简单的表示如下：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-e7d22bbb88d97dc6b8d3b7428926c362_hd.jpg" alt=""></p>
+<p>这个图可以说是非常平面了，意思是单个神经元上允许使用网络循环传递信息。这样的结构是与其他一般的神经网络是有不同的。</p>
+<p>如果你还是不能理解他是怎么实现“循环”这个概念的，看下图：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-b45f69904d546edde41d9539e4c5548c_hd.jpg" alt=""></p>
+<p>再仔细介绍一下这个图，因为rnn经常用的是文本处理，之类的场景，有的时候如果不好理解就代入到日常语境中会明白一些，比如这里，图上有4个T，可以理解的是如果一次处理一句话（batch的概念），这里一句话中分割成四个部分，并且进行tokenize, dictionarize,接着再由look up table 查找到embedding，将token由embedding表示，再对应到上图的输入神经元，隐状态 h_{i}^{t} 也就代表了一张MLP的hidden layer的一个cell。（全连接层，keras里的dense layer）</p>
+<p>前向计算是明白的，解释一下反向传播，这里的反向传播叫BPTT（through time），RNN通过反向推理微调其权重来训练其单元。简单的说，就是根据单元计算出的总输出与目标输出之间的误差，从网络的最终输出端反向逐层回归，利用损失函数的偏导调整每个单元的权重。这就是著名的BP算法，而RNN网络使用的是类似的一个版本，称为通过时间的反向传播（BPTT）。该版本扩展了调整过程，包括负责前一时刻（T-1）输入值对应的每个单元的记忆的权重。</p>
+<p><img src="https://images2015.cnblogs.com/blog/1008922/201703/1008922-20170317221917682-1636807643.png" alt=""></p>
+<p>st=Uh（t−1）+Wxt</p>
+<p>ht=f(st)</p>
+<p>zt=Vht</p>
+<p>ŷ t=softmax(zt)</p>
+<p>（省略偏置项）</p>
+<p>我们要迭代更新的是U，V，W矩阵，三个权重矩阵在时间维度上是共享的。这可以理解为：每个时刻都在执行相同的任务，所以是共享的。这个时候损失函数就是所有时间的损失和。然后就是对U，V，W求梯度。</p>
+<p>这里就引入了记忆的信息。但是，RNN会出现Gradient Vanish。先介绍一下梯度消失的概念：在多层网络中，影响梯度大小的因素主要有两个：权重和激活函数的偏导。深层的梯度是多个激活函数偏导乘积的形式来计算，如果这些激活函数的偏导比较小（小于1）或者为0，那么梯度随时间很容易vanishing；相反，如果这些激活函数的偏导比较大（大于1），那么梯度很有可能就会exploding。直观上讲，使用tanh或logistic激活函数时，由于导数值分别在0到1之间、0到1/4之间，所以如果权重矩阵 U 的范数也不很大，那么经过 t−k 次传播后，值会趋于0，也就导致了梯度消失问题。因而，梯度的计算和更新非常困难。关于梯度消失和激活函数见上一篇笔记。为了缓解梯度消失，可以使用ReLU、PReLU来作为激活函数，以及将 U 初始化为单位矩阵（而不是用随机初始化）等方式。</p>
+<p>下图直观的表达了梯度消失：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-f53954963faddc34c2e9210972836dbb_hd.jpg" alt=""></p>
+<p>为了减小梯度消失带来的影响，LSTM出现了：</p>
+<h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h3><p>有些场景下，由于传递的信息路径太长了，RNN处理的效果不好，这时候LSTM就派上用场了。<br>LSTM（Long Short Term Memory networks）是一种特殊的RNN，它能学习和存储长期依赖关系。它具有循环神经网络的特性：重复的链式网络存储结构。</p>
+<p>LSTM比较核心的概念就是门了，看这个图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-b95bde8d1db089b3a016c2948de646be_hd.jpg" alt=""></p>
+<p>这个图看着比较舒服，也能比较直观的表示它运行的原理。LSTM单元引入了门机制（Gate），通过遗忘门、输入门和输出门来控制流过单元的信息。我们知道，Simple RNN之所以有梯度消失是因为误差项之间的相乘关系；如果用LSTM推导，会发现这个相乘关系变成了相加关系，所以可以缓解梯度消失。</p>
+<p>先讲LSTM的前向计算，再讲它的误差反向传播。</p>
+<blockquote>
+<p>遗忘门（forget gate）<br>它决定了上一时刻的单元状态 c_t-1 有多少保留到当前时刻 c_t</p>
+<p>输入门（input gate）<br>  它决定了当前时刻网络的输入 x_t 有多少保存到单元状态 c_t</p>
+<p>输出门（output gate）<br>控制单元状态 c_t 有多少输出到 LSTM 的当前输出值 h_t</p>
+</blockquote>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-c9dbab3979794684.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/243" alt=""></p>
+<p>这个c就是比RNN增加的状态，表示长期状态。上面说的这三个门就是控制这个长期状态，就是gate。其实gate也是一层全连接层，输入是一个向量，输出是一个 0到1 之间的实数向量。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-bb8d1d0c2c5aa0f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/186" alt=""></p>
+<p>为什么这个能进行控制呢，因为门的输出是 0到1 之间的实数向量，当门输出为 0 时，任何向量与之相乘都会得到 0 向量，这就相当于什么都不能通过；输出为 1 时，任何向量与之相乘都不会有任何改变，这就相当于什么都可以通过。</p>
+<p>再仔细讲一下三个门的原理，</p>
+<p>遗忘门：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-81bc580ebc1b51e9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/666" alt=""></p>
+<p>Wf遗忘门权重。</p>
+<p>输入门：</p>
+<p>根据上一次的输出和本次输入来计算当前输入的单元状态：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-f013288618c83b31.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/620" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-6443c16af1fc9fa1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/568" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-9addd095ca99f567.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/611" alt=""></p>
+<p>输出门：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-963ff8645885f284.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt=""></p>
+<p>这几张图能比较清晰的表现出LSTM的运行原理的。</p>
+<p>总的就是这个了：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-e7209fdb040ea1da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/482" alt=""></p>
+<p>再讲反向传播：<br>反向计算每个神经元的误差项值。与 RNN 一样，LSTM 误差项的反向传播也是包括两个方向：<br>一个是沿时间的反向传播，即从当前 t 时刻开始，计算每个时刻的误差项；<br>一个是将误差项向上一层传播。 根据相应的误差项，计算每个权重的梯度。权重矩阵 W 都是由两个矩阵拼接而成，这两部分在反向传播中使用不同的公式，因此在后续的推导中，权重矩阵也要被写为分开的两个矩阵。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-9da34d2b2b475e7a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt=""></p>
+<p>Wx是层间的，Wh是时间上的</p>
+<h3 id="再讲一下LSTM为什么能解决RNN不能解决的梯度消失"><a href="#再讲一下LSTM为什么能解决RNN不能解决的梯度消失" class="headerlink" title="再讲一下LSTM为什么能解决RNN不能解决的梯度消失"></a>再讲一下LSTM为什么能解决RNN不能解决的梯度消失</h3><p>LSTM使用gate function，有选择的让一部分信息通过。gate是由一个sigmoid单元和一个逐点乘积操作组成，sigmoid单元输出1或0，用来判断通过还是阻止，然后训练这些gate的组合。所以，当gate是打开的（梯度接近于1），梯度就不会vanish。并且sigmoid不超过1，那么梯度也不会explode。</p>
+<p>两个点：</p>
+<p>1、当gate是关闭的，那么就会阻止对当前信息的改变，这样以前的依赖信息就会被学到。2、当gate是打开的时候，并不是完全替换之前的信息，而是在之前信息和现在信息之间做加权平均。所以，无论网络的深度有多深，输入序列有多长，只要gate是打开的，网络都会记住这些信息。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2018 Yang He
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

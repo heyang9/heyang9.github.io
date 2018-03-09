@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>激活函数和梯度消失问题 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+  
+  <meta name="author" content="Yang He">
+  
+
+  
+  <meta name="description" content="梯度消失和激活函数本文简单介绍下常见的激活函数和梯度消失的概念：
+激活函数：激活函数给神经元引入了非线性因素，使得神经网络可以任意逼近任何非线性函数，这样神经网络就可以应用到众多的非线性模型中。如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="激活函数和梯度消失问题"/>
+
+  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>激活函数和梯度消失问题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/31/gaga/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-31T01:22:21.000Z">
+          2018-01-31
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="梯度消失和激活函数"><a href="#梯度消失和激活函数" class="headerlink" title="梯度消失和激活函数"></a>梯度消失和激活函数</h2><p>本文简单介绍下常见的激活函数和梯度消失的概念：</p>
+<p>激活函数：激活函数给神经元引入了非线性因素，使得神经网络可以任意逼近任何非线性函数，这样神经网络就可以应用到众多的非线性模型中。如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。正因为上面的原因，需要引入非线性函数作为激励函数，这样深层神经网络就有意义了（不再是输入的线性组合，可以逼近任意函数）。最早的想法是sigmoid函数或者tanh函数，输出有界，很容易充当下一层输入（以及一些人的生物解释balabala）。</p>
+<h3 id="Sigmoid函数"><a href="#Sigmoid函数" class="headerlink" title="Sigmoid函数"></a>Sigmoid函数</h3><p><img src="https://feisky.xyz/machine-learning/neural-networks/images/14856939826808.png" alt=""></p>
+<p>sigmoid及一阶导：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1127755/201705/1127755-20170527150427513-64342654.png" alt=""></p>
+<p>sigmoid函数常用来做二分类。同时带来很多缺点：激活函数计算量大（指数运算），反向传播求误差梯度时，求导涉及除法<br>对于深层网络，sigmoid 函数反向传播时，很容易就会出现梯度消失的情况（在 sigmoid 接近饱和区时，变换太缓慢，导数趋于 0，这种情况会造成信息丢失），从而无法完成深层网络的训练。</p>
+<p>仔细讲一下梯度消失：</p>
+<p>根本的问题其实并非是梯度消失问题或者梯度激增问题，而是在前面的层上的梯度是来自后面的层上项的乘积。当存在过多的层次时，就出现了内在本质上的不稳定场景。唯一让所有层都接近相同的学习速度的方式是所有这些项的乘积都能得到一种平衡。如果没有某种机制或者更加本质的保证来达成平衡，那网络就很容易不稳定了。简而言之，真实的问题就是神经网络受限于不稳定梯度的问题。所以，如果我们使用标准的基于梯度的学习算法，在网络中的不同层会出现按照不同学习速度学习的情况。</p>
+<h3 id="tanh函数"><a href="#tanh函数" class="headerlink" title="tanh函数"></a>tanh函数</h3><p><img src="https://feisky.xyz/machine-learning/neural-networks/images/14856939707785.png" alt=""></p>
+<p><img src="https://feisky.xyz/machine-learning/neural-networks/images/14856940084631.png" alt=""></p>
+<p><img src="https://images2015.cnblogs.com/blog/1127755/201705/1127755-20170527150813700-409889207.png" alt=""><br>也有梯度消失的问题，但是跟sigmoid不一样的是它是关于零点中心对称的。作为非中心对称的激活函数，sigmoid有个问题：输出总是正数，那么其对wi权重的导数总是正数或负数，这会导致可能会产生阶梯式更新，这显然并非一个好的优化路径。</p>
+<h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h3><p><img src="https://feisky.xyz/machine-learning/neural-networks/images/14854155167846.jpg" alt=""></p>
+<p><img src="https://images2015.cnblogs.com/blog/1127755/201705/1127755-20170527150922622-2086974816.png" alt=""></p>
+<p>ReLU作为目前用的最多的激活函数，有很多的优点，比如解决了梯度消失的问题 (在正区间)<br>计算速度非常快，只需要判断输入是否大于0，收敛速度远快于sigmoid和tanh，更容易学习优化。因为其分段线性性质，导致其前传，后传，求导都是分段线性。而传统的sigmoid函数，由于两端饱和，在传播过程中容易丢弃信息但是也存在一些问题，如上图，它也不是关于中心对称的，并且可能存在Dead ReLU Problem，意思是某些神经元可能永远不会被激活，导致相应的参数永远不能被更新。有两个主要原因可能导致这种情况产生: (1) 非常不幸的参数初始化，这种情况比较少见 (2) 学习速率太高导致在训练过程中参数更新太大，不幸使网络进入这种状态。一个非常大的梯度流过一个 ReLU 神经元，更新过参数之后，这个神经元再也不会对任何数据有激活现象了，那么这个神经元的梯度就永远都会是 0。解决方法是可以采用Xavier初始化方法，以及避免将学习速率设置太大或使用adagrad等自动调节学习速率的算法。这时候就有了ELU。</p>
+<p><a href="http://blog.csdn.net/disiwei1012/article/details/79204243" target="_blank" rel="noopener">这篇博客介绍了dead的原因</a></p>
+<p>此外，有实验说，大概 80%-90%的特征都会被截断，然而 ReLU 仍然是非常常用的激励函数，因为特征足够多。</p>
+<h3 id="ELU"><a href="#ELU" class="headerlink" title="ELU"></a>ELU</h3><p><img src="https://images2015.cnblogs.com/blog/1127755/201705/1127755-20170527151300091-1605535210.png" alt=""></p>
+<p>不会有Dead ReLU问题<br>输出的均值接近0，zero-centered</p>
+<h3 id="Softmax"><a href="#Softmax" class="headerlink" title="Softmax"></a>Softmax</h3><p><img src="https://upload-images.jianshu.io/upload_images/1667471-5bf75eefed2154f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/643" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1667471-c798481b7b366cb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/203" alt=""></p>
+<p>就是如果某一个 zj 大过其他 z, 那这个映射的分量就逼近于 1,其他就逼近于 0，主要应用就是多分类。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2018 Yang He
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
