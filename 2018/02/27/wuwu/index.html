@@ -90,17 +90,17 @@ MLP先看图：
         <h2 id="LSTM-是什么"><a href="#LSTM-是什么" class="headerlink" title="LSTM 是什么"></a>LSTM 是什么</h2><p>最近在做的异常检测用到了LSTM，看了一些网上的介绍文章有的太复杂（全是公式），而且很多都是互相抄袭的，并没有说清楚LSTM的运行原理，那这里就按照我的理解解释一下好了：</p>
 <p>本文将按照我理解的逻辑顺序依次介绍一些概念：首先是MLP</p>
 <h3 id="MLP"><a href="#MLP" class="headerlink" title="MLP"></a>MLP</h3><p>先看图：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-decfe55a0900c7b7ec63c8028c4d58c5_hd.jpg" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp6u2w5tl0j31400ma41y.jpg" alt=""></p>
 <p>应该不需要再解释什么了，非常典型的多层感知机，选择合适的权重是会有不错的效果的。</p>
 <p>以此为原型后续发展出了很多类型的神经网络，比如CNN等（CNN中就是把权重的乘号变成卷积）， 然后是RNN：</p>
 <h3 id="RNN（Recurrent-Neural-Networks）"><a href="#RNN（Recurrent-Neural-Networks）" class="headerlink" title="RNN（Recurrent Neural Networks）"></a>RNN（Recurrent Neural Networks）</h3><p>RNN最大的不同点就是它引入了时序信息。一个简单的表示如下：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-e7d22bbb88d97dc6b8d3b7428926c362_hd.jpg" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp6u4c09f3j30jq0ayjrt.jpg" alt=""></p>
 <p>这个图可以说是非常平面了，意思是单个神经元上允许使用网络循环传递信息。这样的结构是与其他一般的神经网络是有不同的。</p>
 <p>如果你还是不能理解他是怎么实现“循环”这个概念的，看下图：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-b45f69904d546edde41d9539e4c5548c_hd.jpg" alt=""></p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp6u30oxtkj31400g6whk.jpg" alt=""></p>
 <p>再仔细介绍一下这个图，因为rnn经常用的是文本处理，之类的场景，有的时候如果不好理解就代入到日常语境中会明白一些，比如这里，图上有4个T，可以理解的是如果一次处理一句话（batch的概念），这里一句话中分割成四个部分，并且进行tokenize, dictionarize,接着再由look up table 查找到embedding，将token由embedding表示，再对应到上图的输入神经元，隐状态 h_{i}^{t} 也就代表了一张MLP的hidden layer的一个cell。（全连接层，keras里的dense layer）</p>
 <p>前向计算是明白的，解释一下反向传播，这里的反向传播叫BPTT（through time），RNN通过反向推理微调其权重来训练其单元。简单的说，就是根据单元计算出的总输出与目标输出之间的误差，从网络的最终输出端反向逐层回归，利用损失函数的偏导调整每个单元的权重。这就是著名的BP算法，而RNN网络使用的是类似的一个版本，称为通过时间的反向传播（BPTT）。该版本扩展了调整过程，包括负责前一时刻（T-1）输入值对应的每个单元的记忆的权重。</p>
-<p><img src="https://images2015.cnblogs.com/blog/1008922/201703/1008922-20170317221917682-1636807643.png" alt=""></p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp6u34ny2cj31kw0lrn16.jpg" alt=""></p>
 <p>st=Uh（t−1）+Wxt</p>
 <p>ht=f(st)</p>
 <p>zt=Vht</p>
@@ -109,11 +109,11 @@ MLP先看图：
 <p>我们要迭代更新的是U，V，W矩阵，三个权重矩阵在时间维度上是共享的。这可以理解为：每个时刻都在执行相同的任务，所以是共享的。这个时候损失函数就是所有时间的损失和。然后就是对U，V，W求梯度。</p>
 <p>这里就引入了记忆的信息。但是，RNN会出现Gradient Vanish。先介绍一下梯度消失的概念：在多层网络中，影响梯度大小的因素主要有两个：权重和激活函数的偏导。深层的梯度是多个激活函数偏导乘积的形式来计算，如果这些激活函数的偏导比较小（小于1）或者为0，那么梯度随时间很容易vanishing；相反，如果这些激活函数的偏导比较大（大于1），那么梯度很有可能就会exploding。直观上讲，使用tanh或logistic激活函数时，由于导数值分别在0到1之间、0到1/4之间，所以如果权重矩阵 U 的范数也不很大，那么经过 t−k 次传播后，值会趋于0，也就导致了梯度消失问题。因而，梯度的计算和更新非常困难。关于梯度消失和激活函数见上一篇笔记。为了缓解梯度消失，可以使用ReLU、PReLU来作为激活函数，以及将 U 初始化为单位矩阵（而不是用随机初始化）等方式。</p>
 <p>下图直观的表达了梯度消失：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-f53954963faddc34c2e9210972836dbb_hd.jpg" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp6u39xbvjj31400lead4.jpg" alt=""></p>
 <p>为了减小梯度消失带来的影响，LSTM出现了：</p>
 <h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h3><p>有些场景下，由于传递的信息路径太长了，RNN处理的效果不好，这时候LSTM就派上用场了。<br>LSTM（Long Short Term Memory networks）是一种特殊的RNN，它能学习和存储长期依赖关系。它具有循环神经网络的特性：重复的链式网络存储结构。</p>
 <p>LSTM比较核心的概念就是门了，看这个图：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-b95bde8d1db089b3a016c2948de646be_hd.jpg" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp6u3rp9mrj312c0h4di3.jpg" alt=""></p>
 <p>这个图看着比较舒服，也能比较直观的表示它运行的原理。LSTM单元引入了门机制（Gate），通过遗忘门、输入门和输出门来控制流过单元的信息。我们知道，Simple RNN之所以有梯度消失是因为误差项之间的相乘关系；如果用LSTM推导，会发现这个相乘关系变成了相加关系，所以可以缓解梯度消失。</p>
 <p>先讲LSTM的前向计算，再讲它的误差反向传播。</p>
 <blockquote>
