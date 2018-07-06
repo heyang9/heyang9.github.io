@@ -97,13 +97,13 @@
 </blockquote>
 <h3 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h3><p>迁移学习指从原任务获得一些transforming knowledge在目标任务重达到高精度。而多目标学习两者是同时进行的。这些问题都是由data  Domain Adaptation的问题引出的。</p>
 <h3 id="应用领域"><a href="#应用领域" class="headerlink" title="应用领域"></a>应用领域</h3><ol>
-<li>迁移学习<br>带 label 的 target data 很少，但是与 target data类似的 source data 很多的时候，迁移学习就可以将在 soure data 上训练好的网络用于 target task 上，如猫狗识别到老虎狮子识别。<br><img src="http://wx1.sinaimg.cn/small/006cxA6Hgy1ft0iiok0zej30gg0a477p.jpg" alt=""></li>
+<li><p>迁移学习<br>带 label 的 target data 很少，但是与 target data类似的 source data 很多的时候，迁移学习就可以将在 soure data 上训练好的网络用于 target task 上，如猫狗识别到老虎狮子识别。</p>
+</li>
 <li><p>多任务学习<br>使用未来预测现在；多种表示和度量；时间序列预测；使用不可操作特征<br>；使用额外任务来聚焦；<br>有序迁移；<br>多个任务自然地出现；<br>将输入变成输出；具体如脸部特征点检测， Fast R-CNN，旋转人脸网络</p>
 </li>
 <li><p>domain adversarial training</p>
 </li>
 </ol>
-<p><img src="http://wx3.sinaimg.cn/small/006cxA6Hgy1ft0indux18j30hc0bywg9.jpg" alt=""></p>
 <p>挺有意思的，比如same task(手写数字识别)，data mismatch (MNIST, MNIST-M).<br>如果用 source data train 好一个网络后，直接应用于 target data 测试，效果不会很好，因为 source data 和 target data 的 distribution 相差太大。<br>Domain-adversarial 可以将不同 domain 的 data 转到同一个 domain 下，使它们具有相似的分布。</p>
 <p>观察直接 train 出来的网络提取的特征，可以发现不同类的特征在 source data 上分离度较好，在 target data 上则较差。引入一个 domain classifier（相当于GAN 中 discriminator），用于判别 feature extractor 输出的 feature 属于 target domain 还是 source domain, feature extractor 则努力消除 features 分布在 target domain 和 source domain 上的差异，骗过domain classifier的鉴别。但是如果仅仅是使feature extractor 骗过domain classifier，只要feature extractor输出的 feature 全是零，就可以轻易做到的。所以我们需要：not only cheat the domain classifier ,but satisfying label classifier at the same time .</p>
 
