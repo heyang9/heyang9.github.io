@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>迁移学习与多任务学习 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+  
+  <meta name="author" content="Yang He">
+  
+
+  
+  <meta name="description" content="迁移学习与多任务学习最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。
+首先介绍">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="迁移学习与多任务学习"/>
+
+  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>迁移学习与多任务学习</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/04/07/迁移学习与多任务学习/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-04-07T15:35:21.000Z">
+          2018-04-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="迁移学习与多任务学习"><a href="#迁移学习与多任务学习" class="headerlink" title="迁移学习与多任务学习"></a>迁移学习与多任务学习</h2><p>最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。</p>
+<p>首先介绍一下概念，再讲下区别，最后讲下可以用到的地方</p>
+<h3 id="迁移学习"><a href="#迁移学习" class="headerlink" title="迁移学习"></a>迁移学习</h3><p>传统的机器学习需要对每个领域都标定大量训练数据，这将会耗费大量的人力与物力。而迁移学习（Transfer Learning）的目标是将从一个环境中学到的知识用来帮助新环境中的学习任务。因此，相对于传统的机器学习假设训练数据与测试数据服从相同的数据分布，迁移学习不会像传统机器学习那样作同分布假设。<br>迁移学习是指一个学习算法可以利用不同学习任务之间的共性来共享统计的优点和在任务间迁移知识。传统的机器学习假设训练数据与测试数据服从相同的数据分布。如果我们有了大量的、在不同分布下的训练数据，完全丢弃这些数据也是非常浪费的。如何合理的利用这些数据就是迁移学习主要解决的问题。迁移学习可以从现有的数据中迁移知识，用来帮助将来的学习。</p>
+<blockquote>
+<p>Transfer Learning (or Domain Adaptation): Giving a set of source domains/tasks t1, t2, …, t(n-1) and the target domain/task t(n), the goal is to learn well for t(n) by transferring some shared knowledge from t1, t2, …, t(n-1) to t(n). Although this definition is quite general, almost the entire literature on transfer learning is about supervised transfer learning and the number of source domains is only one (i.e., n=2). It also assumes that there are labeled training data for the source domain and few or no labeled examples in the target domain/task, but there are a large amount of unlabeled data in t(n). Note that the goal of transfer learning is to learn well only for the target task. Learning of the source task(s) is irrelevant.</p>
+</blockquote>
+<h3 id="多任务学习"><a href="#多任务学习" class="headerlink" title="多任务学习"></a>多任务学习</h3><p>目前多任务学习方法大致可以总结为两类，一是不同任务之间共享相同的参数（common parameter），二是挖掘不同任务之间隐藏的共有数据特征（latent feature）。</p>
+<blockquote>
+<p>Single Task Learning: Giving a set of learning tasks, t1 , t2 , …, t(n), learn each task independently. This is the most commonly used machine learning paradigm in practice.</p>
+<p>Multitask Learning: Giving a set of learning tasks, t1 , t2 , …, t(n), co-learn all tasks simultaneously. In other words, the learner optimizes the learning/performance across all of the n tasks through some shared knowledge. This may also be called batch multitask learning. Online multitask learning is more like lifelong learning (see below).</p>
+</blockquote>
+<h3 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h3><p>迁移学习指从原任务获得一些transforming knowledge在目标任务重达到高精度。而多目标学习两者是同时进行的。这些问题都是由data  Domain Adaptation的问题引出的。</p>
+<h3 id="应用领域"><a href="#应用领域" class="headerlink" title="应用领域"></a>应用领域</h3><ol>
+<li>迁移学习<br>带 label 的 target data 很少，但是与 target data类似的 source data 很多的时候，迁移学习就可以将在 soure data 上训练好的网络用于 target task 上，如猫狗识别到老虎狮子识别。<br><img src="http://wx1.sinaimg.cn/small/006cxA6Hgy1ft0iiok0zej30gg0a477p.jpg" alt=""></li>
+<li><p>多任务学习<br>使用未来预测现在；多种表示和度量；时间序列预测；使用不可操作特征<br>；使用额外任务来聚焦；<br>有序迁移；<br>多个任务自然地出现；<br>将输入变成输出；具体如脸部特征点检测， Fast R-CNN，旋转人脸网络</p>
+</li>
+<li><p>domain adversarial training</p>
+</li>
+</ol>
+<p><img src="http://wx3.sinaimg.cn/small/006cxA6Hgy1ft0indux18j30hc0bywg9.jpg" alt=""></p>
+<p>挺有意思的，比如same task(手写数字识别)，data mismatch (MNIST, MNIST-M).<br>如果用 source data train 好一个网络后，直接应用于 target data 测试，效果不会很好，因为 source data 和 target data 的 distribution 相差太大。<br>Domain-adversarial 可以将不同 domain 的 data 转到同一个 domain 下，使它们具有相似的分布。</p>
+<p>观察直接 train 出来的网络提取的特征，可以发现不同类的特征在 source data 上分离度较好，在 target data 上则较差。引入一个 domain classifier（相当于GAN 中 discriminator），用于判别 feature extractor 输出的 feature 属于 target domain 还是 source domain, feature extractor 则努力消除 features 分布在 target domain 和 source domain 上的差异，骗过domain classifier的鉴别。但是如果仅仅是使feature extractor 骗过domain classifier，只要feature extractor输出的 feature 全是零，就可以轻易做到的。所以我们需要：not only cheat the domain classifier ,but satisfying label classifier at the same time .</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2018 Yang He
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
