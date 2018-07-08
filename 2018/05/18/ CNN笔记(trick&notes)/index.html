@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CNN笔记(trick&amp;notes) | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+  
+  <meta name="author" content="Yang He">
+  
+
+  
+  <meta name="description" content="杂七杂八的总结
+1234567891011sigmoid会饱和，造成梯度消失。于是有了ReLU。ReLU负半轴是死区，造成梯度变0。于是有了LeakyReLU，PReLU。强调梯度和权值分布的稳定性，由此有了ELU，以及较新的SELU。太深了，梯度传不下去，于是有了highway。干脆连highwa">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="CNN笔记(trick&amp;notes)"/>
+
+  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>CNN笔记(trick&amp;notes)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/05/18/ CNN笔记(trick&notes)/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-05-18T01:22:21.000Z">
+          2018-05-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>杂七杂八的总结</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sigmoid会饱和，造成梯度消失。于是有了ReLU。</span><br><span class="line">ReLU负半轴是死区，造成梯度变0。于是有了LeakyReLU，PReLU。</span><br><span class="line">强调梯度和权值分布的稳定性，由此有了ELU，以及较新的SELU。</span><br><span class="line">太深了，梯度传不下去，于是有了highway。</span><br><span class="line">干脆连highway的参数都不要，直接变残差，于是有了ResNet。</span><br><span class="line">强行稳定参数的均值和方差，于是有了BatchNorm。</span><br><span class="line">在梯度流中增加噪声，于是有了 Dropout。</span><br><span class="line">RNN梯度不稳定，于是加几个通路和门控，于是有了LSTM。</span><br><span class="line">LSTM简化一下，有了GRU。</span><br><span class="line">GAN的JS散度有问题，会导致梯度消失或无效，于是有了WGAN。</span><br><span class="line">WGAN对梯度的clip有问题，于是有了WGAN-GP。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>CNN中的网络设计应该逐渐减少图像尺寸，同时增加通道数，让空间信息转化为高阶抽象的特征信息。</p>
+</blockquote>
+<p>数据扩充方法包括：</p>
+<p>1、翻转包括水平翻转、垂直翻转、水平垂直翻转。</p>
+<p>2、旋转是常取的角度为-30、-15、15、30度等。</p>
+<p>3、尺度变换是指将图像分辨率变为原图的0.8、1.1、1.2倍等，生成新图。</p>
+<p>4、抠取包括随机抠取和监督式抠取。随机抠取在原图的随机位置抠取图像块作为新图像；监督式抠取只抠取含有明显语义信息的图像块。</p>
+<p>5、色彩抖动是对原有的像素值分布进行轻微扰动，即加入轻微的噪声作为新图像。</p>
+<p>6、Fancy PCA对所有训练数据的像素值进行主成分分析，根据得到的特征值和特征向量计算一组随机值，作为扰动加入到原来像素值中。</p>
+<blockquote>
+<p>局部最优解怎么办</p>
+<p>模拟退火 加入momentum项</p>
+</blockquote>
+<p>不收敛怎么回事，怎么解决</p>
+<p>数据太少<br>learningrate过大<br>可能导致从一开始就不收敛，每一层的w都很大，或者跑着跑着loss突然变得很大（一般是因为网络的前面使用relu作为激活函数而最后一层使用softmax作为分类的函数导致）<br>网络结构不好<br>更换其他的最优化算法<br>我做试验的时候遇到过一次，adam不收敛，用最简单的sgd收敛了。。具体原因不详<br>对参数做归一化<br>就是将输入归一化到均值为0方差为1然后使用BN等<br>初始化<br>改一种初始化的方案</p>
+<blockquote>
+<p>pooling层也能防止过拟合，使用overlapped pooling，即用来池化的数据有重叠，但是pooling的大小不要超过3。<br>max pooling比avg pooling效果会好一些。</p>
+</blockquote>
+<p>使用pretrain好的网络参数作为初始值。然后fine-tuning，此处可以保持前面层数的参数不变，只调节后面的参数。但是finetuning要考虑的是图片大小和跟原数据集的相关程度，如果相关性很高，那么只用取最后一层的输出，不相关数据多就要finetuning比较多的层。<br>初始值设置为0.1，然后训练到一定的阶段除以2，除以5，依次减小。<br>加入momentum项[2]，可以让网络更快的收敛。<br>节点数增加，learning rate要降低<br>层数增加，后面的层数learning rate要降低</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2018 Yang He
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

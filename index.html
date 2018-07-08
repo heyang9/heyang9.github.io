@@ -59,6 +59,73 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/05/18/ CNN笔记(trick&notes)/"><span>CNN笔记(trick&amp;notes)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/05/18/ CNN笔记(trick&notes)/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-05-18T01:22:21.000Z">
+          2018-05-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>杂七杂八的总结</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sigmoid会饱和，造成梯度消失。于是有了ReLU。</span><br><span class="line">ReLU负半轴是死区，造成梯度变0。于是有了LeakyReLU，PReLU。</span><br><span class="line">强调梯度和权值分布的稳定性，由此有了ELU，以及较新的SELU。</span><br><span class="line">太深了，梯度传不下去，于是有了highway。</span><br><span class="line">干脆连highway的参数都不要，直接变残差，于是有了ResNet。</span><br><span class="line">强行稳定参数的均值和方差，于是有了BatchNorm。</span><br><span class="line">在梯度流中增加噪声，于是有了 Dropout。</span><br><span class="line">RNN梯度不稳定，于是加几个通路和门控，于是有了LSTM。</span><br><span class="line">LSTM简化一下，有了GRU。</span><br><span class="line">GAN的JS散度有问题，会导致梯度消失或无效，于是有了WGAN。</span><br><span class="line">WGAN对梯度的clip有问题，于是有了WGAN-GP。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>CNN中的网络设计应该逐渐减少图像尺寸，同时增加通道数，让空间信息转化为高阶抽象的特征信息。</p>
+</blockquote>
+<p>数据扩充方法包括：</p>
+<p>1、翻转包括水平翻转、垂直翻转、水平垂直翻转。</p>
+<p>2、旋转是常取的角度为-30、-15、15、30度等。</p>
+<p>3、尺度变换是指将图像分辨率变为原图的0.8、1.1、1.2倍等，生成新图。</p>
+<p>4、抠取包括随机抠取和监督式抠取。随机抠取在原图的随机位置抠取图像块作为新图像；监督式抠取只抠取含有明显语义信息的图像块。</p>
+<p>5、色彩抖动是对原有的像素值分布进行轻微扰动，即加入轻微的噪声作为新图像。</p>
+<p>6、Fancy PCA对所有训练数据的像素值进行主成分分析，根据得到的特征值和特征向量计算一组随机值，作为扰动加入到原来像素值中。</p>
+<blockquote>
+<p>局部最优解怎么办</p>
+<p>模拟退火 加入momentum项</p>
+</blockquote>
+<p>不收敛怎么回事，怎么解决</p>
+<p>数据太少<br>learningrate过大<br>可能导致从一开始就不收敛，每一层的w都很大，或者跑着跑着loss突然变得很大（一般是因为网络的前面使用relu作为激活函数而最后一层使用softmax作为分类的函数导致）<br>网络结构不好<br>更换其他的最优化算法<br>我做试验的时候遇到过一次，adam不收敛，用最简单的sgd收敛了。。具体原因不详<br>对参数做归一化<br>就是将输入归一化到均值为0方差为1然后使用BN等<br>初始化<br>改一种初始化的方案</p>
+<blockquote>
+<p>pooling层也能防止过拟合，使用overlapped pooling，即用来池化的数据有重叠，但是pooling的大小不要超过3。<br>max pooling比avg pooling效果会好一些。</p>
+</blockquote>
+<p>使用pretrain好的网络参数作为初始值。然后fine-tuning，此处可以保持前面层数的参数不变，只调节后面的参数。但是finetuning要考虑的是图片大小和跟原数据集的相关程度，如果相关性很高，那么只用取最后一层的输出，不相关数据多就要finetuning比较多的层。<br>初始值设置为0.1，然后训练到一定的阶段除以2，除以5，依次减小。<br>加入momentum项[2]，可以让网络更快的收敛。<br>节点数增加，learning rate要降低<br>层数增加，后面的层数learning rate要降低</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/04/07/迁移学习与多任务学习/"><span>迁移学习与多任务学习</span></a></h3>
     
   
@@ -664,67 +731,6 @@
 <p>这时就需要EM算法。EM算法就是这样，假设我们想估计知道A和B两个参数，在开始状态下二者都是未知的，但如果知道了A的信息就可以得到B的信息，反过来知道了B也就得到了A。可以考虑首先赋予A某种初值，以此得到B的估计值，然后从B的当前值出发，重新估计A的取值，这个过程一直持续到收敛为止。E步（求期望），第三步被称作M步（求极大化），于是EM算法就在不停的EM、EM、EM….，所以被叫做EM算法！使用EM的好处就是，分离不开，就不分离。用旧的变量来表达新的变量，一步步迭代，也能找到局部最优。其实也就坐标上升法，含有隐变量对数似然求导比较复杂，因此先固定参数求隐变量后验分布(E步)，然后固定隐变量求参数(M步)，交替进行。</p>
 <p>举个非常棒的例子，看完基本上就能懂什么是EM算法，如下：</p>
 <p><img src="https://pic1.zhimg.com/80/v2-a95770a0f41ed0873106d4a1f2dd6b7d_hd.jpg" alt=""></p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/02/正则化的问题/"><span>L1正则化和L2正则化</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/02/正则化的问题/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-02T03:39:21.000Z">
-          2017-06-02
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="正则化的问题"><a href="#正则化的问题" class="headerlink" title="正则化的问题"></a>正则化的问题</h2><p>先说一下范数是什么：<br><img src="https://upload-images.jianshu.io/upload_images/2027163-98307b25668cfa3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/599" alt=""></p>
-<blockquote>
-<p>0范数，向量中非零元素的个数。<br>1范数，为绝对值之和。<br>2范数，就是通常意义上的模，表示某个向量中所有元素平方和再开根， 也就是欧几里得距离公式。</p>
-</blockquote>
-<p>也就是L1正则化和L2正则化，或者L1范数和L2范数</p>
-<p>L1正则化和L2正则化可以看做是损失函数的惩罚项。所谓『惩罚』是指对损失函数中的某些参数做一些限制。对于线性回归模型，使用L1正则化的模型建叫做Lasso回归，使用L2正则化的模型叫做Ridge回归（岭回归）。Lasso回归的损失函数，式中加号后面一项α||w||1，即为L1正则化项。Ridge回归的损失函数，式中加号后面一项α||w||2^2,即为L2正则化项。</p>
-<p><img src="http://img.blog.csdn.net/20160904184228158" alt=""></p>
-<p><img src="http://img.blog.csdn.net/20160904184314333" alt=""></p>
-<p>它们的作用：</p>
-<p>L1正则化可以产生稀疏权值矩阵，即产生一个稀疏模型，可以用于特征选择<br>L2正则化可以防止模型过拟合（overfitting）；一定程度上，L1也可以防止过拟合</p>
-<p>一般用l2正则化防止过拟合，那先讲它为什么能防止这个好了：</p>
-<p>1.模型过于复杂是因为模型尝试去兼顾各个测试数据点， 导致模型函数如下图，处于一种动荡的状态， 每个点的到时在某些很小的区间里，函数值的变化很剧烈。这就意味着函数在某些小区间里的导数值（绝对值）非常大，由于自变量值可大可小，所以只有系数足够大，才能保证导数值很大。（很好理解吧，有的过拟合出来的曲线拐来拐去的，覆盖了每个点）如果发生过拟合， 参数θ一般是比较大的值， 加入惩罚项后， 只要控制λ的大小，当λ很大时，θ1到θn就会很小，即达到了约束数量庞大的特征的目的。</p>
-<p>2.从贝叶斯的角度来分析， 正则化是为模型参数估计增加一个先验知识，先验知识会引导损失函数最小值过程朝着约束方向迭代。 L1正则是Laplace先验，L2是高斯先验。整个最优化问题可以看做是一个最大后验估计，其中正则化项对应后验估计中的先验信息，损失函数对应后验估计中的似然函数，两者的乘积即对应贝叶斯最大后验估计。（这一点有点难理解，需要假设参数先验分布之后推导）</p>
-<p>然后是L1正则化。它的优良性质是能产生稀疏性，导致 W 中许多项变成零。 稀疏的解除了计算量上的好处之外，更重要的是更具有“可解释性”。L1正则化有助于生成一个稀疏权值矩阵，进而可以用于特征选择。为什么要生成一个稀疏矩阵？稀疏矩阵指的是很多元素为0，只有少数元素是非零值的矩阵，即得到的线性回归模型的大部分系数都是0. 通常机器学习中特征数量很多，例如文本处理时，如果将一个词组（term）作为一个特征，那么特征数量会达到上万个（bigram）。在预测或分类时，那么多特征显然难以选择，但是如果代入这些特征得到的模型是一个稀疏模型，表示只有少数特征对这个模型有贡献，绝大部分特征是没有贡献的，或者贡献微小（因为它们前面的系数是0或者是很小的值，即使去掉对模型也没有什么影响），此时我们就可以只关注系数是非零值的特征。这就是稀疏模型与特征选择的关系。</p>
-<p><img src="http://img.blog.csdn.net/20160904184428459" alt=""></p>
-<p>上图是L1正则化的表示，这里简单假设w是二维，所以画出的图是这样的，图中等值线是J0<br>的等值线，黑色方形是L<br>函数的图形。在图中，当J0<br>等值线与L<br>图形首次相交的地方就是最优解。上图中J0<br>与L<br>在L<br>的一个顶点处相交，这个顶点就是最优解。注意到这个顶点的值是(w1,w2)=(0,w)<br>。可以直观想象，因为L<br>函数有很多<em>突出的角</em>（二维情况下四个，多维情况下更多），J0<br>与这些角接触的机率会远大于与L<br>其它部位接触的机率，而在这些角上，会有很多权值等于0，这就是为什么L1正则化可以产生稀疏模型，进而可以用于特征选择。</p>
 
       
     </div>
