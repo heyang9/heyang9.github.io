@@ -81,21 +81,21 @@
       
         <p>之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。</p>
 <p>RNN的重点是循环，即此刻的状态包含上一时刻的历史，又是下一时刻变化的依据。<br>这个图很经典</p>
-<p><img src="http://wx4.sinaimg.cn/small/006cxA6Hgy1ftdxhkhl8jj30go058dfz.jpg" alt=""></p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdxhkhl8jj30go058dfz.jpg" alt=""></p>
 <p>如图，RNN有很多种形式。每一个矩形是一个向量，箭头则表示函数（比如矩阵相乘）。输入向量用红色标出，输出向量用蓝色标出，绿色的矩形是RNN的状态（下面会详细介绍）。从做到右：（1）没有使用RNN的Vanilla模型，从固定大小的输入得到固定大小输出（比如图像分类）。（2）序列输出（比如图片字幕，输入一张图片输出一段文字序列）。（3）序列输入（比如情感分析，输入一段文字然后将它分类成积极或者消极情感）。（4）序列输入和序列输出（比如机器翻译：一个RNN读取一条英文语句然后将它以法语形式输出）。（5）同步序列输入输出（比如视频分类，对视频中每一帧打标签）。我们注意到在每一个案例中，都没有对序列长度进行预先特定约束，因为递归变换（绿色部分）是固定的，而且我们可以多次使用。</p>
 <p>所以，RNN本事是对序列信息的存储，序列的依次输入在RNN内部变化的是信息的更新，每一次的输入都包含了对前一个状态信息的过滤和当前状态的整合，然后最终以一个向量或多个向量序列组成输出。</p>
 <p>因为这里讲时间序列分析里用到的seq2seq模型，所以重点介绍这个：<br>顾名思义，seq2seq 模型就像一个翻译模型，输入是一个序列（比如一个英文句子），输出也是一个序列（比如该英文句子所对应的法文翻译）。这种结构最重要的地方在于输入序列和输出序列的长度是可变的。</p>
-<p><img src="http://wx4.sinaimg.cn/small/006cxA6Hgy1ftdy1m4wy8j30pu095wfa.jpg" alt=""></p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdy1m4wy8j30pu095wfa.jpg" alt=""></p>
 <p>这是原论文里的截图，就是一个Encoder-Decoder模型。可以把它假设成一个对知识的学习与应用过程。每个timestep的学习，都在丰富着我们的大脑（隐藏状态c），由于容量是一定的，所以需要遗忘之前的不用的知识并增加新的知识。经过一段时间序列的学习之后，我们获取了一定的知识（encoder输出），后面的decoder就要用我们学到的知识。最基础的Seq2Seq模型包含了三个部分，即Encoder、Decoder以及连接两者的中间状态向量，Encoder通过学习输入，将其编码成一个固定大小的状态向量S，继而将S传给Decoder，Decoder再通过对状态向量S的学习来进行输出。</p>
 <p>拿机器翻译举例子，就是对不同的句子encodedecode训练，拿多变量时间序列预测就是对多条曲线进行时间序列上的encodedecode记忆，预测</p>
 <p>所谓编码，就是将输入序列转化成一个固定长度的向量；解码，就是将之前生成的固定向量再转化成输出序列。</p>
-<p><img src="http://wx2.sinaimg.cn/small/006cxA6Hgy1ftdyvrorzbj30qc08caai.jpg" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1ftdyvrorzbj30qc08caai.jpg" alt=""></p>
 <p>可以看到输出句子y只需要和c相关即可。端到端训练RNN（LSTM）网络就可以了，在每一个句子末尾打上一个end-of-sentence symbol， EOS符号，用输入句子来预测输出句子。这样的模型就可以完成基本的英语-法语的翻译任务。</p>
-<p><img src="http://wx2.sinaimg.cn/small/006cxA6Hgy1ftdyxun9cqj30hs05d0ti.jpg" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1ftdyxun9cqj30hs05d0ti.jpg" alt=""></p>
 <p>这种pair形式的场景，都是类似的。</p>
-<p><img src="http://wx3.sinaimg.cn/small/006cxA6Hgy1ftdyz5woogj30qb0f2dja.jpg" alt=""></p>
-<p>能看到，rnn cell可以在纵向上继续堆叠。<br><img src="http://wx3.sinaimg.cn/small/006cxA6Hgy1ftdz3055qdj30qo0k0ab8.jpg" alt=""></p>
-<p><img src="http://wx3.sinaimg.cn/small/006cxA6Hgy1ftdz29e80nj30d20d5myp.jpg" alt=""></p>
+<p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdyz5woogj30qb0f2dja.jpg" alt=""></p>
+<p>能看到，rnn cell可以在纵向上继续堆叠。<br><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz3055qdj30qo0k0ab8.jpg" alt=""></p>
+<p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz29e80nj30d20d5myp.jpg" alt=""></p>
 <p>这两张图画的很好。下面这个是很常见的attention机制，是为了弥补encoder-decoder的局限性：基本的Encoder-Decoder模型非常经典，但是也有局限性。最大的局限性就在于编码和解码之间的唯一联系就是一个固定长度的语义向量c。也就是说，编码器要将整个序列的信息压缩进一个固定长度的向量中去。但是这样做有两个弊端，一是语义向量无法完全表示整个序列的信息，还有就是先输入的内容携带的信息会被后输入的信息稀释掉，或者说，被覆盖了。输入序列越长，这个现象就越严重。这就使得在解码的时候一开始就没有获得输入序列足够的信息， 那么解码的准确度自然也就要打个折扣了。</p>
 <p>相比于之前的encoder-decoder模型，attention模型最大的区别就在于它不在要求编码器将所有输入信息都编码进一个固定长度的向量之中。相反，此时编码器需要将输入编码成一个向量的序列，而在解码的时候，每一步都会选择性的从向量序列中挑选一个子集进行进一步处理。这样，在产生每一个输出的时候，都能够做到充分利用输入序列携带的信息。而且这种方法在翻译任务中取得了非常不错的成果。很显然，每一个输出单词在计算的时候，参考的语义编码向量c都是不一样的，也就是它们的注意力焦点是不一样的。</p>
 <p>seq2seq其实可以用在很多地方，比如机器翻译，自动对话机器人，文档摘要自动生成，图片描述自动生成。而且效果也是非常强大。同时，因为是端到端的模型（大部分的深度模型都是端到端的），它减少了很多人工处理和规则制定的步骤。在 Encoder-Decoder 的基础上，人们又引入了attention mechanism等技术，使得这些深度方法在各个任务上表现更加突出。不论是LSTM还是GRU，核心原理还是不变的。</p>
