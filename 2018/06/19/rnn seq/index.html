@@ -15,12 +15,12 @@
 
 
 
-<meta name="description" content="之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。 RNN的重点是循环，即此刻的状态包含上一时刻的历史，又是下一时刻变化的依据。这个图很经典  如图，RNN有很多种形">
+<meta name="description" content="&amp;lt;之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。&amp;gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RNN seq2seq">
 <meta property="og:url" content="http://yoursite.com/2018/06/19/rnn seq/index.html">
 <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
-<meta property="og:description" content="之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。 RNN的重点是循环，即此刻的状态包含上一时刻的历史，又是下一时刻变化的依据。这个图很经典  如图，RNN有很多种形">
+<meta property="og:description" content="&amp;lt;之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。&amp;gt;">
 <meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdxhkhl8jj30go058dfz.jpg">
 <meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdy1m4wy8j30pu095wfa.jpg">
 <meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1ftdyvrorzbj30qc08caai.jpg">
@@ -28,10 +28,10 @@
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdyz5woogj30qb0f2dja.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz3055qdj30qo0k0ab8.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz29e80nj30d20d5myp.jpg">
-<meta property="og:updated_time" content="2018-07-18T06:24:32.851Z">
+<meta property="og:updated_time" content="2018-07-19T10:18:47.473Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RNN seq2seq">
-<meta name="twitter:description" content="之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。 RNN的重点是循环，即此刻的状态包含上一时刻的历史，又是下一时刻变化的依据。这个图很经典  如图，RNN有很多种形">
+<meta name="twitter:description" content="&amp;lt;之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。&amp;gt;">
 <meta name="twitter:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdxhkhl8jj30go058dfz.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -151,13 +151,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>Menu</li>
-                        <li>Tags</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>Friends</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>About Me</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -269,7 +269,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-rnn seq" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -307,7 +307,12 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。</p>
+        <p>&lt;之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。&gt; </p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
+<p>&lt;</p>
 <p>RNN的重点是循环，即此刻的状态包含上一时刻的历史，又是下一时刻变化的依据。<br>这个图很经典</p>
 <p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdxhkhl8jj30go058dfz.jpg" alt=""></p>
 <p>如图，RNN有很多种形式。每一个矩形是一个向量，箭头则表示函数（比如矩阵相乘）。输入向量用红色标出，输出向量用蓝色标出，绿色的矩形是RNN的状态（下面会详细介绍）。从做到右：（1）没有使用RNN的Vanilla模型，从固定大小的输入得到固定大小输出（比如图像分类）。（2）序列输出（比如图片字幕，输入一张图片输出一段文字序列）。（3）序列输入（比如情感分析，输入一段文字然后将它分类成积极或者消极情感）。（4）序列输入和序列输出（比如机器翻译：一个RNN读取一条英文语句然后将它以法语形式输出）。（5）同步序列输入输出（比如视频分类，对视频中每一帧打标签）。我们注意到在每一个案例中，都没有对序列长度进行预先特定约束，因为递归变换（绿色部分）是固定的，而且我们可以多次使用。</p>
@@ -326,7 +331,7 @@
 <p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz29e80nj30d20d5myp.jpg" alt=""></p>
 <p>这两张图画的很好。下面这个是很常见的attention机制，是为了弥补encoder-decoder的局限性：基本的Encoder-Decoder模型非常经典，但是也有局限性。最大的局限性就在于编码和解码之间的唯一联系就是一个固定长度的语义向量c。也就是说，编码器要将整个序列的信息压缩进一个固定长度的向量中去。但是这样做有两个弊端，一是语义向量无法完全表示整个序列的信息，还有就是先输入的内容携带的信息会被后输入的信息稀释掉，或者说，被覆盖了。输入序列越长，这个现象就越严重。这就使得在解码的时候一开始就没有获得输入序列足够的信息， 那么解码的准确度自然也就要打个折扣了。</p>
 <p>相比于之前的encoder-decoder模型，attention模型最大的区别就在于它不在要求编码器将所有输入信息都编码进一个固定长度的向量之中。相反，此时编码器需要将输入编码成一个向量的序列，而在解码的时候，每一步都会选择性的从向量序列中挑选一个子集进行进一步处理。这样，在产生每一个输出的时候，都能够做到充分利用输入序列携带的信息。而且这种方法在翻译任务中取得了非常不错的成果。很显然，每一个输出单词在计算的时候，参考的语义编码向量c都是不一样的，也就是它们的注意力焦点是不一样的。</p>
-<p>seq2seq其实可以用在很多地方，比如机器翻译，自动对话机器人，文档摘要自动生成，图片描述自动生成。而且效果也是非常强大。同时，因为是端到端的模型（大部分的深度模型都是端到端的），它减少了很多人工处理和规则制定的步骤。在 Encoder-Decoder 的基础上，人们又引入了attention mechanism等技术，使得这些深度方法在各个任务上表现更加突出。不论是LSTM还是GRU，核心原理还是不变的。</p>
+<p>seq2seq其实可以用在很多地方，比如机器翻译，自动对话机器人，文档摘要自动生成，图片描述自动生成。而且效果也是非常强大。同时，因为是端到端的模型（大部分的深度模型都是端到端的），它减少了很多人工处理和规则制定的步骤。在 Encoder-Decoder 的基础上，人们又引入了attention mechanism等技术，使得这些深度方法在各个任务上表现更加突出。不论是LSTM还是GRU，核心原理还是不变的。&gt;</p>
 
       
     </div>
@@ -335,17 +340,17 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2018/06/19/rnn seq/">RNN seq2seq</a></p>
-        <p><span>Author:</span><a href="/" title="Back to Homepage">Yang He</a></p>
-        <p><span>Created:</span>2018-06-19, 09:22:21</p>
-        <p><span>Updated:</span>2018-07-18, 14:24:32</p>
+        <p><span>本文标题:</span><a href="/2018/06/19/rnn seq/">RNN seq2seq</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
+        <p><span>发布时间:</span>2018-06-19, 09:22:21</p>
+        <p><span>最后更新:</span>2018-07-19, 18:18:47</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2018/06/19/rnn seq/" title="RNN seq2seq">http://yoursite.com/2018/06/19/rnn seq/</a>
-            <span class="copy-path" data-clipboard-text="From http://yoursite.com/2018/06/19/rnn seq/　　By Yang He" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/06/19/rnn seq/" title="RNN seq2seq">http://yoursite.com/2018/06/19/rnn seq/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/06/19/rnn seq/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
@@ -366,7 +371,7 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+        <strong class="toc-title">文章目录</strong>
         
             
         
@@ -382,10 +387,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
     <script>
-        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
     </script>
 
 
@@ -424,13 +429,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
-        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/05/18/ CNN笔记(trick&notes)/" title="Next: CNN笔记(trick&amp;notes)">
+            <a href="/2018/05/18/ CNN笔记(trick&notes)/" title="下一篇: CNN笔记(trick&amp;notes)">
                 <i class="fa fa-angle-right"></i>
             </a>
         
@@ -453,14 +458,14 @@
                 2016-2018 Yang He
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -469,7 +474,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -502,9 +507,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window
