@@ -1,89 +1,297 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html >
 <head>
-  <meta charset="utf-8">
-  
-  <title>迁移学习与多任务学习 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
 
-  
-  <meta name="author" content="Yang He">
-  
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
 
-  
-  <meta name="description" content="迁移学习与多任务学习最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。
-首先介绍">
-  
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Yang He" />
 
-  
-  
-  <meta name="keywords" content="">
-  
 
-  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <meta property="og:title" content="迁移学习与多任务学习"/>
+<meta name="description" content="迁移学习与多任务学习最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。 首先介绍一下概念，再讲下区别，最后讲下可以用到的地方 迁移学习传统的机器学习需要对每个领域都标定大量训练数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="迁移学习与多任务学习">
+<meta property="og:url" content="http://yoursite.com/2018/04/07/迁移学习与多任务学习/index.html">
+<meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta property="og:description" content="迁移学习与多任务学习最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。 首先介绍一下概念，再讲下区别，最后讲下可以用到的地方 迁移学习传统的机器学习需要对每个领域都标定大量训练数据">
+<meta property="og:updated_time" content="2018-07-06T14:43:31.678Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="迁移学习与多任务学习">
+<meta name="twitter:description" content="迁移学习与多任务学习最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。 首先介绍一下概念，再讲下区别，最后讲下可以用到的地方 迁移学习传统的机器学习需要对每个领域都标定大量训练数据">
 
-  <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑"/>
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
-  
-  <meta property="og:image" content="/favicon.ico"/>
-  
 
-  <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+    <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>迁移学习与多任务学习 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
 </head>
-
-
 <body>
-<div class="blog">
-  <div class="content">
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Yang He</a></h1>
+        </hgroup>
 
-    <header>
-  <div class="site-branding">
-    <h1 class="site-title">
-      <a href="/">呜呜部落格(•̀ᴗ•́)و ̑̑</a>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Yang He</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Yang He</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-迁移学习与多任务学习" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/07/迁移学习与多任务学习/" class="article-date">
+      <time datetime="2018-04-07T15:35:21.000Z" itemprop="datePublished">2018-04-07</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      迁移学习与多任务学习
     </h1>
-    <p class="site-description"></p>
-  </div>
-  <nav class="site-navigation">
-    <ul>
-      
-        <li><a href="/">Home</a></li>
-      
-        <li><a href="/archives">Archives</a></li>
-      
-    </ul>
-  </nav>
-</header>
-
-    <main class="site-main posts-loop">
-    <article>
-
   
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
     
-    <h3 class="article-title"><span>迁移学习与多任务学习</span></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/04/07/迁移学习与多任务学习/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-04-07T15:35:21.000Z">
-          2018-04-07
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
+    <div class="article-entry" itemprop="articleBody">
       
+          
         <h2 id="迁移学习与多任务学习"><a href="#迁移学习与多任务学习" class="headerlink" title="迁移学习与多任务学习"></a>迁移学习与多任务学习</h2><p>最近考虑到adversarial machine learning的一些问题，涉及到train space 和 target space的变换问题，所以看了下迁移学习的内容，不过最近没有用这个，用了其他一些基于梯度的方法和GAN，由于没有用到估计很容易忘，所以记录一下。</p>
 <p>首先介绍一下概念，再讲下区别，最后讲下可以用到的地方</p>
 <h3 id="迁移学习"><a href="#迁移学习" class="headerlink" title="迁移学习"></a>迁移学习</h3><p>传统的机器学习需要对每个领域都标定大量训练数据，这将会耗费大量的人力与物力。而迁移学习（Transfer Learning）的目标是将从一个环境中学到的知识用来帮助新环境中的学习任务。因此，相对于传统的机器学习假设训练数据与测试数据服从相同的数据分布，迁移学习不会像传统机器学习那样作同分布假设。<br>迁移学习是指一个学习算法可以利用不同学习任务之间的共性来共享统计的优点和在任务间迁移知识。传统的机器学习假设训练数据与测试数据服从相同的数据分布。如果我们有了大量的、在不同分布下的训练数据，完全丢弃这些数据也是非常浪费的。如何合理的利用这些数据就是迁移学习主要解决的问题。迁移学习可以从现有的数据中迁移知识，用来帮助将来的学习。</p>
@@ -109,37 +317,214 @@
 
       
     </div>
-
+    
   </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
+  
     
-
-    
-
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/04/07/迁移学习与多任务学习/">迁移学习与多任务学习</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
+        <p><span>发布时间:</span>2018-04-07, 23:35:21</p>
+        <p><span>最后更新:</span>2018-07-06, 22:43:31</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/07/迁移学习与多任务学习/" title="迁移学习与多任务学习">http://yoursite.com/2018/04/07/迁移学习与多任务学习/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/04/07/迁移学习与多任务学习/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
     </div>
 
-    
-  </div>
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/05/18/ CNN笔记(trick&notes)/">
+                    CNN笔记(trick&amp;notes)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/03/19/CNN/">
+                    一些CNN知识
+                </a>
+            </div>
+        
+    </nav>
+
+  
 </article>
 
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#迁移学习与多任务学习"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x8FC1;&#x79FB;&#x5B66;&#x4E60;&#x4E0E;&#x591A;&#x4EFB;&#x52A1;&#x5B66;&#x4E60;" class="headerlink" title="&#x8FC1;&#x79FB;&#x5B66;&#x4E60;&#x4E0E;&#x591A;&#x4EFB;&#x52A1;&#x5B66;&#x4E60;"></a>&#x8FC1;&#x79FB;&#x5B66;&#x4E60;&#x4E0E;&#x591A;&#x4EFB;&#x52A1;&#x5B66;&#x4E60;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#迁移学习"><span class="toc-number">1.1.</span> <span class="toc-text"><a href="#&#x8FC1;&#x79FB;&#x5B66;&#x4E60;" class="headerlink" title="&#x8FC1;&#x79FB;&#x5B66;&#x4E60;"></a>&#x8FC1;&#x79FB;&#x5B66;&#x4E60;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多任务学习"><span class="toc-number">1.2.</span> <span class="toc-text"><a href="#&#x591A;&#x4EFB;&#x52A1;&#x5B66;&#x4E60;" class="headerlink" title="&#x591A;&#x4EFB;&#x52A1;&#x5B66;&#x4E60;"></a>&#x591A;&#x4EFB;&#x52A1;&#x5B66;&#x4E60;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#两者区别"><span class="toc-number">1.3.</span> <span class="toc-text"><a href="#&#x4E24;&#x8005;&#x533A;&#x522B;" class="headerlink" title="&#x4E24;&#x8005;&#x533A;&#x522B;"></a>&#x4E24;&#x8005;&#x533A;&#x522B;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用领域"><span class="toc-number">1.4.</span> <span class="toc-text"><a href="#&#x5E94;&#x7528;&#x9886;&#x57DF;" class="headerlink" title="&#x5E94;&#x7528;&#x9886;&#x57DF;"></a>&#x5E94;&#x7528;&#x9886;&#x57DF;</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
 
-    </main>
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
-    <footer class="site-footer">
-  <p class="site-info">
-    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
-    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
-    </br>
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
     
-    &copy; 2018 Yang He
+<div class="share">
     
-  </p>
-</footer>
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"迁移学习与多任务学习　| 呜呜部落格(•̀ᴗ•́)و ̑̑　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
     
-  </div>
+
+    
 </div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/05/18/ CNN笔记(trick&notes)/" title="上一篇: CNN笔记(trick&amp;notes)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/03/19/CNN/" title="下一篇: 一些CNN知识">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/06/19/rnn seq/">RNN seq2seq</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/18/ CNN笔记(trick&notes)/">CNN笔记(trick&notes)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/07/迁移学习与多任务学习/">迁移学习与多任务学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/CNN/">一些CNN知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/wuwu/">LSTM & RNN 回顾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/gaga/">激活函数和梯度消失问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/12/未命名/">一个有意思的Deep Learning笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/02/XGBoost原理/">集成算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/ARIMA😛/">利用ARIMA模型做时间序列预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/git账号/">查看本地git的账号是否是目前登陆的邮箱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/27/略谈EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/02/正则化的问题/">L1正则化和L2正则化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/18/样本不平衡/">机器学习中样本不平衡的解决办法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/写写常见的几种最优化方法/">梯度下降法和牛顿法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/">Bias(偏差)，Error(误差)，和Variance(方差)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/LDA知识点总结/">线性判别分析是什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/线性回归/">逻辑回归总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/解决python报错/">Python 问题（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/pandas安装问题/">Python问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/mac+hexo/">博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Yang He
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
 </body>
 </html>
