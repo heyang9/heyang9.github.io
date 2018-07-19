@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp6uo6iqikj31kw0lego9.jpg">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1667471-5bf75eefed2154f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/643">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1667471-c798481b7b366cb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/203">
-<meta property="og:updated_time" content="2018-03-09T12:45:04.131Z">
+<meta property="og:updated_time" content="2018-07-19T10:33:16.776Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="激活函数和梯度消失问题">
 <meta name="twitter:description" content="梯度消失和激活函数本文简单介绍下常见的激活函数和梯度消失的概念： 激活函数：激活函数给神经元引入了非线性因素，使得神经网络可以任意逼近任何非线性函数，这样神经网络就可以应用到众多的非线性模型中。如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始">
@@ -312,6 +312,10 @@
           
         <h2 id="梯度消失和激活函数"><a href="#梯度消失和激活函数" class="headerlink" title="梯度消失和激活函数"></a>梯度消失和激活函数</h2><p>本文简单介绍下常见的激活函数和梯度消失的概念：</p>
 <p>激活函数：激活函数给神经元引入了非线性因素，使得神经网络可以任意逼近任何非线性函数，这样神经网络就可以应用到众多的非线性模型中。如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。正因为上面的原因，需要引入非线性函数作为激励函数，这样深层神经网络就有意义了（不再是输入的线性组合，可以逼近任意函数）。最早的想法是sigmoid函数或者tanh函数，输出有界，很容易充当下一层输入（以及一些人的生物解释balabala）。</p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
 <h3 id="Sigmoid函数"><a href="#Sigmoid函数" class="headerlink" title="Sigmoid函数"></a>Sigmoid函数</h3><p><img src="https://feisky.xyz/machine-learning/neural-networks/images/14856939826808.png" alt=""></p>
 <p>sigmoid及一阶导：</p>
 <p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp6unuu8ojj31kw0j4q5y.jpg" alt=""></p>
@@ -342,7 +346,7 @@
         <p><span>本文标题:</span><a href="/2018/01/31/gaga/">激活函数和梯度消失问题</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2018-01-31, 09:22:21</p>
-        <p><span>最后更新:</span>2018-03-09, 20:45:04</p>
+        <p><span>最后更新:</span>2018-07-19, 18:33:16</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/31/gaga/" title="激活函数和梯度消失问题">http://yoursite.com/2018/01/31/gaga/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/01/31/gaga/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/12/25/pandas安装问题/index.html">
 <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
 <meta property="og:description" content="解决 Mac pip Error: [Errno 1] Operation not permitted安装pandas包的时候出现报错： Installing collected packages: numpy, pandas Found existing installation: numpy 1.8.0rc1 DEPRECATION: Uninstalling a distutils inst">
-<meta property="og:updated_time" content="2018-03-08T03:04:34.291Z">
+<meta property="og:updated_time" content="2018-07-19T10:34:40.582Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python问题">
 <meta name="twitter:description" content="解决 Mac pip Error: [Errno 1] Operation not permitted安装pandas包的时候出现报错： Installing collected packages: numpy, pandas Found existing installation: numpy 1.8.0rc1 DEPRECATION: Uninstalling a distutils inst">
@@ -326,7 +326,11 @@ File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.
 os.chflags(dst, st.st_flags)
 
 OSError: [Errno 1] Operation not permitted: &apos;/tmp/pip-bXMbsV-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy-1.8.0rc1-py2.7.egg-info&apos;
-</code></pre><p>解决如下：</p>
+</code></pre><ul>
+<li><a id="more"></a>
+</li>
+</ul>
+<p>解决如下：</p>
 <pre><code>$ pip install --upgrade pip
 
 $ sudo pip install numpy --upgrade --ignore-installed
@@ -341,7 +345,7 @@ $ sudo pip install numpy --upgrade --ignore-installed
         <p><span>本文标题:</span><a href="/2016/12/25/pandas安装问题/">Python问题</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2016-12-25, 20:35:21</p>
-        <p><span>最后更新:</span>2018-03-08, 11:04:34</p>
+        <p><span>最后更新:</span>2018-07-19, 18:34:40</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/12/25/pandas安装问题/" title="Python问题">http://yoursite.com/2016/12/25/pandas安装问题/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/12/25/pandas安装问题/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

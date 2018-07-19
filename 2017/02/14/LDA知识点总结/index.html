@@ -15,17 +15,17 @@
 
 
 
-<meta name="description" content="LDA知识点总结 这个LDA不是NLP里的主题模型，是线性判别分析奥  LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。 一句话读懂LDA：投影后类内方差最小，类间方差最大 LDA通常作为数据预处理阶段的降维">
+<meta name="description" content="LDA知识点总结 这个LDA不是NLP里的主题模型，是线性判别分析奥  LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。 一句话读懂LDA：投影后类内方差最小，类间方差最大">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线性判别分析是什么">
 <meta property="og:url" content="http://yoursite.com/2017/02/14/LDA知识点总结/index.html">
 <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
-<meta property="og:description" content="LDA知识点总结 这个LDA不是NLP里的主题模型，是线性判别分析奥  LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。 一句话读懂LDA：投影后类内方差最小，类间方差最大 LDA通常作为数据预处理阶段的降维">
+<meta property="og:description" content="LDA知识点总结 这个LDA不是NLP里的主题模型，是线性判别分析奥  LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。 一句话读懂LDA：投影后类内方差最小，类间方差最大">
 <meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fp5f20x8vij31cy0es76e.jpg">
-<meta property="og:updated_time" content="2018-03-08T07:10:51.517Z">
+<meta property="og:updated_time" content="2018-07-19T10:33:28.172Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线性判别分析是什么">
-<meta name="twitter:description" content="LDA知识点总结 这个LDA不是NLP里的主题模型，是线性判别分析奥  LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。 一句话读懂LDA：投影后类内方差最小，类间方差最大 LDA通常作为数据预处理阶段的降维">
+<meta name="twitter:description" content="LDA知识点总结 这个LDA不是NLP里的主题模型，是线性判别分析奥  LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。 一句话读懂LDA：投影后类内方差最小，类间方差最大">
 <meta name="twitter:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fp5f20x8vij31cy0es76e.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -306,6 +306,10 @@
 </blockquote>
 <p>LDA的全称是Linear Discriminant Analysis（线性判别分析），是一种supervised learning。因为是由Fisher在1936年提出的，所以也叫Fisher’s Linear Discriminant。</p>
 <p>一句话读懂LDA：<strong>投影后类内方差最小，类间方差最大</strong></p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
 <p>LDA通常作为数据预处理阶段的降维技术，其目标是将数据投影到低维空间来避免维度灾难（curse of dimensionality）引起的过拟合，同时还保留着良好的可分性。也可以说它是一种分类算法，通过对历史数据进行投影，以保证投影后同一类别的数据尽量靠近，不同类别的数据尽量分开。并生成线性判别模型对新生成的数据进行分离和预测。所以我们能看到它是一种有效的特征抽取方法。使用这种方法能够使投影后模式样本的类间散布矩阵最大，并且同时类内散布矩阵最小。就是说，它能够保证投影后模式样本在新的空间中有最小的类内距离和最大的类间距离，即模式在该空间中有最佳的可分离性。</p>
 <p>具体LDA分类基本思想：假设各个类别的样本数据符合高斯分布，这样利用LDA进行投影后，可以利用极大似然估计计算各个类别投影数据的均值和方差，进而得到该类别高斯分布的概率密度函数。当一个新的样本到来后，我们可以将它投影，然后将投影后的样本特征分别带入各个类别的高斯分布概率密度函数，计算它属于这个类别的概率，最大的概率对应的类别即为预测类别。</p>
 <p>关于具体公式就不手打了，贴几张图形象的表示一下它的原理：</p>
@@ -341,7 +345,7 @@
         <p><span>本文标题:</span><a href="/2017/02/14/LDA知识点总结/">线性判别分析是什么</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2017-02-14, 14:15:21</p>
-        <p><span>最后更新:</span>2018-03-08, 15:10:51</p>
+        <p><span>最后更新:</span>2018-07-19, 18:33:28</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/02/14/LDA知识点总结/" title="线性判别分析是什么">http://yoursite.com/2017/02/14/LDA知识点总结/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/02/14/LDA知识点总结/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

@@ -15,21 +15,21 @@
 
 
 
-<meta name="description" content="写写常见的几种最优化方法首先肯定是要说泰勒公式的了。。 泰勒公式是一个用函数在某点的信息描述其附近取值的公式。 局部有效性 它的基本形式是： 这是后续优化方法的迭代基础 梯度下降法在机器学习任务中，需要最小化损失函数L（theta），其中theta是要求解的模型参数。梯度下降法常用来求解这种无约束最优化问题，它是一种迭代方法:选取初值，不断迭代，更新theta的值，进行损失函数的极小化。梯度下降法">
+<meta name="description" content="写写常见的几种最优化方法首先肯定是要说泰勒公式的了。。 泰勒公式是一个用函数在某点的信息描述其附近取值的公式。 局部有效性">
 <meta property="og:type" content="article">
 <meta property="og:title" content="梯度下降法和牛顿法">
 <meta property="og:url" content="http://yoursite.com/2017/05/06/写写常见的几种最优化方法/index.html">
 <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
-<meta property="og:description" content="写写常见的几种最优化方法首先肯定是要说泰勒公式的了。。 泰勒公式是一个用函数在某点的信息描述其附近取值的公式。 局部有效性 它的基本形式是： 这是后续优化方法的迭代基础 梯度下降法在机器学习任务中，需要最小化损失函数L（theta），其中theta是要求解的模型参数。梯度下降法常用来求解这种无约束最优化问题，它是一种迭代方法:选取初值，不断迭代，更新theta的值，进行损失函数的极小化。梯度下降法">
+<meta property="og:description" content="写写常见的几种最优化方法首先肯定是要说泰勒公式的了。。 泰勒公式是一个用函数在某点的信息描述其附近取值的公式。 局部有效性">
 <meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5hmziysij31kw089tan.jpg">
 <meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fp5ht3pqwqj31kw0n8n2l.jpg">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Gradient_descent.png/350px-Gradient_descent.png">
 <meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5hxpzbrbj31kw0xnwn8.jpg">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/e/e0/NewtonIteration_Ani.gif">
-<meta property="og:updated_time" content="2018-03-08T09:33:51.241Z">
+<meta property="og:updated_time" content="2018-07-19T10:32:29.292Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="梯度下降法和牛顿法">
-<meta name="twitter:description" content="写写常见的几种最优化方法首先肯定是要说泰勒公式的了。。 泰勒公式是一个用函数在某点的信息描述其附近取值的公式。 局部有效性 它的基本形式是： 这是后续优化方法的迭代基础 梯度下降法在机器学习任务中，需要最小化损失函数L（theta），其中theta是要求解的模型参数。梯度下降法常用来求解这种无约束最优化问题，它是一种迭代方法:选取初值，不断迭代，更新theta的值，进行损失函数的极小化。梯度下降法">
+<meta name="twitter:description" content="写写常见的几种最优化方法首先肯定是要说泰勒公式的了。。 泰勒公式是一个用函数在某点的信息描述其附近取值的公式。 局部有效性">
 <meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5hmziysij31kw089tan.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -308,6 +308,10 @@
         <h2 id="写写常见的几种最优化方法"><a href="#写写常见的几种最优化方法" class="headerlink" title="写写常见的几种最优化方法"></a>写写常见的几种最优化方法</h2><p>首先肯定是要说泰勒公式的了。。</p>
 <p>泰勒公式是一个用函数在某点的信息描述其<em>附近</em>取值的公式。</p>
 <p><strong>局部有效性</strong></p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
 <p>它的基本形式是：<img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5hmziysij31kw089tan.jpg" alt=""></p>
 <p>这是后续优化方法的迭代基础</p>
 <h3 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h3><p>在机器学习任务中，需要最小化损失函数L（theta），其中theta是要求解的模型参数。梯度下降法常用来求解这种无约束最优化问题，它是一种迭代方法:选取初值，不断迭代，更新theta的值，进行损失函数的极小化。梯度下降法的优化思想是用当前位置负梯度方向作为搜索方向，因为该方向为当前位置的最快下降方向，所以也被称为是”最速下降法“。最速下降法越接近目标值，步长越小，前进越慢。</p>
@@ -339,7 +343,7 @@
         <p><span>本文标题:</span><a href="/2017/05/06/写写常见的几种最优化方法/">梯度下降法和牛顿法</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2017-05-06, 16:35:00</p>
-        <p><span>最后更新:</span>2018-03-08, 17:33:51</p>
+        <p><span>最后更新:</span>2018-07-19, 18:32:29</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/05/06/写写常见的几种最优化方法/" title="梯度下降法和牛顿法">http://yoursite.com/2017/05/06/写写常见的几种最优化方法/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/05/06/写写常见的几种最优化方法/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

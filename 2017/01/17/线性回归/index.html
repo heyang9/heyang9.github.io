@@ -15,12 +15,12 @@
 
 
 
-<meta name="description" content="总结了一下最近看的知识和笔记 线性回归 逻辑回归线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归（logistic regression）。 据说LR简单、解释性好、计算速度快，和前面的模型不同，逻辑回归是用来做">
+<meta name="description" content="总结了一下最近看的知识和笔记 线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归">
 <meta property="og:type" content="article">
 <meta property="og:title" content="逻辑回归总结">
 <meta property="og:url" content="http://yoursite.com/2017/01/17/线性回归/index.html">
 <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
-<meta property="og:description" content="总结了一下最近看的知识和笔记 线性回归 逻辑回归线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归（logistic regression）。 据说LR简单、解释性好、计算速度快，和前面的模型不同，逻辑回归是用来做">
+<meta property="og:description" content="总结了一下最近看的知识和笔记 线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归">
 <meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5bva7dh9j313a0n8wg7.jpg">
 <meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp5bvryhdcj313e0nrwn6.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp5bvxa0qwj31360an0te.jpg">
@@ -28,10 +28,10 @@
 <meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fp5cf5yah2j31dq0480st.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp5d5kgftxj31kw0bc769.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp5d5odj9sj31kw04h3yy.jpg">
-<meta property="og:updated_time" content="2018-03-08T06:23:36.848Z">
+<meta property="og:updated_time" content="2018-07-19T10:32:15.586Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="逻辑回归总结">
-<meta name="twitter:description" content="总结了一下最近看的知识和笔记 线性回归 逻辑回归线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归（logistic regression）。 据说LR简单、解释性好、计算速度快，和前面的模型不同，逻辑回归是用来做">
+<meta name="twitter:description" content="总结了一下最近看的知识和笔记 线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归">
 <meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5bva7dh9j313a0n8wg7.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -308,6 +308,11 @@
       
           
         <p>总结了一下最近看的知识和笔记</p>
+<p>线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归</p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
 <h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5bva7dh9j313a0n8wg7.jpg" alt=""><br><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp5bvryhdcj313e0nrwn6.jpg" alt=""><br><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp5bvxa0qwj31360an0te.jpg" alt=""><br><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fp5bvnh1loj312x0du3zm.jpg" alt=""></p>
 <h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>线性回归、岭回归、lasso回归和多项式回归模型。这些模型都是广义线性回归模型的具体形式，广义线性回归是一种灵活的框架，比普通线性回归要求更少的假设。似乎工业界中常用到逻辑回归，那就来看看广义线性回归模型的具体形式的另一种形式，逻辑回归（logistic regression）。</p>
 <p>据说LR简单、解释性好、计算速度快，和前面的模型不同，逻辑回归是用来做分类任务的。分类任务的目标是找一个函数，把观测值匹配到相关的类和标签上。学习算法必须用成对的特征向量和对应的标签来估计匹配函数的参数，从而实现更好的分类效果。简单来说， 逻辑回归是一种用于解决二分类（0 or 1）问题的机器学习方法，用于估计某种事物的可能性。这里用的是“可能性”，而非数学上的“概率”，logisitc回归的结果并非数学定义中的概率值，不可以直接当做概率值来用。该结果往往用于和其他特征值加权求和，而非直接相乘。</p>
@@ -335,7 +340,7 @@
         <p><span>本文标题:</span><a href="/2017/01/17/线性回归/">逻辑回归总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2017-01-17, 10:37:21</p>
-        <p><span>最后更新:</span>2018-03-08, 14:23:36</p>
+        <p><span>最后更新:</span>2018-07-19, 18:32:15</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/01/17/线性回归/" title="逻辑回归总结">http://yoursite.com/2017/01/17/线性回归/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/01/17/线性回归/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

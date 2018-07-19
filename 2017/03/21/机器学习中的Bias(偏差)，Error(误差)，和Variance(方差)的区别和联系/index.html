@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系这个比较基础的概念我觉得是很好理解的👌🏻 看图  这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况，如右上图，会很分散（容易收到样本数据影响，稍微的扰动会带来很大影响） variance和bias">
+<meta name="description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系ias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况.variance和bias不同的是，它不是对样本拟合程度的反应，它表现的是模型在测试集上的表现，降低方差需要减小模型复杂度，但是会容易欠拟合，带来的结果是high bias。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bias(偏差)，Error(误差)，和Variance(方差)">
 <meta property="og:url" content="http://yoursite.com/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/index.html">
 <meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
-<meta property="og:description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系这个比较基础的概念我觉得是很好理解的👌🏻 看图  这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况，如右上图，会很分散（容易收到样本数据影响，稍微的扰动会带来很大影响） variance和bias">
+<meta property="og:description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系ias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况.variance和bias不同的是，它不是对样本拟合程度的反应，它表现的是模型在测试集上的表现，降低方差需要减小模型复杂度，但是会容易欠拟合，带来的结果是high bias。">
 <meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5gbz8cmfj30k00tw0u5.jpg">
 <meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fp5h42bf9sj30jg0j8t9f.jpg">
-<meta property="og:updated_time" content="2018-03-08T08:09:50.710Z">
+<meta property="og:updated_time" content="2018-07-19T10:31:01.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bias(偏差)，Error(误差)，和Variance(方差)">
-<meta name="twitter:description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系这个比较基础的概念我觉得是很好理解的👌🏻 看图  这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况，如右上图，会很分散（容易收到样本数据影响，稍微的扰动会带来很大影响） variance和bias">
+<meta name="twitter:description" content="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系ias描述的是模型输出的预测结果的期望与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况.variance和bias不同的是，它不是对样本拟合程度的反应，它表现的是模型在测试集上的表现，降低方差需要减小模型复杂度，但是会容易欠拟合，带来的结果是high bias。">
 <meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5gbz8cmfj30k00tw0u5.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -302,7 +302,12 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系"><a href="#机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系" class="headerlink" title="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系"></a>机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系</h2><p>这个比较基础的概念我觉得是很好理解的👌🏻</p>
+        <h2 id="机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系"><a href="#机器学习中的Bias-偏差-，Error-误差-，和Variance-方差-的区别和联系" class="headerlink" title="机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系"></a>机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系</h2><p>ias描述的是模型输出的<strong>预测结果的期望</strong>与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况.variance和bias不同的是，它不是对样本拟合程度的反应，它表现的是模型在测试集上的表现，降低方差需要减小模型复杂度，但是会容易欠拟合，带来的结果是high bias。</p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
+<p>这个比较基础的概念我觉得是很好理解的👌🏻</p>
 <p>看图</p>
 <p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fp5gbz8cmfj30k00tw0u5.jpg" alt=""></p>
 <p>这个图基本上就能看懂他们的区别联系了：bias描述的是模型输出的<strong>预测结果的期望</strong>与真实结果的差距，如果要减小bias就需要增加模型复杂度，但是容易出现过拟合的情况，如右上图，会很分散（容易收到样本数据影响，稍微的扰动会带来很大影响）</p>
@@ -344,7 +349,7 @@
         <p><span>本文标题:</span><a href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/">Bias(偏差)，Error(误差)，和Variance(方差)</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2017-03-21, 10:31:23</p>
-        <p><span>最后更新:</span>2018-03-08, 16:09:50</p>
+        <p><span>最后更新:</span>2018-07-19, 18:31:01</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/" title="Bias(偏差)，Error(误差)，和Variance(方差)">http://yoursite.com/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
