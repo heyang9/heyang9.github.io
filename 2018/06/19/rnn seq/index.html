@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdyz5woogj30qb0f2dja.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz3055qdj30qo0k0ab8.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1ftdz29e80nj30d20d5myp.jpg">
-<meta property="og:updated_time" content="2018-07-19T10:20:31.104Z">
+<meta property="og:updated_time" content="2018-07-19T10:24:20.523Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RNN seq2seq">
 <meta name="twitter:description" content="之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。">
@@ -308,10 +308,7 @@
       
           
         <p>之前对RNN的总结比较泛泛，今天从seq2seq这种具体模型来记录一下。之前是用LSTM做anomaly detection，可以看作一个一对一的模型，同时RNN（LSTM/GRU）在时间序列预测中也很常见，之前有些arima模型做预测，这里RNN可以看作本质上学的很好的ARIMA。</p>
-<ul>
-<li><a id="more"></a>
-</li>
-</ul>
+ <a id="more"></a>
 <p>RNN的重点是循环，即此刻的状态包含上一时刻的历史，又是下一时刻变化的依据。<br>这个图很经典</p>
 <p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftdxhkhl8jj30go058dfz.jpg" alt=""></p>
 <p>如图，RNN有很多种形式。每一个矩形是一个向量，箭头则表示函数（比如矩阵相乘）。输入向量用红色标出，输出向量用蓝色标出，绿色的矩形是RNN的状态（下面会详细介绍）。从做到右：（1）没有使用RNN的Vanilla模型，从固定大小的输入得到固定大小输出（比如图像分类）。（2）序列输出（比如图片字幕，输入一张图片输出一段文字序列）。（3）序列输入（比如情感分析，输入一段文字然后将它分类成积极或者消极情感）。（4）序列输入和序列输出（比如机器翻译：一个RNN读取一条英文语句然后将它以法语形式输出）。（5）同步序列输入输出（比如视频分类，对视频中每一帧打标签）。我们注意到在每一个案例中，都没有对序列长度进行预先特定约束，因为递归变换（绿色部分）是固定的，而且我们可以多次使用。</p>
@@ -342,7 +339,7 @@
         <p><span>本文标题:</span><a href="/2018/06/19/rnn seq/">RNN seq2seq</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
         <p><span>发布时间:</span>2018-06-19, 09:22:21</p>
-        <p><span>最后更新:</span>2018-07-19, 18:20:31</p>
+        <p><span>最后更新:</span>2018-07-19, 18:24:20</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/06/19/rnn seq/" title="RNN seq2seq">http://yoursite.com/2018/06/19/rnn seq/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/06/19/rnn seq/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
