@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Yang He" />
+
+
+
+<meta name="description" content="Spark种种共享内存计算混合并行计算： 当计算机执行一项进程时，操作系统会分配给应用程序一定的内存供其使用. 概括而言，由主进程创建的全部线程共享了这些内存，每个线程都可以访问储存在内存中的全部变量。内存共享允许线程直接访问共享的变量，而且程序不必进行通信，也能在线程之间交换信息。在计算中，通信很可能是一个巨大瓶颈，应当尽可能避免；并行运算目前是加快计算速度的主要方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta property="og:url" content="http://heyang9.github.io/2018/07/20/Spark种种/index.html">
+<meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta property="og:description" content="Spark种种共享内存计算混合并行计算： 当计算机执行一项进程时，操作系统会分配给应用程序一定的内存供其使用. 概括而言，由主进程创建的全部线程共享了这些内存，每个线程都可以访问储存在内存中的全部变量。内存共享允许线程直接访问共享的变量，而且程序不必进行通信，也能在线程之间交换信息。在计算中，通信很可能是一个巨大瓶颈，应当尽可能避免；并行运算目前是加快计算速度的主要方式。">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1ftgd5i6g5gj31kw0hau05.jpg">
+<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftgdab88g5j30bh06jt8x.jpg">
+<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftgddq07vij30es06mmxe.jpg">
+<meta property="og:updated_time" content="2018-07-20T09:33:56.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta name="twitter:description" content="Spark种种共享内存计算混合并行计算： 当计算机执行一项进程时，操作系统会分配给应用程序一定的内存供其使用. 概括而言，由主进程创建的全部线程共享了这些内存，每个线程都可以访问储存在内存中的全部变量。内存共享允许线程直接访问共享的变量，而且程序不必进行通信，也能在线程之间交换信息。在计算中，通信很可能是一个巨大瓶颈，应当尽可能避免；并行运算目前是加快计算速度的主要方式。">
+<meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1ftgd5i6g5gj31kw0hau05.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/wuwu.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Yang He</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Yang He</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/wuwu.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Yang He</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-Spark种种" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/07/20/Spark种种/" class="article-date">
+      <time datetime="2018-07-20T08:22:16.858Z" itemprop="datePublished">2018-07-20</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Spark种种"><a href="#Spark种种" class="headerlink" title="Spark种种"></a>Spark种种</h2><h3 id="共享内存计算"><a href="#共享内存计算" class="headerlink" title="共享内存计算"></a>共享内存计算</h3><p>混合并行计算：</p>
+<p>当计算机执行一项进程时，操作系统会分配给应用程序一定的内存供其使用. 概括而言，由主进程创建的全部线程共享了这些内存，每个线程都可以访问储存在内存中的全部变量。内存共享允许线程直接访问共享的变量，而且程序不必进行通信，也能在线程之间交换信息。在计算中，通信很可能是一个巨大瓶颈，应当尽可能避免；并行运算目前是加快计算速度的主要方式。<br> <a id="more"></a></p>
+<h3 id="分布式内存计算"><a href="#分布式内存计算" class="headerlink" title="分布式内存计算"></a>分布式内存计算</h3><p>共享内存计算是指将一个程序的任务分割成多个较小的、可在一个节点内并行运行的工作单元，即线程。这些线程共享了对某一部分内存的访问，故称之为共享内存计算。与之相比，分布式内存计算 的并行过程是通过多个进程（执行多线程）来完成的；每个进程都拥有各自的内存空间，其他进程无法访问。在分布式内存 方法中，这些进程分布在多台计算机、多个处理器和/或多个内核中，共同组成了一个并行程序。</p>
+<blockquote>
+<p>简而言之，内存不再是共享的，而是被分配给各个进程。</p>
+</blockquote>
+<p>一台计算机的内存和计算能力是有限的。为了提升性能及增加可用的内存量，科学家开始将几台计算机连接在一起，组成了所谓的计算机集群。</p>
+<p>通过计算机集群来分配物理进程，这种方法将并行问题的复杂度提升到了一个新水平。每个问题都要分割成更小的单元——不仅数据需要拆分，对应的任务也要分配给各台机器。以矩阵类的问题为例，在执行庞大的阵列运算时，阵列可以拆分成区块（可能是不连续的，也可能是重叠的），每个私有区块由一个进程专门负责。当然，每个区块上的运算和数据可以和其他区块上的运算和数据相互耦合，所以在进程之间引入通信机制成为了必要。<br>为了实现通信，其他进程需要的数据或信息会被收集成数据块，然后通过发送消息与其他进程交换数据。这种方法被称为消息传递，模式可以是全局交换（多对多、多对一、一对多）或点对点交换（一个点发送进程，一个点接收进程）。根据整个问题的耦合程度，消息交换可能需要大量的通信。<br>人们希望尽可能在本地处理数据和执行运算，目的是尽量减少通信量。</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1ftgd5i6g5gj31kw0hau05.jpg" alt=""></p>
+<p>使用计算机集群时，科学家可以从两个方面受益于额外的资源：<br>第一，由于内存增多、计算能力增强，科学家可以求解更大型的问题。具体来说，一方面增加额外的进程，另一方面保持每个进程的工作负载（即子问题的规模和运算数量）水平不变，由此在相同的时间内解决规模更大的问题。这叫做弱扩展。<br>第二，科学家可以在保持整体问题规模不变的前提下，将原问题分割成更多更小的子问题，并分配给更多进程。这样一来，每个进程的工作量减小，就可以更快地完成任务。在最优情况下，假如一个规模固定的问题被分配给 P 个进程，那么计算速度就会提高 P倍。相比于单位时间（一个小时、一天等）内运行一次仿真，第二种方法允许在单位时间内运行 P 次仿真。这种方法称为强扩展。</p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftgdab88g5j30bh06jt8x.jpg" alt=""></p>
+<p>&gt;<br>分布式内存计算拥有众多优点，其中一个优点与共享内存相同，那就是为了增强系统的计算能力，不管我们在集群中增加内核、插槽还是节点，都可以启动更多进程，充分利用新添加的资源。运用更强大的计算能力，我们可以更快地获得仿真结果。<br>使用分布式内存的另一个好处是，每向集群中添加一个计算节点，我们就会得到更多可用内存。这意味着我们不再受限于主板分配的内存空间，因此理论上可以计算任意大的模型。在多数情况下，分布式内存计算的扩展性强于共享内存计算，也就是说，在加速比达到饱和之前，可以使用的进程数（与可以使用的线程数相比）会多得多。</p>
+<h3 id="内存计算产品分类"><a href="#内存计算产品分类" class="headerlink" title="内存计算产品分类"></a>内存计算产品分类</h3><p>Ø  分布式缓存(Memcached/Redis)：主要使用场景就是将频繁访问的数据保存在内存中避免磁盘加载。多数产品都是分布式内存key/value存储，并提供简单的put和get方法。随着不断成熟，与后端的read/write-through，ACID事务，复制和分区，eviction策略等也逐渐加入到产品中，这些特性也成为了后来出现的IMDG/IMCG产品的基础。</p>
+<p>Ø  内存数据/计算网格(IMDG/IMCG, GemFire/Hazelcast/GridGain)：数据网格的显著特性是co-location计算，将计算过程发送到数据本地执行。这是数据/计算网格的关键创新点，在数据量不断增长的情况下再加数据抓取过来执行计算已经变得不现实了。这种创新也不仅使内存计算从简单的缓存产品进化，也激发了后来IMDB的诞生。</p>
+<p>Ø  分布式内存数据库(IMDB, VoltDB/Impala)：分布式内存数据库的显著特性是增加了基于标准SQL或MapReduce的MPP(大规模并行处理)能力。如果说数据网格的核心是解决数据量不断增长下计算的困境，那么分布式内存数据库就是解决计算复杂度不断增长的困境。它提供了分布式SQL、复杂(分布式共享)索引、MapReduce处理等工具。</p>
+<p><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1ftgddq07vij30es06mmxe.jpg" alt=""></p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>1）事务处理：主要分为Cache(Memcached, Redis, GemFire)、RDBMS、NewSQL(以VoltDB为首的)三部分，缓存和NewSQL数据库是关注的重点。</p>
+<p>2）流式处理：Storm本身只是计算的框架，而Spark-Streaming才实现了内存计算式的流处理。</p>
+<p>3）分析阶段的对比：</p>
+<p>Ø  通用处理：MapReduce，Spark</p>
+<p>Ø  查询：Hive，Pig，Spark-Shark</p>
+<p>Ø  数据挖掘：Mahout，Spark-MLLib，Spark-GraphX</p>
+<h3 id="Spark基础"><a href="#Spark基础" class="headerlink" title="Spark基础"></a>Spark基础</h3><p>Spark是一个基于内存计算的开源的集群计算系统，目的是让数据分析更加快速。Spark非常小巧玲珑，由加州伯克利大学AMP实验室的Matei为主的小团队所开发。使用的语言是Scala，项目的core部分的代码只有63个Scala文件，非常短小精悍。</p>
+<p>Spark 是一种与 Hadoop 相似的开源集群计算环境，但是两者之间还存在一些不同之处，这些有用的不同之处使 Spark 在某些工作负载方面表现得更加优越，换句话说，Spark 启用了内存分布数据集，除了能够提供交互式查询外，它还可以优化迭代工作负载。Spark 是在 Scala 语言中实现的，它将 Scala 用作其应用程序框架。与 Hadoop 不同，Spark 和 Scala 能够紧密集成，其中的 Scala 可以像操作本地集合对象一样轻松地操作分布式数据集。尽管创建 Spark 是为了支持分布式数据集上的迭代作业，但是实际上它是对 Hadoop 的补充，可以在 Hadoop 文件系统中并行运行。通过名为Mesos的第三方集群框架可以支持此行为。</p>
+<p>Spark 集群计算架构虽然 Spark 与 Hadoop 有相似之处，但它提供了具有有用差异的一个新的集群计算框架。首先，Spark 是为集群计算中的特定类型的工作负载而设计，即那些在并行操作之间重用工作数据集（比如机器学习算法）的工作负载。为了优化这些类型的工作负载，Spark 引进了内存集群计算的概念，可在内存集群计算中将数据集缓存在内存中，以缩短访问延迟。Spark 还引进了名为弹性分布式数据集(RDD) 的抽象。RDD 是分布在一组节点中的只读对象集合。这些集合是弹性的，如果数据集一部分丢失，则可以对它们进行重建。重建部分数据集的过程依赖于容错机制，该机制可以维护 “血统”（即允许基于数据衍生过程重建部分数据集的信息）。RDD 被表示为一个 Scala 对象，并且可以从文件中创建它；一个并行化的切片（遍布于节点之间）；另一个 RDD 的转换形式；并且最终会彻底改变现有 RDD 的持久性，比如请求缓存在内存中。Spark 中的应用程序称为驱动程序，这些驱动程序可实现在单一节点上执行的操作或在一组节点上并行执行的操作。与 Hadoop 类似，Spark 支持单节点集群或多节点集群。对于多节点操作，Spark 依赖于 Mesos 集群管理器。Mesos 为分布式应用程序的资源共享和隔离提供了一个有效平台。该设置充许 Spark 与 Hadoop 共存于节点的一个共享池中。</p>
+<blockquote>
+<p>拥有Hadoop MapReduce所具有的优点；但不同于MapReduce的是Job中间输出和结果可以保存在内存中，从而不再需要读写HDFS，<br>因此Spark能更 好地适用于数据挖掘与机器学习等需要迭代的map reduce的算法</p>
+</blockquote>
+<p><code>Spark与Hadoop的对比</code></p>
+<p>Spark的中间数据放到内存中，对于迭代运算效率更高。 Spark更适合于迭代运算比较多的ML和DM运算。因为在Spark里面，有RDD的抽象概念。 Spark比Hadoop更通用。 Spark提供的数据集操作类型有很多种，不像Hadoop只提供了Map和Reduce两种操作。比如map, filter, flatMap, sample, groupByKey, reduceByKey, union,<br>join, cogroup, mapValues, sort,partionBy等多种操作类型，Spark把这些操作称为Transformations。同时还提供Count, collect, reduce, lookup, save等多种actions操作。</p>
+<p>摘文A：<br>Hadoop，Spark和Storm是目前最重要的三大分布式计算系统，Hadoop常用于离线的复杂的大数据处理，Spark常用于离线的快速的大数据处理，而Storm常用于在线的实时的大数据处理。</p>
+<p>摘文B：<br><strong>大数据生态的两个主要部分是Hadoop软件框架和Spark内存级计算引擎</strong>。Hadoop包含四个项目：Hadoop common，HDFS，YARN和MapReduce。 HDFS用于存储数据，HDFS文件被划分成区块分布在集群上； 用于管理集群资源（CPU和内存）和支持Hadoop的公共实用程序；<br>MapReduce是利用磁盘的高I/O操作实现并行计算的框架，但它在迭代计算中性能不足。Spark的作用相当于MapReduce，它是基于内存的计算引擎。Spark将迭代过程的中间数据缓存到内存中，根据需要多次重复使用。此外，Spark利用RDD结构提升了容错性能。</p>
+<h3 id="RDD"><a href="#RDD" class="headerlink" title="RDD"></a>RDD</h3><p>在Spark里，所有的处理和计算任务都会被组织成一系列Resilient Distributed Dataset(弹性分布式数据集，简称RDD)上的transformations(转换) 和 actions(动作)。 </p>
+<p>RDD是一个包含诸多元素、被划分到不同节点上进行并行处理的数据集合，可以将RDD持久化到内存中，这样就可以有效地在并行操作中复用（在机器学习这种需要反复迭代的任务中非常有效）。 </p>
+<p>在节点发生错误时RDD也可以根据其Lineage自动计算恢复。<br>RDD是Spark的最基本抽象，是对分布式内存的抽象使用，以操作本地集合的方式来操作分布式数据集的抽象实现。<br>RDD是Spark最核心的内容，它表示已被分区、不可变的、能够被并行操作的数据集，不同的数据集格式对应不同的RDD实现。<br>RDD必须是可序列化的。<br>RDD只能从持久存储或通过Transformation操作产生。</p>
+<h3 id="工作架构"><a href="#工作架构" class="headerlink" title="工作架构"></a>工作架构</h3><p>Spark可以分为1个driver(笔记本电脑或者集群网关机器上，用户编写的Spark程序)和若干个executor(在RDD分布的各个节点上)。</p>
+<p>通过SparkContext(简称sc)连接Spark集群、创建RDD、累加器（accumlator）、广播变量（broadcast variables），简单可以认为SparkContext是Spark程序的根本。 </p>
+<p>Driver会把计算任务分成一系列小的task，然后送到executor执行。executor之间可以通信，在每个executor完成自己的task以后，所有的信息会被传回。 </p>
+<p>虽然是基于scala开发的，但是也提供了python的借口，pyspark。下了一个搭好环境的vbox，实践中</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2018/07/20/Spark种种/"></a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">Yang He</a></p>
+        <p><span>Created:</span>2018-07-20, 16:22:16</p>
+        <p><span>Updated:</span>2018-07-20, 17:33:56</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2018/07/20/Spark种种/" title="">http://heyang9.github.io/2018/07/20/Spark种种/</a>
+            <span class="copy-path" data-clipboard-text="From http://heyang9.github.io/2018/07/20/Spark种种/　　By Yang He" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/06/19/rnn seq/">
+                    RNN seq2seq
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark种种"><span class="toc-number">1.</span> <span class="toc-text"><a href="#Spark&#x79CD;&#x79CD;" class="headerlink" title="Spark&#x79CD;&#x79CD;"></a>Spark&#x79CD;&#x79CD;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#共享内存计算"><span class="toc-number">1.1.</span> <span class="toc-text"><a href="#&#x5171;&#x4EAB;&#x5185;&#x5B58;&#x8BA1;&#x7B97;" class="headerlink" title="&#x5171;&#x4EAB;&#x5185;&#x5B58;&#x8BA1;&#x7B97;"></a>&#x5171;&#x4EAB;&#x5185;&#x5B58;&#x8BA1;&#x7B97;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式内存计算"><span class="toc-number">1.2.</span> <span class="toc-text"><a href="#&#x5206;&#x5E03;&#x5F0F;&#x5185;&#x5B58;&#x8BA1;&#x7B97;" class="headerlink" title="&#x5206;&#x5E03;&#x5F0F;&#x5185;&#x5B58;&#x8BA1;&#x7B97;"></a>&#x5206;&#x5E03;&#x5F0F;&#x5185;&#x5B58;&#x8BA1;&#x7B97;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存计算产品分类"><span class="toc-number">1.3.</span> <span class="toc-text"><a href="#&#x5185;&#x5B58;&#x8BA1;&#x7B97;&#x4EA7;&#x54C1;&#x5206;&#x7C7B;" class="headerlink" title="&#x5185;&#x5B58;&#x8BA1;&#x7B97;&#x4EA7;&#x54C1;&#x5206;&#x7C7B;"></a>&#x5185;&#x5B58;&#x8BA1;&#x7B97;&#x4EA7;&#x54C1;&#x5206;&#x7C7B;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用场景"><span class="toc-number">1.4.</span> <span class="toc-text"><a href="#&#x5E94;&#x7528;&#x573A;&#x666F;" class="headerlink" title="&#x5E94;&#x7528;&#x573A;&#x666F;"></a>&#x5E94;&#x7528;&#x573A;&#x666F;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spark基础"><span class="toc-number">1.5.</span> <span class="toc-text"><a href="#Spark&#x57FA;&#x7840;" class="headerlink" title="Spark&#x57FA;&#x7840;"></a>Spark&#x57FA;&#x7840;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RDD"><span class="toc-number">1.6.</span> <span class="toc-text"><a href="#RDD" class="headerlink" title="RDD"></a>RDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工作架构"><span class="toc-number">1.7.</span> <span class="toc-text"><a href="#&#x5DE5;&#x4F5C;&#x67B6;&#x6784;" class="headerlink" title="&#x5DE5;&#x4F5C;&#x67B6;&#x6784;"></a>&#x5DE5;&#x4F5C;&#x67B6;&#x6784;</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| 呜呜部落格(•̀ᴗ•́)و ̑̑　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/06/19/rnn seq/" title="Next: RNN seq2seq">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/07/20/Spark种种/">Spark种种</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/19/rnn seq/">RNN seq2seq</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/18/ CNN笔记(trick&notes)/">CNN笔记(trick&notes)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/07/迁移学习与多任务学习/">迁移学习与多任务学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/CNN/">一些CNN知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/wuwu/">LSTM & RNN 回顾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/gaga/">激活函数和梯度消失问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/12/未命名/">一个有意思的Deep Learning笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/02/XGBoost原理/">集成算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/ARIMA😛/">利用ARIMA模型做时间序列预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/git账号/">查看本地git的账号是否是目前登陆的邮箱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/27/略谈EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/02/正则化的问题/">L1正则化和L2正则化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/18/样本不平衡/">机器学习中样本不平衡的解决办法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/写写常见的几种最优化方法/">梯度下降法和牛顿法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/">Bias(偏差)，Error(误差)，和Variance(方差)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/LDA知识点总结/">线性判别分析是什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/线性回归/">逻辑回归总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/解决python报错/">Python 问题（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/pandas安装问题/">Python问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/mac+hexo/">博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Yang He
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
