@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Yang He" />
+
+
+
+<meta name="description" content="这个月的知识点总结。 1 P-R曲线和ROC曲线 P-R：在机器学习中分类器往往输出的不是类别标号，而是属于某个类别的概率值，根据分类器的预测结果从大到小对样例进行排序，逐个把样例加入正例进行预测，算出此时的P、R值。  ROC：和P-R曲线类似，ROC曲线用FPR（假正例率）作横轴，用TPR（真正例率）作纵轴，其中：FPR=FP/TN+FP TPR=TP/TP+FN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些算法基础知识和目标检测的问题">
+<meta property="og:url" content="http://heyang9.github.io/2018/08/28/7月总结/index.html">
+<meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta property="og:description" content="这个月的知识点总结。 1 P-R曲线和ROC曲线 P-R：在机器学习中分类器往往输出的不是类别标号，而是属于某个类别的概率值，根据分类器的预测结果从大到小对样例进行排序，逐个把样例加入正例进行预测，算出此时的P、R值。  ROC：和P-R曲线类似，ROC曲线用FPR（假正例率）作横轴，用TPR（真正例率）作纵轴，其中：FPR=FP/TN+FP TPR=TP/TP+FN">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fundqfqm0pj31es0f6td6.jpg">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*sNH_XnRaFxGKBJbLEXgwuQ.png">
+<meta property="og:image" content="http://lanbing510.info/public/img/posts/rcnn/rcnn.png">
+<meta property="og:image" content="http://lanbing510.info/public/img/posts/rcnn/sppnet.png">
+<meta property="og:image" content="http://lanbing510.info/public/img/posts/rcnn/image02.png">
+<meta property="og:image" content="http://lanbing510.info/public/img/posts/rcnn/frcnn.png">
+<meta property="og:image" content="http://lanbing510.info/public/img/posts/rcnn/ferrcnn.png">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fuhci8c8v5j31kw0dldoj.jpg">
+<meta property="og:image" content="http://nooverfit.com/wp/wp-content/uploads/2017/07/QQ截图20170713172621.png">
+<meta property="og:image" content="http://nooverfit.com/wp/wp-content/uploads/2017/07/SSD_Diag1.png">
+<meta property="og:image" content="http://nooverfit.com/wp/wp-content/uploads/2017/07/Screenshot-from-2017-07-13-202323.png">
+<meta property="og:image" content="http://nooverfit.com/wp/wp-content/uploads/2017/07/Screenshot-from-2017-07-16-095446.png">
+<meta property="og:image" content="http://nooverfit.com/wp/wp-content/uploads/2017/07/Screenshot-from-2017-07-16-100130.png">
+<meta property="og:updated_time" content="2018-08-28T02:18:22.721Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一些算法基础知识和目标检测的问题">
+<meta name="twitter:description" content="这个月的知识点总结。 1 P-R曲线和ROC曲线 P-R：在机器学习中分类器往往输出的不是类别标号，而是属于某个类别的概率值，根据分类器的预测结果从大到小对样例进行排序，逐个把样例加入正例进行预测，算出此时的P、R值。  ROC：和P-R曲线类似，ROC曲线用FPR（假正例率）作横轴，用TPR（真正例率）作纵轴，其中：FPR=FP/TN+FP TPR=TP/TP+FN">
+<meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fundqfqm0pj31es0f6td6.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>一些算法基础知识和目标检测的问题 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/wuwu.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Yang He</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Yang He</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/wuwu.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Yang He</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-7月总结" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/28/7月总结/" class="article-date">
+      <time datetime="2018-08-28T02:28:21.000Z" itemprop="datePublished">2018-08-28</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一些算法基础知识和目标检测的问题
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>这个月的知识点总结。</p>
+<p>1 <strong>P-R曲线和ROC曲线</strong></p>
+<p>P-R：在机器学习中分类器往往输出的不是类别标号，而是属于某个类别的概率值，根据分类器的预测结果从大到小对样例进行排序，逐个把样例加入正例进行预测，算出此时的P、R值。 </p>
+<p>ROC：和P-R曲线类似，ROC曲线用FPR（假正例率）作横轴，用TPR（真正例率）作纵轴，其中：<br>FPR=FP/TN+FP</p>
+<p>TPR=TP/TP+FN</p>
+ <a id="more"></a>
+<p>PR曲线和ROC曲线有什么联系和不同：</p>
+<p>相同点：<br>首先从定义上PR曲线的R值是等于ROC曲线中的TPR值。<br>都是用来评价分类器的性能的。 </p>
+<p>不同点：<br>ROC曲线是单调的而PR曲线不是（根据它能更方便调参），可以用AUC的值得大小来评价分类器的好坏（是否可以用PR曲线围成面积大小来评价呢？）。<br>正负样本的分布失衡的时候，ROC曲线保持不变，而PR曲线会产生很大的变化。 </p>
+<p>2 <strong>目标检测中 hard negative mining是什么</strong></p>
+<p>在bootstrapping方法中,我们先用初始的正负样本(一般是正样本+与正样本同规模的负样本的一个子集)训练分类器,然后再用训练出的分类器对样本进行分类,把其中错误分类的那些样本(hard negative)放入负样本集合,再继续训练分类器,如此反复,直到达到停止条件(比如分类器性能不再提升).</p>
+<p>hard negative就是每次把那些顽固的棘手的错误,再送回去继续练,练到你的成绩不再提升为止.这一个过程就叫做’hard negative mining’.</p>
+<p>对于目标检测中我们会事先标记处ground truth，然后再算法中会生成一系列proposal，这些proposal有跟标记的ground truth重合的也有没重合的，那么重合度（IOU）超过一定阈值（通常0.5）的则认定为是正样本，以下的则是负样本。然后扔进网络中训练。However，这也许会出现一个问题那就是正样本的数量远远小于负样本，这样训练出来的分类器的效果总是有限的，会出现许多false positive，把其中得分较高的这些false positive当做所谓的Hard negative，既然mining出了这些Hard negative，就把这些扔进网络再训练一次，从而加强分类器判别假阳性的能力。ps：Fast中把IOU小于0.1的作为hard example mining，是不是说也可以预先定义hard example。</p>
+<p>（不是很理解）（大概就先说目标检测中负例比正例多）</p>
+<p>3 <strong>最大似然估计（MLE）、最大后验概率估计（MAP）区别</strong></p>
+<p>概率是已知模型和参数，推数据。统计是已知数据，推模型和参数。</p>
+<p>贝叶斯公式就是在描述，你有多大把握能相信一件证据？（how much you can trust the evidence）</p>
+<p>似然函数P(x|θ)：</p>
+<p>输入有两个：x表示某一个具体的数据；θ表示模型的参数。如果θ<br>是已知确定的，x<br>是变量，这个函数叫做概率函数(probability function)，它描述对于不同的样本点x，其出现概率是多少。</p>
+<p>如果x<br>是已知确定的，θ<br>是变量，这个函数叫做似然函数(likelihood function), 它描述对于不同的模型参数，出现x这个样本点的概率是多少。</p>
+<blockquote>
+<p>最大似然估计是求参数θ<br>, 使似然函数P(x0|θ)<br>最大。最大后验概率估计则是想求θ<br>使P(x0|θ)P(θ)<br>最大。求得的θ<br>不单单让似然函数大，θ<br>自己出现的先验概率也得大。 （这有点像正则化里加惩罚项的思想，不过正则化里是利用加法，而MAP里是利用乘法）</p>
+</blockquote>
+<p>MAP就是多个作为因子的先验概率P(θ)<br>。或者，也可以反过来，认为MLE是把先验概率P(θ)<br>认为等于1，即认为θ<br>是均匀分布。</p>
+<blockquote>
+<p>朴素贝叶斯：由期望风险最小化到后验概率最大化</p>
+<p>后验概率就是极大似然乘先验，即贝叶斯估计</p>
+<p>概率估计方法：极大似然估计，贝叶斯估计</p>
+</blockquote>
+<p>4 快速排序的算法复杂度的那个递推关系式: T(n) = 2T(n/2) + n</p>
+<p>5 <strong>熵</strong></p>
+<p>单个变量 -plogp</p>
+<p>(X,Y) 条件熵 大概意思，x和y一起是属于某个分布的，x给定的时候y的条件概率分布。信息增益就是得知特征X的信息而使得Y的信息的不确定性减少的程度</p>
+<p>决策树中的信息增益等价于训练数据集中类与特征的互信息。以信息增益作为划分训练数据集的特征，存在偏向于选择取值较多的特征的问题。使用信息增益比可以对其进行校正。</p>
+<p>信息增益g(D,A)=H(D)-H(D|A)</p>
+<p>信息增益比 g(D,A)/Ha(D) 即信息增益除以数据集D关于特征A的值的熵</p>
+<p>6 <strong>树的剪枝</strong></p>
+<p>加入损失函数： Ca(T)=C(T)+a|T|</p>
+<p>决策树剪枝通过优化损失函数还考虑减小模型复杂度。利用损失函数最小原则进行剪枝就是用正则化的极大似然估计进行模型选择。（树本身可以看作极大似然）</p>
+<p>具体操作：回缩，得到损失函数最小的子树，可以用动态规划实现</p>
+<p>CART： 回归树 平方误差最小化<br>        分类树 Gini最小化</p>
+<pre><code>gini： 假设有k个类，样本点属于第k类的概率为pk，则gini(p)=1-(pk)**2从一到k求和
+</code></pre><p>CART剪枝： 从完全生长的决策树的底端减去一些子树，使决策树变小，形成一个子树序列{T0,T1,……,Tn}；然后通过交叉验证在独立的验证数据集上对子树序列进行验证</p>
+<p>rf分类，gbdt分类或回归，rf一般不剪枝，gbdt剪枝，lgb更适合分布式</p>
+<p>树的生成过程：CART是二叉树，CART分类树在每次分枝时，是穷举每一个feature的每一个阈值，根据GINI系数找到使不纯性降低最大的的feature以及其阀值，然后按照feature&lt;=阈值，和feature&gt;阈值分成的两个分枝，每个分支包含符合分支条件的样本。用同样方法继续分枝直到该分支下的所有样本都属于统一类别，或达到预设的终止条件，若最终叶子节点中的类别不唯一，则以多数人的类别作为该叶子节点的性别。回归树总体流程也是类似，不过在每个节点（不一定是叶子节点）都会得一个预测值，以年龄为例，该预测值等于属于这个节点的所有人年龄的平均值。分枝时穷举每一个feature的每个阈值找最好的分割点，但衡量最好的标准不再是GINI系数，而是最小化均方差–即（每个人的年龄-预测年龄）^2 的总和 / N，或者说是每个人的预测误差平方和 除以 N。这很好理解，被预测出错的人数越多，错的越离谱，均方差就越大，通过最小化均方差能够找到最靠谱的分枝依据。分枝直到每个叶子节点上人的年龄都唯一（这太难了）或者达到预设的终止条件（如叶子个数上限），若最终叶子节点上人的年龄不唯一，则以该节点上所有人的平均年龄做为该叶子节点的预测年龄。</p>
+<p>gbdt分类的时候也是用的回归树，而且gbdt分裂方式和xgboost不同，gbdt用的跟传统决策树一样，xgboost有自己的打分函数（按损失函数分裂） （gbdt也是按损失函数的？）反正都是暴力贪心枚举，xgboost在数据量太大时用近似算法，基于特征分bin计算，减少了枚举所有特征分裂点的开销）</p>
+<p>gbdt分类时候的损失函数是交叉熵吗？</p>
+<p>第一种方法是用指数损失函数，此时的GBDT会退化为AdaBoost算法， 关于GBDT退化为AdaBoost我会在另一篇博客中进行讨论<br>第二种方法使用类似于逻辑回归的对数似然损失函数的方法，也就是说，我们用的是类别的预测概率值和真实概率值的差来拟合损失</p>
+<p>Friedman采用负二项对数似然损失函数（negative binomial log-likelihood）作为学习器的损失函数</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fundqfqm0pj31es0f6td6.jpg" alt=""></p>
+<p>多酚类用softmax，k个树，二分类一棵树</p>
+<p>DART</p>
+<p>核心思想就是将dropout引入XGBoost</p>
+<p><a href="https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/" target="_blank" rel="noopener">一个xgboost介绍</a></p>
+<p><strong><em>xgboost调参过程</em></strong></p>
+<p>Step 1: Fix learning rate and number of estimators for tuning tree-based parameters</p>
+<p>Step 2: Tune max_depth and min_child_weight</p>
+<p>Step 3: Tune gamma</p>
+<p>Step 4: Tune subsample and colsample_bytree</p>
+<p>Step 6: Reducing Learning Rate</p>
+<p><strong><em>GBDT用的就是回归树！这样结果才是可以相加的</em></strong></p>
+<p>xgboost<em>选择最佳分裂点</em> 节点分裂，按照loss function最小值（不是平方差函数的时候也可以用泰勒展开成二次？）选择一个feature分裂，计算loss function最小值，然后再选一个feature分裂，又得到一个loss function最小值…你枚举完，找一个效果最好的，把树给分裂，就得到了小树苗。</p>
+<p>同层级节点可并行。具体的对于某个节点，节点内选择最佳分裂点，候选分裂点计算增益用多线程并行。决策树的学习最耗时的一个步骤就是对特征的值进行排序（因为要确定最佳分割点），XGBoost在训练之前，预先对数据进行了排序，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小计算量。这个block结构也使得并行成为了可能，在进行节点的分裂时，需要计算每个特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行。</p>
+<p>损失函数不同，所假设的误差的所服从的分布也是不同的，平方误差的话，应该假设误差服从高斯分布，且最优值应该是均值；如果是绝对误差的话，应该假设误差服从拉普拉斯分布，且最优值应该是中位值。 </p>
+<p>正则项：决策树的正则一般考虑的是叶子节点数和叶子权值，比如常见的是使用叶子节点总数和叶子权值平方和的加权作为正则项</p>
+<p>怎么理解泰勒的二阶展开：f(x+x’)=f(x)+g(delta x)+0.5h**2(delta x**2)。这里f（X）就是加入新树之前的模型损失函数，再加新的就是delta x,g h都跟之前所有模型有关</p>
+<p><a href="https://blog.csdn.net/sxf1061926959/article/details/78303555" target="_blank" rel="noopener">一个博客</a></p>
+<p>xgboost还是暴力枚举，但是有预排序和直方图还有并行化，快一点，不是原来的gini而是损失函数，而且分裂后的输出w是有一阶导和二阶导</p>
+<p>7 <strong>逻辑回归和最大熵</strong></p>
+<p>很像，都是学一个概率模型，然后极大似然</p>
+<p>最大熵模型： 在满足约束条件的模型集合中选取熵最大的模型</p>
+<p>最大熵模型的学习过程就是求解最大熵模型的过程，最大熵模型的学习可以形式化为约束最优化问题。然后极大似然估计</p>
+<blockquote>
+<p>LR，最大熵都可以归结为以似然函数为目标函数的最优化问题，通常通过迭代算法求解。他们的目标函数都是光滑的凸函数，多种最优化的方法都适用，保证能找到全局最优解。方法有改进的迭代尺度法，梯度下降法，牛顿法拟牛顿法（后两者更快）</p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*sNH_XnRaFxGKBJbLEXgwuQ.png" alt=""></p>
+<p>Bloom Filter是一种空间效率很高的随机数据结构，它利用位数组很简洁地表示一个集合，并能判断一个元素是否属于这个集合。Bloom Filter的这种高效是有一定代价的：在判断一个元素是否属于某个集合时，有可能会把不属于这个集合的元素误认为属于这个集合（false positive）。因此，Bloom Filter不适合那些“零错误”的应用场合。而在能容忍低错误率的应用场合下，Bloom Filter通过极少的错误换取了存储空间的极大节省。</p>
+<p>10亿个32位正整数，求不同值，只给1GB内存</p>
+<p>8 cnn中1*1卷积核干嘛的</p>
+<pre><code>跨通道信息整合 多个chanel的线形叠加 （升降维，加入非线形）
+</code></pre><p>9 RCNN-&gt;Fast R-CNN-&gt; Faster r-cnn-&gt;YOLO-&gt;SSD</p>
+<p><strong>RCNN</strong></p>
+<p><img src="http://lanbing510.info/public/img/posts/rcnn/rcnn.png" alt=""></p>
+<ul>
+<li><p>一张图像生成1K~2K个候选区域 <strong><em>使用了Selective Search1方法从一张图像生成约2000-3000个候选区域</em></strong></p>
+</li>
+<li><p>对每个候选区域，使用深度网络提取特征 <strong><em>对每个region产生一个固定长度的特征向量</em></strong></p>
+</li>
+<li>特征送入每一类的SVM 分类器，判别是否属于该类 <strong><em>svm训练的时候，因为svm适用于少样本训练，所以对于训练样本数据的IOU要求比较严格，我们只有当bounding box把整个物体都包含进去了，我们才把它标注为物体类别，然后训练svm</em></strong></li>
+<li>使用回归器精细修正候选框位置 </li>
+</ul>
+<p>非极大值抑制去除相交的多余的框。非极大值抑制（NMS）先计算出每一个bounding box的面积，然后根据score进行排序，把score最大的bounding box作为选定的框，计算其余bounding box与当前最大score与box的IoU，去除IoU大于设定的阈值的bounding box。</p>
+<p>就是r-cnn需要两次进行跑cnn model，第一次得到classification的结果，第二次才能得到(nms+b-box regression)bounding-box。（没看懂）</p>
+<p>在r-cnn的基础上就提出了fast-rcnn,它解决了rcnn中跑了两次cnn才分别得到classification和bounding-box，牛掰之处在于ROI层的提出.</p>
+<p><strong><em>训练过程：先用Alexnet预训练参数拿过来，把最后一层原来2000类换成（20+1）类，对每一个图片的每一个selective region做sgd（类别标定是按照iou大于0.5），这样子做fine tuning训练，提取特征</em></strong></p>
+<p><strong>SPP-net</strong></p>
+<p><img src="http://lanbing510.info/public/img/posts/rcnn/sppnet.png" alt=""></p>
+<p><img src="http://lanbing510.info/public/img/posts/rcnn/image02.png" alt=""><br>如果固定网络输入的话，要么选择crop策略，要么选择warp策略，crop就是从一个大图扣出网络输入大小的patch（比如227×227），而warp则是把一个bounding box的内容resize成227×227 。无论是那种策略，都能很明显看出有影响网络训练的不利因素，比如crop就有可能crop出object的一个部分，而无法准确训练出类别，而warp则会改变object的正常宽高比，使得训练效果变差。接着，分析了出深度网络需要固定输入尺寸的原因是因为有全链接层，不过在那个时候，还没有FCN的思想，那如何去做才能使得网络不受输入尺寸的限制呢？Kaiming He 大神就想出，用不同尺度的pooling 来pooling出固定尺度大小的feature map，这样就可以不受全链接层约束任意更改输入尺度了。</p>
+<p>CNN网络需要固定尺寸的图像输入，SPPNet将任意大小的图像池化生成固定长度的图像表示，提升R-CNN检测的速度24-102倍</p>
+<p>R-CNN提取特征比较耗时，需要对每个warp的区域进行学习，而SPPNet只对图像进行一次卷积，之后使用SPPNet在特征图上提取特征。结合EdgeBoxes提取的proposal，系统处理一幅图像需要0.5s。</p>
+<p>当我们有很多层网络的时候，当网络输入的是一张任意大小的图片，这个时候我们可以一直进行卷积、池化，直到网络的倒数几层的时候，也就是我们即将与全连接层连接的时候，就要使用金字塔池化，使得任意大小的特征图都能够转换成固定大小的特征向量，这就是空间金字塔池化的奥义（多尺度特征提取出固定大小的特征向量）</p>
+<p><strong><em>核心：通过对feature map进行相应尺度的pooling，使得能pooling出4×4, 2×2, 1×1的feature map，再将这些feature map concat成列向量与下一层全链接层相连。这样就消除了输入尺度不一致的影响。</em></strong></p>
+<p><strong>Fast r-cnn</strong></p>
+<p><img src="http://lanbing510.info/public/img/posts/rcnn/frcnn.png" alt=""></p>
+<p>R-CNN缺点：训练、测试时间和空间开销大</p>
+<p>SPP：和R-CNN一样，它的训练要经过多个阶段，特征也要存在磁盘中，另外，SPP中的微调只更新spp层后面的全连接层，对很深的网络这样肯定是不行的。</p>
+<p>解决方式:<br>1.训练的时候，pipeline是隔离的，先提proposal，然后CNN提取特征，之后用SVM分类器，最后再做bbox regression。FRCN实现了end-to-end的joint training(提proposal阶段除外)。<br>2.训练时间和空间开销大。RCNN中ROI-centric的运算开销大，所以FRCN用了image-centric的训练方式来通过卷积的share特性来降低运算开销；<br>RCNN提取特征给SVM训练时候需要中间要大量的磁盘空间存放特征，FRCN去掉了SVM这一步，所有的特征都暂存在显存中，就不需要额外的磁盘空间了。<br>3.测试时间开销大。依然是因为ROI-centric的原因(whole image as input-&gt;ss region映射)，这点SPP-Net已经改进，然后FRCN进一步通过single scale(pooling-&gt;spp just for one scale) testing和SVD(降维)分解全连接来提速。</p>
+<p>过程：1.用selective search在一张图片中生成约2000个object proposal，即RoI。</p>
+<p>2.把它们整体输入到全卷积的网络中，在最后一个卷积层上对每个ROI求映射关系，并用一个RoI pooling layer来统一到相同的大小－&gt; (fc)feature vector 即－&gt;提取一个固定维度的特征表示。</p>
+<p>3.继续经过两个全连接层（FC）得到特征向量。特征向量经由各自的FC层，得到两个输出向量：第一个是分类，使用softmax，第二个是每一类的bounding box回归。</p>
+<p>和SPP的改进：</p>
+<p>1.改进了SPP-Net在实现上无法同时tuning在SPP layer两边的卷积层和全连接层。只能更新fc层的原因,按照论文所描述:</p>
+<p>2.SPP-Net后面的需要将第二层FC的特征放到硬盘上训练SVM，之后再额外训练bbox regressor。</p>
+<p>Pre-trained networks</p>
+<p>用了3个预训练的ImageNet网络（CaffeNet/VGG_CNN_M_1024/VGG16）。<br>预训练的网络初始化Fast RCNN要经过三次变形： </p>
+<ol>
+<li>最后一个max pooling层替换为RoI pooling层，设置H’和W’与第一个全连接层兼容。(SPPnet for one scale -&gt; arbitrary input image size )</li>
+<li>最后一个全连接层和softmax（原本是1000个类）-&gt; 替换为softmax的对K+1个类别的分类层，和bounding box 回归层。 (Cls and Det at same time)</li>
+<li>输入修改为两种数据：一组N个图形，R个RoI，batch size和ROI数、图像分辨率都是可变的。</li>
+</ol>
+<p>（变svm为softmax，同时训练分类和回归，ROI 设置使微调能同时训练spp前后）</p>
+<p><strong>faster rcnn</strong></p>
+<p>目标检测的四个基本步骤（候选区域生成，特征提取，分类，位置精修）终于被统一到一个深度网络框架之内<br><img src="http://lanbing510.info/public/img/posts/rcnn/ferrcnn.png" alt=""></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fuhci8c8v5j31kw0dldoj.jpg" alt=""></p>
+<p>用RPN和Fast R-CNN目标检测网络共享计算</p>
+<p>RPN只需在最后的卷积层上滑动一遍，借助Anchor机制和边框回归可以得到多尺度多长宽比的Region Proposal</p>
+<p><strong><em>Faster rcnn不能检测小目标的原因</em></strong></p>
+<p>scale的问题，faster rcnn只在con5_3进行roi pooling，这一层的特征对应原图的scale都是很大的，因为进行了4次下采样，一个4<em>4的anchor对应原图64</em>64的object，自然无法对小目标进行有效的特征提取了。fpn和mask-rcnn则正好解决了这个缺陷，在多级特征上进行roi pooling（下采样2次～5次。P2~P5），这样一来P2层上4<em>4的anchor对应了原图16</em>16的object，就可以有效的对小目标进行检测了。</p>
+<p><strong>YOLO</strong></p>
+<p><strong><em>R-CNN系列算法看图片做目标检测，都是需要“看两眼”的. 即，第一眼 做 “region proposals”获得所有候选目标框，第二眼 对所有候选框做“Box Classifier候选框分类”才能完成目标检测</em></strong></p>
+<p><strong><em>让各个卷积特征图(通道)蕴含检测位置和分类置信度的信息</em></strong></p>
+<p><img src="http://nooverfit.com/wp/wp-content/uploads/2017/07/QQ截图20170713172621.png" alt=""></p>
+<p>YOLO的核心思想就是利用整张图作为网络的输入，直接在输出层回归bounding box的位置和bounding box所属的类别。</p>
+<p><img src="http://nooverfit.com/wp/wp-content/uploads/2017/07/SSD_Diag1.png" alt=""></p>
+<p>没记错的话faster RCNN中也直接用整张图作为输入，但是faster-RCNN整体还是采用了RCNN那种 proposal+classifier的思想，只不过是将提取proposal的步骤放在CNN中实现了。</p>
+<p>.YOLO的缺点</p>
+<p>YOLO对相互靠的很近的物体，还有很小的群体 检测效果不好，这是因为一个网格中只预测了两个框，并且只属于一类。</p>
+<p>对测试图像中，同一类物体出现的新的不常见的长宽比和其他情况是。泛化能力偏弱。</p>
+<p>由于损失函数的问题，定位误差是影响检测效果的主要原因。尤其是大小物体的处理上，还有待加强。</p>
+<p><img src="http://nooverfit.com/wp/wp-content/uploads/2017/07/Screenshot-from-2017-07-13-202323.png" alt=""></p>
+<p>中间是最后一层需要卷积的图片(实际上是人类无法看懂的卷积通道图片). 左边是卷积示意图, 其中细细的一条是卷积输出的通道包含的信息, 放大后, 可看到右边通道的信息包含box的候选位置信息, 5位是box, 两5位代表支持一个卷积窗口同时包含在两个识别物体框中. 之后的蓝色位数代表该位置为某个类别物体的置信度.  两个相乘MUL, 就是每个位置对每个类别置信度的信息.</p>
+<p><strong>SSD</strong></p>
+<p><img src="http://nooverfit.com/wp/wp-content/uploads/2017/07/Screenshot-from-2017-07-16-095446.png" alt=""><br>YOLO最后一层的输出特征图是7*7 固定的, 因此只能检测到大小尺度相当的物体. SSD就此做了符合直觉的改进, 在最后7*7的输出特征后, 继续加一些不同大小的卷积层, 让最后这几层卷积同时为目标检测做出判断. 这样, 就可以识别各个尺度大小的物体(大物件或小物件):</p>
+<p><img src="http://nooverfit.com/wp/wp-content/uploads/2017/07/Screenshot-from-2017-07-16-100130.png" alt=""></p>
+<p><strong><em>因此，SSD与YOLO的最大不同就在于如何把大小各种尺寸的物体都考虑到检测的范畴，并且有效地在相应的输出特征图上应用这些检测。</em></strong></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/08/28/7月总结/">一些算法基础知识和目标检测的问题</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
+        <p><span>发布时间:</span>2018-08-28, 10:28:21</p>
+        <p><span>最后更新:</span>2018-08-28, 10:18:22</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/08/28/7月总结/" title="一些算法基础知识和目标检测的问题">http://heyang9.github.io/2018/08/28/7月总结/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://heyang9.github.io/2018/08/28/7月总结/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/07/20/Spark种种/">
+                    Spark (1)
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"一些算法基础知识和目标检测的问题　| 呜呜部落格(•̀ᴗ•́)و ̑̑　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/07/20/Spark种种/" title="下一篇: Spark (1)">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/7月总结/">一些算法基础知识和目标检测的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/20/Spark种种/">Spark (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/19/rnn seq/">RNN seq2seq</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/18/ CNN笔记(trick&notes)/">CNN笔记(trick&notes)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/07/迁移学习与多任务学习/">迁移学习与多任务学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/CNN/">一些CNN知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/wuwu/">LSTM & RNN 回顾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/gaga/">激活函数和梯度消失问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/12/未命名/">一个有意思的Deep Learning笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/02/XGBoost原理/">集成算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/ARIMA😛/">利用ARIMA模型做时间序列预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/git账号/">查看本地git的账号是否是目前登陆的邮箱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/27/略谈EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/02/正则化的问题/">L1正则化和L2正则化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/18/样本不平衡/">机器学习中样本不平衡的解决办法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/写写常见的几种最优化方法/">梯度下降法和牛顿法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/">Bias(偏差)，Error(误差)，和Variance(方差)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/LDA知识点总结/">线性判别分析是什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/线性回归/">逻辑回归总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/解决python报错/">Python 问题（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/pandas安装问题/">Python问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/mac+hexo/">博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Yang He
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

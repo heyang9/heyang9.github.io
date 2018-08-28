@@ -262,6 +262,94 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-pandas安装问题" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/25/pandas安装问题/" class="article-date">
+      <time datetime="2016-12-25T12:35:21.000Z" itemprop="datePublished">2016-12-25</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/25/pandas安装问题/">Python问题</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h1 id="解决-Mac-pip-Error-Errno-1-Operation-not-permitted"><a href="#解决-Mac-pip-Error-Errno-1-Operation-not-permitted" class="headerlink" title="解决 Mac pip Error: [Errno 1] Operation not permitted"></a>解决 Mac pip Error: [Errno 1] Operation not permitted</h1><p>安装pandas包的时候出现报错：</p>
+<pre><code>Installing collected packages: numpy, pandas
+Found existing installation: numpy 1.8.0rc1
+DEPRECATION: Uninstalling a distutils installed project (numpy) has been deprecated and will be removed in a future version. This is due to the fact that uninstalling a distutils project will only partially uninstall the project.
+Uninstalling numpy-1.8.0rc1:
+Exception:
+Traceback (most recent call last):
+File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/basecommand.py&quot;, line 215, in main
+status = self.run(options, args)
+File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/commands/install.py&quot;, line 342, in run
+prefix=options.prefix_path,
+File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_set.py&quot;, line 778, in install
+requirement.uninstall(auto_confirm=True)
+File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_install.py&quot;, line 754, in uninstall
+paths_to_remove.remove(auto_confirm)
+File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/req/req_uninstall.py&quot;, line 115, in remove
+renames(path, new_path)
+File &quot;/Library/Python/2.7/site-packages/pip-9.0.1-py2.7.egg/pip/utils/__init__.py&quot;, line 267, in renames
+shutil.move(old, new)
+File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 302, in move
+copy2(src, real_dst)
+File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 131, in copy2
+copystat(src, dst)
+File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/shutil.py&quot;, line 103, in copystat
+os.chflags(dst, st.st_flags)
+
+OSError: [Errno 1] Operation not permitted: &apos;/tmp/pip-bXMbsV-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy-1.8.0rc1-py2.7.egg-info&apos;
+</code></pre><ul>
+<li>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+        <p class="article-more-link">
+          <a href="/2016/12/25/pandas安装问题/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-mac+hexo" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
