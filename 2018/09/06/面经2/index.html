@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Yang He" />
+
+
+
+<meta name="description" content="记录阅读时候看到的有趣的问题1 kd tree 如果是一维数据，我们可以用二叉查找树来进行存储，但是如果是多维的数据，用传统的二叉查找树就不能够满足我们的要求了，因此后来才发展出了满足多维数据的Kd-Tree数据结构。 Kd-tree的构造是在BST的基础上升级： 选定数据X1的Y1维数值a1做为根节点比对值，对所有的数值在Y1维进行一层BST排列。相当于根据Y1维数值a1对数据集进行分割。选定数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习&amp;数据结构算法基础笔记">
+<meta property="og:url" content="http://heyang9.github.io/2018/09/06/面经2/index.html">
+<meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta property="og:description" content="记录阅读时候看到的有趣的问题1 kd tree 如果是一维数据，我们可以用二叉查找树来进行存储，但是如果是多维的数据，用传统的二叉查找树就不能够满足我们的要求了，因此后来才发展出了满足多维数据的Kd-Tree数据结构。 Kd-tree的构造是在BST的基础上升级： 选定数据X1的Y1维数值a1做为根节点比对值，对所有的数值在Y1维进行一层BST排列。相当于根据Y1维数值a1对数据集进行分割。选定数">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fundqfqm0pj31es0f6td6.jpg">
+<meta property="og:image" content="http://www.spongeliu.com/wp-content/uploads/2010/09/2.png">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fupnbo1mh1j315k0hu467.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/937251/201604/937251-20160419100653320-2031528791.png">
+<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fupnmrrvxgj31e60eetc8.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/937251/201604/937251-20160419100649335-305239639.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/937251/201604/937251-20160419100649679-1784925743.png">
+<meta property="og:image" content="http://www.huaxiaozhuan.com/计算机视觉/imgs/classification/lenet.jpg">
+<meta property="og:image" content="http://www.huaxiaozhuan.com/计算机视觉/imgs/classification/alexnet.jpg">
+<meta property="og:image" content="http://www.huaxiaozhuan.com/计算机视觉/imgs/classification/vgg_net.png">
+<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fuqflgm7efj31kw0e7kcu.jpg">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fuqftsv8evj31de0wyh4j.jpg">
+<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fuqjsiuqx3j31kw0y87wi.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1furrio98xgj318g1fk7ti.jpg">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1furrxbp6ntj31kw0o4h5l.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1furrxgyghaj31kw0rek9s.jpg">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fuxuc4amdbj316o1bwqhs.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fuxvqqp3dfj31100n87ct.jpg">
+<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fuxvqj6q1hj310k070myb.jpg">
+<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fuxvrvoiuuj31ei0feq95.jpg">
+<meta property="og:updated_time" content="2018-09-06T03:04:04.693Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习&amp;数据结构算法基础笔记">
+<meta name="twitter:description" content="记录阅读时候看到的有趣的问题1 kd tree 如果是一维数据，我们可以用二叉查找树来进行存储，但是如果是多维的数据，用传统的二叉查找树就不能够满足我们的要求了，因此后来才发展出了满足多维数据的Kd-Tree数据结构。 Kd-tree的构造是在BST的基础上升级： 选定数据X1的Y1维数值a1做为根节点比对值，对所有的数值在Y1维进行一层BST排列。相当于根据Y1维数值a1对数据集进行分割。选定数">
+<meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fundqfqm0pj31es0f6td6.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>机器学习&amp;数据结构算法基础笔记 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/wuwu.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Yang He</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Yang He</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/wuwu.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Yang He</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-面经2" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/09/06/面经2/" class="article-date">
+      <time datetime="2018-09-06T03:00:21.000Z" itemprop="datePublished">2018-09-06</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      机器学习&amp;数据结构算法基础笔记
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="记录阅读时候看到的有趣的问题"><a href="#记录阅读时候看到的有趣的问题" class="headerlink" title="记录阅读时候看到的有趣的问题"></a>记录阅读时候看到的有趣的问题</h2><p>1 kd tree</p>
+<p>如果是一维数据，我们可以用二叉查找树来进行存储，但是如果是多维的数据，用传统的二叉查找树就不能够满足我们的要求了，因此后来才发展出了满足多维数据的Kd-Tree数据结构。</p>
+<p>Kd-tree的构造是在BST的基础上升级：</p>
+<p>选定数据X1的Y1维数值a1做为根节点比对值，对所有的数值在Y1维进行一层BST排列。相当于根据Y1维数值a1对数据集进行分割。<br>选定数据X2的Y2维数值a2做为根节点比对值，对所有的数值在Y2维进行一层BST排列。也即将数据集在Y2维上又做了一层BST。</p>
+ <a id="more"></a>
+<p>在计算机视觉领域应用Kd-Tree较多的是在特征点匹配的时候，例如SIFT特征点匹配的时候，需要两两比对特征描述子的128位特征描述向量，选取汉明距离最小的做为最佳匹配点，这个时候因为要将多个特征描述向量进行大量的查找比对，Kd-Tree就能够发挥它的大作用了。当然Kd-Tree的相关知识还有最近邻查找以及怎样在回溯查找的时间复杂度和查找准确度中取舍等等，留待以后再记录。 </p>
+<p>2 优化方法</p>
+<p><a href="https://zhuanlan.zhihu.com/p/32230623" target="_blank" rel="noopener">一个知乎的介绍</a><br><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fundqfqm0pj31es0f6td6.jpg" alt=""></p>
+<p>动量在参数更新项中加上一次更新量(即动量项)。，t时刻的下降方向，不仅由当前点的梯度方向决定，而且由此前累积的下降方向决定。</p>
+<p>SGD-M在SGD基础上增加了一阶动量，AdaGrad和AdaDelta在SGD基础上增加了二阶动量。把一阶动量和二阶动量都用起来，就是Adam了——Adaptive + Momentum。</p>
+<p>几种优化方法的特点总结：</p>
+<p> <strong><em>Adagrad</em></strong>主要优势在于它能够为每个参数自适应不同的学习速率，而一般的人工都是设定为0.01。同时其缺点在于需要计算参数梯度序列平方和，并且学习速率趋势是不断衰减最终达到一个非常小的值。</p>
+<p>  <strong><em>Adadelta</em></strong>是Adagrad的一种扩展，为了降低Adagrad中学习速率衰减过快问题，其改进了三处，一是使用了窗口；二是对于参数梯度历史窗口序列(不包括当前)不再使用平方和，而是使用均值代替；三是最终的均值是历史窗口序列均值与当前梯度的时间衰减加权平均。</p>
+<p>  <strong><em>RMSprop</em></strong> 是Adadelta的中间形式，也是为了降低Adagrad中学习速率衰减过快问题</p>
+<p>3 DBSCAN</p>
+<p>DBSCAN（Density-Based Spatial Clustering of Applications with Noise，具有噪声的基于密度的聚类方法）是一种基于密度的空间聚类算法。该算法将具有足够密度的区域划分为簇，并在具有噪声的空间数据库中发现任意形状的簇，它将簇定义为密度相连的点的最大集合。</p>
+<p>该算法利用基于密度的聚类的概念，即要求聚类空间中的一定区域内所包含对象（点或其他空间对象）的数目不小于某一给定阈值。DBSCAN算法的显著优点是聚类速度快且能够有效处理噪声点和发现任意形状的空间聚类。但是由于它直接对整个数据库进行操作且进行聚类时使用了一个全局性的表征密度的参数，因此也具有两个比较明显的弱点：</p>
+<p>（1）当数据量增大时，要求较大的内存支持I/O消耗也很大；</p>
+<p>（2）当空间聚类的密度不均匀、聚类间距差相差很大时，聚类质量较差。</p>
+<p>1）与K-MEANS比较起来，不需要输入要划分的聚类个数；</p>
+<p>（2）聚类簇的形状没有偏倚；</p>
+<p>（3）可以在需要时输入过滤噪声的参数；</p>
+<p>4 蓄水池抽样</p>
+<blockquote>
+<p>问题：给出一个数据流，这个数据流的长度很大或者未知。并且对该数据流中数据只能访问一次。请写出一个随机选择算法，使得数据流中所有数据被选中的概率相等</p>
+</blockquote>
+<p>假设当前正要读取第n个数据，则我们以1/n的概率留下该数据，否则留下前n-1个数据中的一个。以这种方法选择，所有数据流中数据被选择的概率一样。简短的证明：假设n-1时候成立，即前n-1个数据被返回的概率都是1/n-1,当前正在读取第n个数据，以1/n的概率返回它。那么前n-1个数据中数据被返回的概率为：(1/(n-1))*((n-1)/n)= 1/n，假设成立。</p>
+<p>5 git操作问题</p>
+<p><a href="http://blog.jobbole.com/114297/" target="_blank" rel="noopener">一个相关博客</a></p>
+<p>6 跳表 SkipList</p>
+<p>Skip List是一种随机化的数据结构，基于并联的链表，其效率可比拟于二叉查找树（对于大多数操作需要O(log n)平均时间）。基本上，跳跃列表是对有序的链表增加上附加的前进链接，增加是以随机化的方式进行的，所以在列表中的查找可以快速的跳过部分列表(因此得名)。所有操作都以对数随机化的时间进行。Skip List可以很好解决有序链表查找特定值的困难。</p>
+<pre><code> 1、给定一个有序的链表。
+2、选择连表中最大和最小的元素，然后从其他元素中按照一定算法（随机）随即选出一些元素，将这些元素组成有序链表。这个新的链表称为一层，原链表称为其下一层。
+3、为刚选出的每个元素添加一个指针域，这个指针指向下一层中值同自己相等的元素。Top指针指向该层首元素
+4、重复2、3步，直到不再能选择出除最大最小元素以外的元素。
+</code></pre><p><img src="http://www.spongeliu.com/wp-content/uploads/2010/09/2.png" alt=""></p>
+<p>7 xgboost 参数描述</p>
+<p><a href="http://www.huaxiaozhuan.com/工具/xgboost/chapters/xgboost_usage.html" target="_blank" rel="noopener">链接</a></p>
+<pre><code>eta： 也称作学习率。默认为 0.3 。范围为 [0,1]
+
+gamma： 也称作最小划分损失min_split_loss。 它刻画的是：对于一个叶子节点，当对它采取划分之后，损失函数的降低值的阈值。
+
+如果大于该阈值，则该叶子节点值得继续划分
+如果小于该阈值，则该叶子节点不值得继续划分
+该值越大，则算法越保守（尽可能的少划分）。默认值为 0
+
+max_depth： 每棵子树的最大深度。其取值范围为  ， 0 表示没有限制，默认值为6。
+
+该值越大，则子树越复杂；值越小，则子树越简单。
+
+min_child_weight： 子节点的权重阈值。它刻画的是：对于一个叶子节点，当对它采取划分之后，它的所有子节点的权重之和的阈值。
+
+如果它的所有子节点的权重之和大于该阈值，则该叶子节点值得继续划分
+如果它的所有子节点的权重之和小于该阈值，则该叶子节点不值得继续划分
+所谓的权重：
+
+对于线性模型(booster=gblinear)，权重就是：叶子节点包含的样本数量。 因此该参数就是每个节点包含的最少样本数量。
+对于树模型（booster=gbtree,dart），权重就是：叶子节点包含样本的所有二阶偏导数之和。
+该值越大，则算法越保守（尽可能的少划分）。默认值为 1
+
+max_delta_step： 每棵树的权重估计时的最大delta step。取值范围为  ，0 表示没有限制，默认值为 0 。
+
+通常该参数不需要设置，但是在逻辑回归中，如果类别比例非常不平衡时，该参数可能有帮助。
+
+subsample： 对训练样本的采样比例。取值范围为 (0,1]，默认值为 1 。
+
+如果为 0.5， 表示随机使用一半的训练样本来训练子树。它有助于缓解过拟合。
+
+    colsample_bytree： 构建子树时，对特征的采样比例。取值范围为 (0,1]， 默认值为 1。
+
+如果为 0.5， 表示随机使用一半的特征来训练子树。它有助于缓解过拟合。
+
+colsample_bylevel： 寻找划分点时，对特征的采样比例。取值范围为 (0,1]， 默认值为 1。
+
+如果为 0.5， 表示随机使用一半的特征来寻找最佳划分点。它有助于缓解过拟合。
+
+lambda： L2 正则化系数（基于weights的正则化），默认为 1。 该值越大则模型越简单
+
+alpha： L1 正则化系数（基于weights的正则化），默认为 0。 该值越大则模型越简单
+</code></pre><p>在GBDT 中，越早期加入的子树越重要；越后期加入的子树越不重要。</p>
+<p>DART booster 原理：为了缓解过拟合，采用dropout 技术，随机丢弃一些树。</p>
+<p>8 变分自编码器（VAE）</p>
+<p>9 kmeans</p>
+<blockquote>
+<p>原生Kmeans对异常值很敏感</p>
+</blockquote>
+<p>解决办法：<br><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fupnbo1mh1j315k0hu467.jpg" alt=""></p>
+<p>离散变量在目标函数是距离时，转化为独热再算距离不是最优的。</p>
+<p>即聚类问题中，独热编码要慎用。离散变量分有序变量和无序变量。无序变量用VDM。</p>
+<blockquote>
+<p>聚类算法中的距离度量有哪些？</p>
+</blockquote>
+<p>聚类算法中的距离度量一般用闽科夫斯基距离，在p取不同的值下对应不同的距离，例如p=1的时候对应曼哈顿距离，p=2的情况下对应欧式距离，p=inf的情况下变为切比雪夫距离，还有jaccard距离，幂距离(闽科夫斯基的更一般形式),余弦相似度，加权的距离，马氏距离(类似加权)作为距离度量需要满足非负性，同一性，对称性和直递性，闽科夫斯基在p&gt;=1的时候满足读来那个性质，对于一些离散属性例如{飞机，火车，轮船}则不能直接在属性值上计算距离，这些称为无序属性，可以用VDM(Value Diffrence Metrix)，属性u上两个离散值a,b之间的VDM距离定义为</p>
+<p><img src="https://images2015.cnblogs.com/blog/937251/201604/937251-20160419100653320-2031528791.png" alt=""></p>
+<p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fupnmrrvxgj31e60eetc8.jpg" alt=""></p>
+<p>10 信息增益和信息增益率的公式</p>
+<p>信息增益</p>
+<p><img src="https://images2015.cnblogs.com/blog/937251/201604/937251-20160419100649335-305239639.png" alt=""></p>
+<p>信息增益率</p>
+<p><img src="https://images2015.cnblogs.com/blog/937251/201604/937251-20160419100649679-1784925743.png" alt=""></p>
+<p>11 SVM LR</p>
+<p>SVM依赖于数据测度，需要先做归一化，LR一般不需要，对于大量的数据LR使用更加广泛，LR向多分类的扩展更加直接，对于类别不平衡SVM一般用权重解决，即目标函数中对正负样本代价函数不同，LR可以用一般的方法，也可以直接对最后结果调整(通过阈值)，一般小数据下样本维度比较高的时候SVM效果要更优一些。</p>
+<p>12 如何判断函数凸或非凸？</p>
+<p>如果函数有二阶导数，那么如果函数二阶导数为正，或者对于多元函数，Hessian矩阵半正定则为凸函数。</p>
+<p>13 EM和Kmeans</p>
+<blockquote>
+<p>采用 EM 算法求解的模型有哪些，为什么不用牛顿法或梯度下降法？</p>
+</blockquote>
+<p>用EM算法求解的模型一般有GMM或者协同过滤，k-means其实也属于EM。EM算法一定会收敛，但是可能收敛到局部最优。由于求和的项数将随着隐变量的数目指数上升，会给梯度计算带来麻烦。</p>
+<blockquote>
+<p>用 EM 算法推导解释 Kmeans。</p>
+</blockquote>
+<p>k-means算法是高斯混合聚类在混合成分方差相等，且每个样本仅指派一个混合成分时候的特例。注意k-means在运行之前需要进行归一化处理，不然可能会因为样本在某些维度上过大导致距离计算失效。k-means中每个样本所属的类就可以看成是一个隐变量，在E步中，我们固定每个类的中心，通过对每一个样本选择最近的类优化目标函数，在M步，重新更新每个类的中心点，该步骤可以通过对目标函数求导实现，最终可得新的类中心就是类中样本的均值。</p>
+<p>14 TF-IDF</p>
+<p>TF指Term frequecy,代表词频,IDF代表inverse document frequency,叫做逆文档频率，这个算法可以用来提取文档的关键词，首先一般认为在文章中出现次数较多的词是关键词，词频就代表了这一项，然而有些词是停用词，例如的，是，有这种大量出现的词，首先需要进行过滤，比如过滤之后再统计词频出现了中国，蜜蜂，养殖且三个词的词频几乎一致，但是中国这个词出现在其他文章的概率比其他两个词要高不少，因此我们应该认为后两个词更能表现文章的主题，IDF就代表了这样的信息，计算该值需要一个语料库，如果一个词在语料库中出现的概率越小，那么该词的IDF应该越大，一般来说TF计算公式为(某个词在文章中出现次数/文章的总词数)，这样消除长文章中词出现次数多的影响，IDF计算公式为log(语料库文章总数/(包含该词的文章数)+1)。将两者乘乘起来就得到了词的TF-IDF。传统的TF-IDF对词出现的位置没有进行考虑，可以针对不同位置赋予不同的权重进行修正，注意这些修正之所以是有效的，正是因为人观测过了大量的信息，因此建议了一个先验估计，人将这个先验估计融合到了算法里面，所以使算法更加的有效。</p>
+<p>提取关键词，用余弦距离计算文本相似度</p>
+<p>15 各种CNN<br><a href="http://www.huaxiaozhuan.com/计算机视觉/chapters/CNN_classfication.html" target="_blank" rel="noopener">link</a></p>
+<blockquote>
+<p>LeNet :第一个</p>
+</blockquote>
+<p><img src="http://www.huaxiaozhuan.com/计算机视觉/imgs/classification/lenet.jpg" alt=""></p>
+<blockquote>
+<p>AlexNet：<br>使用ReLU 激活函数。<br>使用dropout、data augmentation 、重叠池化等防止过拟合的方法。<br>使用百万级的大数据集来训练。<br>使用GPU训练，以及的LRN 使用。<br>使用带动量的 mini batch 随机梯度下降来训练。</p>
+</blockquote>
+<p><img src="http://www.huaxiaozhuan.com/计算机视觉/imgs/classification/alexnet.jpg" alt=""></p>
+<blockquote>
+<p>VGG:<br>证明了小尺寸的卷积核（3x3 ）的深层网络要优于大尺寸卷积核的浅层网络。<br>证明了深度对网络的预测性能的重要性。<br>验证了尺寸抖动scale jittering 这一数据增强技术的有效性。</p>
+</blockquote>
+<p><img src="http://www.huaxiaozhuan.com/计算机视觉/imgs/classification/vgg_net.png" alt=""></p>
+<blockquote>
+<p>Inception<br>Inception 网络是卷积神经网络的一个重要里程碑。</p>
+</blockquote>
+<p>在Inception 之前，大部分流行的卷积神经网络仅仅是把卷积层堆叠得越来越多，使得网络越来越深。<br>而Inception 网络考虑的是多种卷积核的并行计算，扩展了网络的宽度。<br>这使得网络越来越复杂，参数越来越多，从而导致网络容易出现过拟合，增加计算量。</p>
+<p>而Inception 网络考虑的是卷积层的并行，使得网络的宽度较大。</p>
+<p>Inception Net 核心思想是：稀疏连接。因为生物神经连接是稀疏的。</p>
+<p>Inception 网络的最大特点是大量使用了Inception 模块。</p>
+<blockquote>
+<p>ResNet 主要贡献：提出了一种残差学习框架来解决网络退化问题，从而训练更深的网络。</p>
+<p>DenseNet的主要贡献在于：不是通过更深或者更宽的结构，而是通过特征重用来提升网络的学习能力。</p>
+</blockquote>
+<p>DenseNet 从ResNet 中获得的灵感：创建从“靠近输入的层” 到 “靠近输出的层” 的直连。</p>
+<p>而DenseNet 做得更为彻底：将所有层以前馈的形式相连。这种网络因此称作DenseNet 。</p>
+<p>DenseNet 的参数数量和计算量相对ResNet 明显减少。</p>
+<p>具有 20M 个参数的DenseNet-201 与具有 40M 个参数的ResNet-101 验证误差接近。</p>
+<p>DenseNet 具有以下的优点：</p>
+<p>缓解梯度消失的问题。因为每层都可以直接从损失函数和原始输入中获取梯度，从而易于训练。<br>密集连接还具有正则化的效应，缓解了小训练集任务的过拟合。<br>鼓励特征重用。<br>大幅度减少参数数量。因为每层的卷积核尺寸都比较小，输出通道数较少 (由增长率  决定)。</p>
+<p>16 Tensorflow 框架</p>
+<p>1） Protocol Buffer 一个结构数据序列化的工具 ； Bazel 一个谷歌开源的编译工具</p>
+<p>2） 基本计算模型：计算图；数据模型：张量 （多维数组）；运行模型：session（会话）；</p>
+<p>3）损失函数<img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fuqflgm7efj31kw0e7kcu.jpg" alt=""></p>
+<p>softmax<img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fuqftsv8evj31de0wyh4j.jpg" alt=""></p>
+<p>图片参数计算 <img src="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fuqjsiuqx3j31kw0y87wi.jpg" alt=""></p>
+<p>4） 预处理函数。resize 图像片段截取，大小调整，图像翻转，色彩调整</p>
+<p>   避免预处理成为算法效率的瓶颈，有多线程输入数据处理框架</p>
+<p>5） tf计算加速</p>
+<p>GPU；深度学习训练并行模式（同步异步）；多GPU并行；分布式tf</p>
+<p>17 调参的方法：</p>
+<p>1） 手动调整超参数</p>
+<p>2） 网格搜索：当只有三个或者更少的超参数时，常见的超参数搜索方法是：网格搜索</p>
+<pre><code>对于每个超参数，选择一个较小的有限值集合去搜索
+然后这些超参数笛卡尔乘积得到多组超参数
+网格搜索使用每一组超参数训练模型，挑选验证集误差最小的超参数作为最好的超参数
+</code></pre><p>3） 随机搜索：随机搜索是一种可以替代网格搜索的方法，它编程简单、使用方便、能更快收敛到超参数的良好取值：</p>
+<pre><code>首先为每个超参数定义一个边缘分布，如伯努利分布（对应着二元超参数）或者对数尺度上的均匀分布（对应着正实值超参数）
+然后假设超参数之间相互独立，从各分布中抽样出一组超参数。
+使用这组超参数训练模型
+经过多次抽样 -&gt; 训练过程，挑选验证集误差最小的超参数作为最好的超参数
+</code></pre><p>4） 基于模型的超参数优化</p>
+<p>超参数搜索问题可以转化为一个优化问题：</p>
+<pre><code>决策变量是超参数
+优化的代价是超参数训练出来的模型在验证集上的误差
+在简化的设定下，可以计算验证集上可导的误差函数关于超参数的梯度，然后基于这个梯度进行更新
+</code></pre><p>大部分情况下大多数问题中，超参数的梯度是不可用的。了弥补超参数梯度的缺失，我们可以使用贝叶斯回归模型来估计每个超参数的验证集误差的期望和该期望的不确定性（贝叶斯回归模型不需要使用梯度）。即用贝叶斯优化调参，Hyperopt</p>
+<p>18 数据预处理</p>
+<p>均值减法;归一化;PCA 降维;白化whitening：先对数据进行旋转（旋转的矩阵就是 SVD 分解中的 U矩阵），然后对每个维度除以特征值（为防止分母为0，通常加一个很小的值作为平滑系数）来对数值范围进行归一化</p>
+<p>如果数据服从多变量的高斯分布，则白化之后，数据的分布是一个均值为零，且协方差相等的矩阵<br>该变换的缺点是：可能会放大数据中的噪声。因为它将所有维度都拉伸到相同的维度，这包括了那些大多数是噪声的维度。这个问题可以采用更强的平滑系数来解决.【实际在神经网络中，并不会采用 PCA 和白化。】</p>
+<p><strong><em>任何预处理策略都只能在训练集的数据上进行，然后再应用到验证集或测试集上。如数据均值：首先分成训练集、验证集、测试集，从训练集中求数据的均值。然后训练集、验证集、测试集中的数据减去这个均值。 而不是减去测试集均值或者验证集均值</em></strong></p>
+<p><strong>Batch Normalization：让数据在通过激活函数之前，添加一个 batch normalization</strong></p>
+<p><strong><em>变量初始化</em></strong></p>
+<p>权重一定不能全零初始化。因为这会导致神经元在前向传播中计算出同样的输出，然后在反向传播中计算出同样的梯度，从而进行同样的权重更新。这就产生了大量对称性神经元。</p>
+<p>通常采用小随机数初始化，通过这样来打破对称性。至于使用高斯分布还是均匀分布，对结果影响很小。</p>
+<p>通常将偏置初始化为0。这是因为随机小数值权重已经打破了对称性</p>
+<p>19 三门问题</p>
+<p>主持人在三个小碗分下面放了1块钱、1块钱和10000块钱的筹码。你选中哪一个，你就可以领到对应的钱。当你选定一个碗之后，主持人翻开剩下两个碗里，下面有一块钱筹码的碗给你看。并且，给你一次机会选另外一只碗。请问：应不应该换？为什么？</p>
+<p>换。其实那只被主持人打开的碗你也是可以选择的，只不过已经知道它没有奖金（或汽车）罢了。然而这个真实存在的选项却被你脑补忽略了。所以对于选碗来说仍然是三选一。你现在面临的真正问题是坚持自己的初次选择：  概率；还是换选另两个碗（包括那个打开的空碗）：共  概率。</p>
+<p>20 对比</p>
+<p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1furrio98xgj318g1fk7ti.jpg" alt=""></p>
+<p>细节：</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1furrxbp6ntj31kw0o4h5l.jpg" alt=""></p>
+<p><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1furrxgyghaj31kw0rek9s.jpg" alt=""></p>
+<p>21 维度灾难是什么？</p>
+<p>维度太高了，计算量巨大，而且会过拟合</p>
+<p>svm如何处理高维特征？<br>knn如何处理高维特征？<br>kmeans如何处理高维特征？kmeans如何处理异常点？</p>
+<pre><code>svm不存在维度灾难。核函数，稀疏性。
+knn和kmeans维度过高出现距离收敛。
+解决方案是降维、换距离度量、交叉验证。处理异常值问题可以做异常值检测，用各种优化后的kmeans
+</code></pre><p>22 对数似然损失和交叉熵？</p>
+<p>-logp</p>
+<p>23 卷积</p>
+<p>卷积神经网络主要运用了三个重要的思想：</p>
+<pre><code>稀疏交互sparse interactions
+参数共享parameter sharing
+等变表示equivariant representation
+</code></pre><p>池化</p>
+<blockquote>
+<p>最大池化：定义一个窗口，并从窗口内取出最大值。</p>
+<p>均值池化：定义一个窗口，并从窗口内取出平均值。</p>
+<p>其他常见的还有：L2范数以及基于中心像素距离的加权平均函数。</p>
+</blockquote>
+<p>池化可以解决图像分类问题中，图像尺寸不同的问题。</p>
+<p>在图像分类任务中，要求分类层的输入必须是固定大小。<br>通常池化层的输出就是分类层的输入；如果图像的大小不同，则调整池化区域的大小来实现不同大小的图像生成同样尺寸的输出。</p>
+<p>特性：平移近似不变性；模拟其它不变性</p>
+<p><strong><em>小卷积核</em></strong></p>
+<p><strong><em>非对称卷积核</em></strong></p>
+<p><strong><em>多尺寸卷积核</em></strong></p>
+<p><strong><em>1x1 卷积核</em></strong>（实现跨通道的信息整合。；进行通道数的升维和降维‘在不损失分辨率的前提下（即：feature map 尺寸不变），大幅增加非线性。）</p>
+<p><strong><em>DepthWise 卷积</em></strong>（标准的卷积会考虑所有的输入通道，而DepthWise 卷积会针对每一个输入通道进行卷积操作。然后接一个1x1 的跨通道卷积操作。）</p>
+<p><strong><em>通道混洗分组卷积</em></strong></p>
+<p><strong><em>通道加权卷积</em></strong></p>
+<p><strong><em>空洞卷积</em></strong></p>
+<p><strong><em>全连接转卷积</em></strong></p>
+<p>【插楼：Hyperopt的贝叶斯优化调参很好用】</p>
+<p>24 读《算法图解》</p>
+<p>A 快排最坏O(N2) 平均O(nlogn) 归并一直O(nlogn) 那为什么还要用快排：快排的常数量小一点</p>
+<p>B 哈希冲突时：散列函数的选择很重要</p>
+<p>C 广度优先搜索，你可对图使用这种算法回答诸如“到X的最短路径是什么”等问题。不同于二分查找，BFS是基于图的查找算法</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/006cxA6Hgy1fuxuc4amdbj316o1bwqhs.jpg" alt=""><br>D 使用了广度优先搜索来查找两点之间的最短路径，那时“最短路径”的意思是 段数最少。在狄克斯特拉算法中，你给每段都分配了一个数字或权重，因此狄克斯特拉算法找出 的是总权重最小的路径。</p>
+<p>E 贪婪算法：每步都采取最优的做法。最终得到近似最优解。（解决NP完全问题）（寻找局部最优解，企图以这种方式获得全局最优解。）</p>
+<p>F 动态规划：动态规划可帮助你在给定约束条件下找到最优解。在背包问题中，你必 须在背包容量给定的情况下，偷到价值最高的商品。<strong><em>在问题可分解为彼此独立且离散的子问题时，就可使用动态规划来解决。</em></strong> </p>
+<p>最长公共子串：动规。<br><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fuxvqqp3dfj31100n87ct.jpg" alt=""><br><img src="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fuxvqj6q1hj310k070myb.jpg" alt=""><br><img src="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fuxvrvoiuuj31ei0feq95.jpg" alt=""><br>编辑距离(levenshtein distance)指出了两个字符串的相 似程度，也是使用动态规划计算得到的。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/09/06/面经2/">机器学习&amp;数据结构算法基础笔记</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
+        <p><span>发布时间:</span>2018-09-06, 11:00:21</p>
+        <p><span>最后更新:</span>2018-09-06, 11:04:04</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/09/06/面经2/" title="机器学习&amp;数据结构算法基础笔记">http://heyang9.github.io/2018/09/06/面经2/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://heyang9.github.io/2018/09/06/面经2/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/08/28/7月总结/">
+                    一些算法基础知识和目标检测的问题
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#记录阅读时候看到的有趣的问题"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x8BB0;&#x5F55;&#x9605;&#x8BFB;&#x65F6;&#x5019;&#x770B;&#x5230;&#x7684;&#x6709;&#x8DA3;&#x7684;&#x95EE;&#x9898;" class="headerlink" title="&#x8BB0;&#x5F55;&#x9605;&#x8BFB;&#x65F6;&#x5019;&#x770B;&#x5230;&#x7684;&#x6709;&#x8DA3;&#x7684;&#x95EE;&#x9898;"></a>&#x8BB0;&#x5F55;&#x9605;&#x8BFB;&#x65F6;&#x5019;&#x770B;&#x5230;&#x7684;&#x6709;&#x8DA3;&#x7684;&#x95EE;&#x9898;</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"机器学习&数据结构算法基础笔记　| 呜呜部落格(•̀ᴗ•́)و ̑̑　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/08/28/7月总结/" title="下一篇: 一些算法基础知识和目标检测的问题">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/06/面经2/">机器学习&数据结构算法基础笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/7月总结/">一些算法基础知识和目标检测的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/20/Spark种种/">Spark (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/19/rnn seq/">RNN seq2seq</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/18/ CNN笔记(trick&notes)/">CNN笔记(trick&notes)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/07/迁移学习与多任务学习/">迁移学习与多任务学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/CNN/">一些CNN知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/wuwu/">LSTM & RNN 回顾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/gaga/">激活函数和梯度消失问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/12/未命名/">一个有意思的Deep Learning笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/02/XGBoost原理/">集成算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/ARIMA😛/">利用ARIMA模型做时间序列预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/git账号/">查看本地git的账号是否是目前登陆的邮箱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/27/略谈EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/02/正则化的问题/">L1正则化和L2正则化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/18/样本不平衡/">机器学习中样本不平衡的解决办法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/写写常见的几种最优化方法/">梯度下降法和牛顿法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/">Bias(偏差)，Error(误差)，和Variance(方差)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/LDA知识点总结/">线性判别分析是什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/线性回归/">逻辑回归总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/解决python报错/">Python 问题（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/pandas安装问题/">Python问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/mac+hexo/">博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Yang He
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
