@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Yang He" />
+
+
+
+<meta name="description" content="1 普适注意力：用于机器翻译的2D卷积神经网络，显著优于编码器-解码器架构 现有的当前最佳机器翻译系统都是基于编码器-解码器架构的，首先要对输入序列进行编码，然后根据输入的编码生成输出序列。这两者都有注意力机制，注意力机制可以根据解码器的状态重新组合源 token 的固定编码。我们提出了一种可替代的方法，这种方法依赖于跨越两个序列的单个 2D 卷积神经网络。我们的网络的每一层都会根据当前生成的输出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="零碎的笔记">
+<meta property="og:url" content="http://heyang9.github.io/2019/01/06/20193/index.html">
+<meta property="og:site_name" content="呜呜部落格(•̀ᴗ•́)و ̑̑">
+<meta property="og:description" content="1 普适注意力：用于机器翻译的2D卷积神经网络，显著优于编码器-解码器架构 现有的当前最佳机器翻译系统都是基于编码器-解码器架构的，首先要对输入序列进行编码，然后根据输入的编码生成输出序列。这两者都有注意力机制，注意力机制可以根据解码器的状态重新组合源 token 的固定编码。我们提出了一种可替代的方法，这种方法依赖于跨越两个序列的单个 2D 卷积神经网络。我们的网络的每一层都会根据当前生成的输出">
+<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fuzurt6bd9j31040pm41v.jpg">
+<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fv0uzbamerj311e0egwme.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fv10wpgjhgj31ag0n4wsb.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fv144yhn2hj30u00f6k0e.jpg">
+<meta property="og:updated_time" content="2019-03-14T12:34:47.981Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="零碎的笔记">
+<meta name="twitter:description" content="1 普适注意力：用于机器翻译的2D卷积神经网络，显著优于编码器-解码器架构 现有的当前最佳机器翻译系统都是基于编码器-解码器架构的，首先要对输入序列进行编码，然后根据输入的编码生成输出序列。这两者都有注意力机制，注意力机制可以根据解码器的状态重新组合源 token 的固定编码。我们提出了一种可替代的方法，这种方法依赖于跨越两个序列的单个 2D 卷积神经网络。我们的网络的每一层都会根据当前生成的输出">
+<meta name="twitter:image" content="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fuzurt6bd9j31040pm41v.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="呜呜部落格(•̀ᴗ•́)و ̑̑" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>零碎的笔记 | 呜呜部落格(•̀ᴗ•́)و ̑̑</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/wuwu.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Yang He</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Yang He</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/wuwu.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Yang He</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto: heyang9@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/heyang9" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-20193" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/06/20193/" class="article-date">
+      <time datetime="2019-01-06T08:35:00.000Z" itemprop="datePublished">2019-01-06</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      零碎的笔记
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>1 <strong><em>普适注意力：用于机器翻译的2D卷积神经网络，显著优于编码器-解码器架构</em></strong></p>
+<p>现有的当前最佳机器翻译系统都是基于编码器-解码器架构的，首先要对输入序列进行编码，然后根据输入的编码生成输出序列。这两者都有注意力机制，注意力机制可以根据解码器的状态重新组合源 token 的固定编码。我们提出了一种可替代的方法，这种方法依赖于跨越两个序列的单个 2D 卷积神经网络。我们的网络的每一层都会根据当前生成的输出序列重新编码源 token。因此类似注意力机制的属性适用于整个网络。我们的模型得到了非常出色的结果，比当前最佳的编码器-解码器系统还要出色，而且从概念上讲我们的模型也更加简单、参数更少。</p>
+<ul>
+<li><a id="more"></a>
+</li>
+</ul>
+<p>Gehring 等人（2017b）在编码器和解码器模块中用了带有线性门控单元的 1D CNN（Meng et al., 2015; Oord et al., 2016c; Dauphin et al., 2017）进行机器翻译，得到的结果比深度 LSTM 要好。基于 CNN 和基于 RNN 的模型之间的区别在于，基于 CNN 的模型的时序连接被置于网络的层之间，而非层内。相关概念图请参见下图。这种在连接上显而易见的微小差异可能造成两种重要的结果。第一，这种连接使可视域在卷积网络的层间线性增长，但在循环网络的层中则是无边界的。其次，RNN 中的激活值只能以序列方式计算，但在卷积网络中则可以在时序维度上并行计算。<br><img src="http://wx4.sinaimg.cn/mw690/006cxA6Hgy1fuzurt6bd9j31040pm41v.jpg" alt=""><br>有两个隐藏层的解码器网络拓扑结构图示，底部和上部的节点分别表示输入和输出。RNN 用的是水平方向的连接，卷积网络用的是对角方向的连接。这两种方法都用了垂直连接。参数可跨时间步（水平方向）共享，但不跨层（垂直方向）共享。</p>
+<p>2 <strong><em>NLP</em></strong></p>
+<p>1） 洗数据</p>
+<p>2） 找到一个好的数据表示</p>
+<p>3） 分类</p>
+<p>3 对于xgboost，还有必要做很多特征工程吗？</p>
+<p>对于xgboost，它能够很好地做到特征选择，所以这一点不用我们去操心太多。</p>
+<p>至于特征变换（离散化、归一化、标准化、取log等等），我们也不需要做太多，因为xgboost是基于决策树，决策树自然能够解决这些。相比较来说，线性模型则需要做离散化或者取log处理。因为xgboost（树类模型）不依赖于线性假设。但是对于分类特征，xgboost需要对其进行独热编码，否则无法训练模型。</p>
+<p>xgboost也可以免于一部分特征合成的工作，比如线性回归中的交互项a:b，在树类模型中都可以自动完成。但是对于加法a+b，减法a-b，除法a-b这类合成的特征，则需要手动完成。</p>
+<p>扩展：关于sklearn中的决策树是否应该用one-hot编码？</p>
+<p><img src="http://wx1.sinaimg.cn/mw690/006cxA6Hgy1fv0uzbamerj311e0egwme.jpg" alt=""></p>
+<p>那么决策树怎么用类别特征？</p>
+<p>A. 类别特征的最优切分，直方图算法，lightgbm</p>
+<p>B  <img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fv10wpgjhgj31ag0n4wsb.jpg" alt=""></p>
+<p>个人总结：需要one-hot。【类别型变量在范围较小时（tqchen给出的是[10,100]范围内）推荐使用】但是维度过大效果不好，维度灾难，不建议使用，有其他更好的方法，比如选衍生的统计特征</p>
+<blockquote>
+<p>关于对类别特征的支持：<br>CatBoost:不需要任何显式的预处理来将类别转换为数字。CatBoost使用在各种统计上的分类特征和数值特征的组合将分类值转换成数字。</p>
+<p> 可赋予分类变量指标，进而通过独热最大量得到独热编码形式的结果（独热最大量：在所有特征上，对小于等于某个给定参数值的不同的数使用独热编码）。</p>
+<p>lightgbm：和 CatBoost 类似，LighGBM 也可以通过使用特征名称的输入来处理属性数据；它没有对数据进行独热编码，因此速度比独热编码快得多。LGBM 使用了一个特殊的算法来确定属性特征的分割值。</p>
+<p>xgboost：和 CatBoost 以及 LGBM 算法不同，XGBoost 本身无法处理分类变量，而是像随机森林一样，只接受数值数据。因此在将分类数据传入 XGBoost 之前，必须通过各种编码方式：例如标记编码、均值编码或独热编码对数据进行处理。</p>
+<p>即：lgb，cat能直接处理分类特征，其他的需要one-hot或其他方法处理</p>
+</blockquote>
+<p>4 <strong><em>Xgboost Lightgbm Catboost</em></strong></p>
+<p><a href="https://www.jiqizhixin.com/articles/2018-03-18-4" target="_blank" rel="noopener">一个介绍</a></p>
+<p>LightGBM 和 XGBoost 的结构差异</p>
+<p>在过滤数据样例寻找分割值时，LightGBM 使用的是全新的技术：基于梯度的单边采样（GOSS）；而 XGBoost 则通过预分类算法和直方图算法来确定最优分割。这里的样例（instance）表示观测值/样本。</p>
+<blockquote>
+<p>预分类算法<br>对于每个节点，遍历所有特征<br>对于每个特征，根据特征值分类样例<br>进行线性扫描，根据当前特征的基本信息增益，确定最优分割<br>选取所有特征分割结果中最好的一个</p>
+</blockquote>
+<p>直方图算法：<br>直方图算法在某个特征上将所有数据点划分到离散区域，并通过使用这些离散区域来确定直方图的分割值。虽然在计算速度上，和需要在预分类特征值上遍历所有可能的分割点的预分类算法相比，直方图算法的效率更高，但和 GOSS 算法相比，其速度仍然更慢。</p>
+<blockquote>
+<p>GOSS:<br>在 Adaboost 中，样本权重是展示样本重要性的很好的指标。但在梯度提升决策树（GBDT）中，并没有天然的样本权重，因此 Adaboost 所使用的采样方法在这里就不能直接使用了，这时我们就需要基于梯度的采样方法。</p>
+<p>梯度表征损失函数切线的倾斜程度，所以自然推理到，如果在某些意义上数据点的梯度非常大，那么这些样本对于求解最优分割点而言就非常重要，因为算其损失更高。</p>
+<p>GOSS 保留所有的大梯度样例，并在小梯度样例上采取随机抽样。比如，假如有 50 万行数据，其中 1 万行数据的梯度较大，那么我的算法就会选择（这 1 万行梯度很大的数据+x% 从剩余 49 万行中随机抽取的结果）。如果 x 取 10%，那么最后选取的结果就是通过确定分割值得到的，从 50 万行中抽取的 5.9 万行。</p>
+</blockquote>
+<p>效果比较：<br><img src="http://wx3.sinaimg.cn/mw690/006cxA6Hgy1fv144yhn2hj30u00f6k0e.jpg" alt=""></p>
+<p>GBDT采用的是数值优化的思维, 用的最速下降法去求解Loss Function的最优解, 其中用CART决策树去拟合负梯度, 用牛顿法求步长.</p>
+<p>XGboost用的解析的思维, 对Loss Function展开到二阶近似, 求得解析解, 用解析解作为Gain来建立决策树, 使得Loss Function最优.</p>
+<p>自己理解：像cart做分类时候，一棵树可以输出好多类，按gini；做回归时候，按平方差损失做分裂（计算样本的损失），输出结果为节点上所有输出的均值；gbdt和xgboost里对损失函数的分解是每棵树的函数输出值，所以最后是可以相加的。回归的时候，gbdt每棵树失去拟合负梯度，xgboost是用泰勒二阶直接计算每个叶子的输出。【学的是函数】</p>
+<p>即：</p>
+<p>如何学习新函数<br>通过最小化目标函数得出新函数，目标函数是基于结构风险最小化原则，目标函数=误差拟合+模型复杂度<br>对误差拟合函数二阶泰勒展开，对模型复杂度包含（叶子结点数 和 叶子结点权重）<br>最后通过对目标函数求导 得到最优权重(该权重与一阶与二阶信息有关) 以及 已知权重下的目标函数（打分函数）</p>
+<p>如何生成xgboost?<br>选取最优特征，在最优特征下寻找最佳属性分割点，评判标准为类似于吉尼系数形式，递归生成树</p>
+<blockquote>
+<p>Lightgbm对xgboost有哪些改进？<br>Histgram算法 将浮点型数值离散为K个，统计离散值的累积量，遍历直方图找最优特征分裂点<br>直方图加速：叶子结点的直方图可由父亲结点的直方图与兄弟结点的直方图做差得到<br>leave wise 选取信息增益最大的叶子结点继续分裂（容易过拟合，利用max_depth参数控制)</p>
+</blockquote>
+<p>5 <strong><em>python</em></strong></p>
+<p>continue跳出当前循环，break跳出整个循环</p>
+<p>6<strong><em>共线性</em></strong><br>LR如何解决共线性，为什么深度学习不强调？</p>
+<p>回归分析是数据挖掘中最基本的方法，其中基于普通最小二乘法的多元线性回归要求模型中的特征数据不能存在有多重共线性，否则模型的可信度将大打折扣。</p>
+<p>解决方法：</p>
+<p>1、增加数据；</p>
+<p>2、对模型施加某些约束条件；</p>
+<p>3、删除一个或几个共线变量；</p>
+<p>4、将模型适当变形；</p>
+<p>5、主成分回归</p>
+<p>共线性会影响系数估计，不会影响预测能力。机器学习一般只关注预测能力，所以共线性不那么重要。</p>
+<p>一般机器学习里用LR的时候为了更好地泛化都会正则化进去，正则化能有效抑制共线性。如果没有正则化，因为在训练集上训练出的系数不可靠，所以我觉得会对测试集上的预测效果产生影响。</p>
+<p>7 加强下记忆<strong><em>优化方法总结：SGD，Momentum，AdaGrad，RMSProp，Adam</em></strong></p>
+<p>1）Momentum</p>
+<p>SGD方法的一个缺点是其更新方向完全依赖于当前batch计算出的梯度，因而十分不稳定。Momentum算法借用了物理中的动量概念，它模拟的是物体运动时的惯性，即更新的时候在一定程度上保留之前更新的方向，同时利用当前batch的梯度微调最终的更新方向。这样一来，可以在一定程度上增加稳定性，从而学习地更快，并且还有一定摆脱局部最优的能力。（球下坡滚的会越来越快）</p>
+<p>2）Adagrad</p>
+<p>上述方法中，对于每一个参数θi的训练都使用了相同的学习率α。Adagrad算法能够在训练中自动的对learning rate进行调整，对于出现频率较低参数采用较大的α更新；相反，对于出现频率较高的参数采用较小的α更新。因此，Adagrad非常适合处理稀疏数据。</p>
+<p>3）RMSprop</p>
+<p>RMSprop是Geoff Hinton提出的一种自适应学习率方法。Adagrad会累加之前所有的梯度平方，而RMSprop仅仅是计算对应的平均值，因此可缓解Adagrad算法学习率下降较快的问题。 </p>
+<p>4）Adam</p>
+<p>Adam(Adaptive Moment Estimation)是另一种自适应学习率的方法。它利用梯度的一阶矩估计和二阶矩估计动态调整每个参数的学习率。Adam的优点主要在于经过偏置校正后，每一次迭代学习率都有个确定范围，使得参数比较平稳。</p>
+<p>8 <strong><em>神经网络权重初始化</em></strong></p>
+<p>权重合理初始化目的是了尽量避免随着网络层数的加深，而出现的梯度消失或者梯度爆炸的情况。关于权重的初始化要避免初始化为零，这样会出现对称的问题。</p>
+<p>小随机数初始化：梯度消失</p>
+<p>使用1/sqrt(n)校准方差：：w = np.random.randn(n) / sqrt(n)。其中n是输入数据的数量。这样就保证了网络中所有神经元起始时有近似同样的输出分布。实践经验证明，这样做可以提高收敛的速度。<br>（理解成均值0房差1除以sqrt(n)）</p>
+<p>卷积（/全连接）和激活函数之间加一个BN层减轻这个问题</p>
+<pre><code>w = np.random.randn(n) / sqrt(n),n为参数数目
+激活函数为relu的话,推荐
+w = np.random.randn(n) * sqrt(2.0/n)
+svd ,对RNN效果比较好,可以有效提高收敛速度.    
+</code></pre><p>9 <strong><em>RNNtricks以及怎么正则</em></strong></p>
+<p>1） 权重初始化 gates初始化全部为0效果不好；应使用正交初始化：理想的情况是，权重矩阵的特征值绝对值为1。则无论步数增加多少，梯度都在数值计算的精度内。</p>
+<p>这样的参数矩阵W<br>是单位正交阵。</p>
+<p>把转移矩阵初始化为单位正交阵，可以避免在训练一开始就发生梯度爆炸/消失现象，称为orthogonal initialization。</p>
+<p>SVD分解：</p>
+<p>奇异值分解是一个适用于任意矩阵的分解方法，奇异值分解可以理解为将一个比较复杂的矩阵用更小更简单的3个子矩阵的相乘来表示，这3个小矩阵描述了大矩阵重要的特性。</p>
+<p>SVD分解：1.降维；2.隐性语义分析；3.推荐系统</p>
+<p>2）forgetgate bias初试值（tf中为1）但有时为0效果更好</p>
+<p>3）clipping gradientds比不用好</p>
+<p>4）dropout和l2正则 放在输入输出或者gate上都可以(输入-&gt;RNN与RNN-&gt;输出的位置)</p>
+<p>正则：</p>
+<p>r2-regularization, weight decay</p>
+<p>input dropout</p>
+<p>mask dropout</p>
+<p>weight dropout</p>
+<p>DropConnect (Wan et al. 2013) applied on the RNN hidden to hidden matrix</p>
+<p>activation regularization(AR)</p>
+<p>temporal activation regularization(TAR)</p>
+<p>adversarial dropout, fraternal dropout</p>
+<p>遗忘门 bias 初始值设置成1 </p>
+<p>10 <strong>GRU</strong>（相比lstm更容易进行训练）</p>
+<p>更新门 用于控制前一时刻的状态信息被带入到当前状态中的程度，更新门的值越大说明前一时刻的状态信息带入越多</p>
+<p>重置门 重置门用于控制忽略前一时刻的状态信息的程度，重置门的值越小说明忽略得越多。</p>
+<p>11<strong><em>求逆序对</em></strong></p>
+<pre><code>def InversePairs(self, data):
+    sortData = sorted(data)
+    count = 0
+    for i in sortData:
+        pos = data.index(i)
+        count += pos
+        data.pop(pos)
+    return count
+
+def quick_sort(self, data):
+    if len(data) &lt; 2:
+        return data
+    left = self.quick_sort([i for i in data[1:] if i &lt;= data[0]])
+    right = self.quick_sort([j for j in data[1:] if j &gt; data[0]])
+    return left + [data[0]] + right
+</code></pre><p>12 <strong><em>SVM</em></strong></p>
+<p>在整体框架上，首先要知道SVM的学习策略是间隔最大化，可形式化为一个凸二次规划，等价于正则化的hinge损失函数的最小化问题，最后通过SMO方法解决接下来可根据李航的统计学习方法或者周志华的机器学习的SVM章节从头开始回忆细节。</p>
+<p>1）什么是kkt条件?  什么是支持向量?</p>
+<p>将含由不等式的约束问题通过拉格朗日法得到了无约束问题，此时得到了KKT条件，通俗来将有以下几个条件<br>（1）拉格朗日式L对各个参数求导为0<br>（2）等式约束f(xi)为0<br>（3）拉格朗日系数alpha&gt;=0<br>  (4) 拉格朗日系数alpha 与不等式约束式子g(xi)的乘积=0</p>
+<p>  可由以上可的，当alpha&gt;0 时，g(xi) =0即其解x向量就是支持向量这里同时说明支持向量机只依赖于alpha&gt;0的样本点,其他样本点对其没有影响,说明支持向量对噪音不敏感</p>
+<p>2） 为什么推到成对偶形式?<br>(1) 对偶问题更容易求解<br>(2) 能够自然的引入核函数,进而推广到非线性问题</p>
+<p>3） 核函数的作用是什么?有哪些核函数?如何选择核函数?</p>
+<p>(1) 什么是核函数?<br>特征函数为将欧式空间映射到希尔伯特征空间, 核函数K(x,z)就为特征函数的内积。<br>核技巧为只定义核函数K(x,z),不定义映射函数, 通过核函数直接计算映射函数的内积。</p>
+<p>（2） 核函数的作用?<br>将低维的欧式空间映射到高唯特征空间,将线性不可分在高维特征空间中变得线性可分,在svm中拉格朗日对偶问题中的内积xi*xj 可以用核函数代替 。核函数可将两组数据映射为核空间内的两个点,看两个点之间的距离判断是否为同一分布。</p>
+<p>（3） 有哪些核函数?</p>
+<p>高斯核函数RBF: 其嵌入空间(embedding space)非常丰富,使得原空间的不同分布能够映射到不同的点.<br>核函数能将连续函数空间填满的kernel叫做general kernel.</p>
+<p>多项式核函数:多项式函数不是general kernel. 因为更高阶的多项式不能由低阶多项式的线性组合构成</p>
+<p>字符串核函数(string kernel function):核函数不仅定义在欧式空间,还定义在离散数据集合. 字符串核函数是定义在字符串集合上的核函数</p>
+<p>4）正则化的合叶损失函数：(当样本被正确分类且函数间隔(确性度)&gt;1 的时候损失<br>数为0,否则损失函数为1-y(wx+b))</p>
+<p>5） 逻辑回归能否解决非线性分类?<br>(1)非线性超平面可通过变换替换，使得超平面关于新变量线性。<br>(2)逻辑回归不是wx+b这样的形式,需要变换为有内积的对偶形式，再利用核技巧。但LR对偶形式系数不稀疏，但是svm对偶形式系数是稀疏的，所以当线性可分会选择svm</p>
+<p>13 圆上三个点组成锐角三角形的概率</p>
+<p>1/4 钝角3/4 直角 0 思考过程：锐角三角形，等价圆心在三角形里，也等价三个点无法被一段半圆弧所包括。也就是等价任取两个点，第三个点在其他两个点组成的小圆弧关于圆心对称的圆弧里。由于圆上每个点选取的概率是一样的，这个小圆弧最大是接近半圆，所以随机选取第三个点使其成为锐角三角形的概率为1/2，小圆弧最小接近0，所以选取第三个点使其成为锐角三角形概率为0。由于小圆弧的长度是0到1/2的均匀分布，所以锐角三角形的概率就是(1/2+0)/2 = 1/4</p>
+<p>14 <strong><em>为什么引入非线性</em></strong></p>
+<p>增强网络表达能力和让原来线性不可分的问题变成线性可分</p>
+<p>15 回顾：</p>
+<p>梯度爆炸：gradient clipping</p>
+<p>梯度消失：relu，bn，resnet</p>
+<p>不适合深度学习的数据： 数据量小，无局部相关性</p>
+<p>16<strong><em>上溢出和下溢出 softmax</em></strong></p>
+<p>softmax中，参与计算的c都极其大，则分子计算上溢出；</p>
+<p>c为负数，绝对值很大，则分母下溢出</p>
+<p>解决方法，类似归一化</p>
+<p>如：在深度学习中，softmax 是一个常用的函数，计算公式如下：<br>softmax[x(i)] = exp[x(i)] / sum[exp[x(j)]，{i，j = 1…N}，<br>当这个函数的输入序列 {x0,x1,x2,x3…} 为非常小的负数时，会分母下溢，结果异常</p>
+<p>17 <strong><em>b+树</em></strong></p>
+<p>在以B+树数据结构索引存储的关系型数据库中，假设表R有一个联合唯一索引（a,b,c），那么使用该索引进行加速查询的查询条件必须要用a开始的。</p>
+<p>18 有二十五匹速度各不相同的马来赛跑，一次只能跑五匹，每匹马每次跑的状态稳定，没有计时设备，那么请问：最少需要多少次才能找出跑得最快的三匹马</p>
+<p>7次。假设分为 A B C D E 五组，五组各进行一次比赛，得出对应的第一名 A1 B1 C1 D1 E1，然后让这5个比赛，对A1 B1 C1 D1 E1名次先后进行排序，假设排序结果为A1 B1 C1 D1 E1，则可判断，D E 两组完全被淘汰，此时已经比赛了6次，可得出以下结论：<br>因为A1&gt;A2&gt;A3&gt;A4&gt;A5,所以A4和A5被淘汰，A1&gt;B1&gt;B2&gt;B3&gt;B4&gt;B5, 所以B3、B4、B5被淘汰，同理C2到C5被淘汰，那么还剩下，A1、A2、A3、B1、B2、C1,共6匹马，但是A1是第一，是确定的，所以，剩下的A2、A3、B1、B2、C1进行一次比赛来确定，第2，3名就行了，所以共7次比赛</p>
+<p>19 每个飞机只有一个油箱,飞机之间可以相互加油（注意是相互,没有加油机）,一箱油可供一架飞机绕地球飞半圈. 问：为使至少一架飞机绕地球一圈回到起飞时的飞机场,至少需要出动几架飞机? （所有飞机从同一机场起飞,而且必须安全返回机场,不允许中途降落,中间没有飞机场）</p>
+<p>5.每台飞机满油状态可以飞1/2圈，那么每个飞机最多可以携带1/2圈的油量；<br>1、A B C三个飞机同时起飞，飞到1/8处，三个飞机都消耗了1/8的油量，然后A用自己的油把B和C同时加到满油状态，自己剩余1/8的油量返回<br>2、B C飞行岛1/4圈的时候，现在都剩余3/8的油量，B用自己的油给C加满，B剩余1/4的油量返回<br>3、C这个时候的状态可以飞行到3/4圈的位置，这个时候让D提前反方向飞行，保证D C在3/4的位置，这个时候D剩余1/4的油量，C空油，然后D分享1/8的油量给C，这个时候C和D分别有1/8圈的油量，继续飞行<br>4、C D的状态可以飞行到7/8圈的位置，让E提前反方向飞行，保证C D E在7/8圈的位置，这个时候E剩余3/8圈的油量，C D空油，然后E分别给C和D 1/8圈的油量，然后三个飞机就可以愉快的飞回了。</p>
+<p>20<strong><em>GMM</em></strong></p>
+<p>缺点就是收敛到局部最优。高斯混合模型(GMM)的极大似然估计(MLE)高斯混合模型(GMM)的极大似然估计(MLE)。</p>
+<p>21 独立随机变量x和y，概率密度分别为p(x)和p(y)，那么z = x + y的概率密度p(z)为：<br>P(x) 和p(y)的卷积</p>
+<p>21<strong><em>统计模式分类</em></strong></p>
+<p>聂曼-皮尔逊判决准则主要用于 某一种判决错误较另一种判决错误更为重<br>要 情况；最小最大判别准则主要用于 先验概率未知的 情况。</p>
+<p>22 <strong><em>AUC的计算</em></strong></p>
+<p>在一次模型预测实验里，测试集合的Label是[1,1,0,0]，某个模型的输出值是[0.7,0.9,0.8,0.1]，那么这个模型在该测试集合上的AUC是：</p>
+<p>对于二分类问题，任取一正例和负例，正例得分大于负例得分的概率就是AUC的值。在这个题里，正例有两个，负例也有两个，共4种取法。（0.7，0.8）（0.7,0.1）（0.9,0.8）（0.9,0.1），这4个当中后面3个都是正例得分概率大于负例得分概率，所以AUC的值就是3/4</p>
+<p>23<strong><em>fine tuning</em></strong></p>
+<p>在实践中，由于数据集不够大，很少有人从头开始训练网络。常见的做法是使用预训练的网络（例如在ImageNet上训练的分类1000类的网络）来重新fine-tuning（也叫微调），或者当做特征提取器。</p>
+<p>以下是常见的两类迁移学习场景：</p>
+<p>1 卷积网络当做特征提取器。使用在ImageNet上预训练的网络，去掉最后的全连接层，剩余部分当做特征提取器（例如AlexNet在最后分类器前，是4096维的特征向量）。这样提取的特征叫做CNN codes。得到这样的特征后，可以使用线性分类器（Liner SVM、Softmax等）来分类图像。</p>
+<p>2 Fine-tuning卷积网络。替换掉网络的输入层（数据），使用新的数据继续训练。Fine-tune时可以选择fine-tune全部层或部分层。通常，前面的层提取的是图像的通用特征（generic features）（例如边缘检测，色彩检测），这些特征对许多任务都有用。后面的层提取的是与特定类别有关的特征，因此fine-tune时常常只需要Fine-tuning后面的层。</p>
+<p>预训练模型 </p>
+<p>在ImageNet上训练一个网络，即使使用多GPU也要花费很长时间。因此人们通常共享他们预训练好的网络，这样有利于其他人再去使用。例如，Caffe有预训练好的网络地址Model Zoo。</p>
+<p>何时以及如何Fine-tune</p>
+<p>决定如何使用迁移学习的因素有很多，这是最重要的只有两个：新数据集的大小、以及新数据和原数据集的相似程度。有一点一定记住：网络前几层学到的是通用特征，后面几层学到的是与类别相关的特征。这里有使用的四个场景：</p>
+<p>1、新数据集比较小且和原数据集相似。因为新数据集比较小，如果fine-tune可能会过拟合；又因为新旧数据集类似，我们期望他们高层特征类似，可以使用预训练网络当做特征提取器，用提取的特征训练线性分类器。</p>
+<p>2、新数据集大且和原数据集相似。因为新数据集足够大，可以fine-tune整个网络。</p>
+<p>3、新数据集小且和原数据集不相似。新数据集小，最好不要fine-tune，和原数据集不类似，最好也不使用高层特征。这时可是使用前面层的特征来训练SVM分类器。</p>
+<p>4、新数据集大且和原数据集不相似。因为新数据集足够大，可以重新训练。但是实践中fine-tune预训练模型还是有益的。新数据集足够大，可以fine-tine整个网络。</p>
+<p>实践建议</p>
+<p>预训练模型的限制。使用预训练模型，受限于其网络架构。例如，你不能随意从预训练模型取出卷积层。但是因为参数共享，可以输入任意大小图像；卷积层和池化层对输入数据大小没有要求（只要步长stride fit），其输出大小和属于大小相关；全连接层对输入大小没有要求，输出大小固定。</p>
+<p>学习率。与重新训练相比，fine-tune要使用更小的学习率。因为训练好的网络模型权重已经平滑，我们不希望太快扭曲（distort）它们（尤其是当随机初始化线性分类器来分类预训练模型提取的特征时）。</p>
+<p>24<strong><em>selective search</em></strong></p>
+<pre><code>1 使用一种过分割手段，将图像分割成小区域 (1k~2k 个)
+2 查看现有小区域，按照合并规则合并可能性最高的相邻两个区域。重复直到整张图像合并成一个区域位置 
+3 输出所有曾经存在过的区域，所谓候选区域
+</code></pre><p>25 <strong><em>非极大值抑制</em></strong></p>
+<p>先假设有6个矩形框，根据分类器的类别分类概率做排序，假设从小到大属于车辆的概率 分别为A、B、C、D、E、F。</p>
+<p>(1)从最大概率矩形框F开始，分别判断A~E与F的重叠度IOU是否大于某个设定的阈值;</p>
+<p>(2)假设B、D与F的重叠度超过阈值，那么就扔掉B、D；并标记第一个矩形框F，是我们保留下来的。</p>
+<p>(3)从剩下的矩形框A、C、E中，选择概率最大的E，然后判断E与A、C的重叠度，重叠度大于一定的阈值，那么就扔掉；并标记E是我们保留下来的第二个矩形框。</p>
+<p>就这样一直重复，找到所有被保留下来的矩形框。</p>
+<p>非极大值抑制（NMS）顾名思义就是抑制不是极大值的元素，搜索局部的极大值。这个局部代表的是一个邻域，邻域有两个参数可变，一是邻域的维数，二是邻域的大小。这里不讨论通用的NMS算法，而是用于在目标检测中用于提取分数最高的窗口的。</p>
+<p>例如在行人检测中，滑动窗口经提取特征，经分类器分类识别后，每个窗口都会得到一个分数。但是滑动窗口会导致很多窗口与其他窗口存在包含或者大部分交叉的情况。这时就需要用到NMS来选取那些邻域里分数最高（是行人的概率最大），并且抑制那些分数低的窗口。</p>
+<p>26 <strong><em>anchor</em></strong></p>
+<p>当我们使用一个3*3的卷积核，在最后一个feature map上滑动，当滑动到特征图的某一个位置时，以当前滑动窗口中心为中心映射回原图的一个区域(注意 feature map 上的一个点是可以映射到原图的一个区域的，相当于感受野起的作用)，以原图上这个区域的中心对应一个尺度和长宽比，就是一个anchor了。</p>
+<p>27 <strong><em>推荐技术</em></strong></p>
+<p>基于用户数据的推荐：</p>
+<p>（1）协同过滤（邻域方法）</p>
+<pre><code>UserCF 基于用户的协同过滤 即把相似人群喜欢的物品推荐给你，更社会化，比如新闻推荐（item更新快）
+
+ItemCF 基于物品的协同过滤 即把历史喜欢物品的相似物品推荐给你，更私人化，如amazon
+</code></pre><p>原始itemcf覆盖度和新颖度不够，但是优化后两种性能差不多</p>
+<p> （2） LFM隐语义模型</p>
+<p> 通过隐含特征联系用户和物品（对兴趣和物品分类，然后从分类中挑取可能感兴趣的物品）</p>
+<p> 数据集稀疏时，性能会下降；不好生成实时推荐；不适合庞大系统</p>
+<p> （3）基于图的模型</p>
+<p> PersonalRank算法</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/01/06/20193/">零碎的笔记</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yang He</a></p>
+        <p><span>发布时间:</span>2019-01-06, 16:35:00</p>
+        <p><span>最后更新:</span>2019-03-14, 20:34:47</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/06/20193/" title="零碎的笔记">http://heyang9.github.io/2019/01/06/20193/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://heyang9.github.io/2019/01/06/20193/　　作者: Yang He" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/09/06/面经2/">
+                    机器学习&amp;数据结构算法基础笔记
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"零碎的笔记　| 呜呜部落格(•̀ᴗ•́)و ̑̑　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/09/06/面经2/" title="下一篇: 机器学习&amp;数据结构算法基础笔记">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/20193/">零碎的笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/06/面经2/">机器学习&数据结构算法基础笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/7月总结/">一些算法基础知识和目标检测的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/20/Spark种种/">Spark (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/19/rnn seq/">RNN seq2seq</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/18/ CNN笔记(trick&notes)/">CNN笔记(trick&notes)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/07/迁移学习与多任务学习/">迁移学习与多任务学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/CNN/">一些CNN知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/wuwu/">LSTM & RNN 回顾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/gaga/">激活函数和梯度消失问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/12/未命名/">一个有意思的Deep Learning笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/02/XGBoost原理/">集成算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/08/ARIMA😛/">利用ARIMA模型做时间序列预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/git账号/">查看本地git的账号是否是目前登陆的邮箱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/27/略谈EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/02/正则化的问题/">L1正则化和L2正则化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/18/样本不平衡/">机器学习中样本不平衡的解决办法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/写写常见的几种最优化方法/">梯度下降法和牛顿法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/21/机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)的区别和联系/">Bias(偏差)，Error(误差)，和Variance(方差)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/LDA知识点总结/">线性判别分析是什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/线性回归/">逻辑回归总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/解决python报错/">Python 问题（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/pandas安装问题/">Python问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/mac+hexo/">博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2019 Yang He
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
